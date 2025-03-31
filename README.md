@@ -13,4 +13,4 @@
 - Sydney Galorio
 - Clark Modequillo
 - John Jacob Muli
-- Moen Rago
+- Moen Malone Rago
