@@ -1,16 +1,20 @@
-# Team RaGO | Capstone2025
+# [Project Title Here]
+*A capstone project for the subject, CSIT284: Object Oriented Programming.*
 
-## Potentital Capstone Projects
-### - 2D Version of 'Raft'
-### - Turn-based DSA-inspired game
-### - Soul-knight-inspired AI-driven game
-### - R.E.P.O. x Overcooked game
+**Team RaGO🏃🏻** </br>
+*Tayo'y babangon muli!*
+```kt
+var members = listOf(
+	"Rago, Moen Malone",
+	"Cornilla, Karl Phoenix",
+	"Modequillo, Clark Vincent",
+	"Galorio, Sydney",
+	"Muli, John Jacob"
+)
+```
 
-<br><br><br><br>
-
-## Members
-- Karl Cornilla
-- Sydney Galorio
-- Clark Modequillo
-- John Jacob Muli
-- Moen Malone Rago
+### Potential Capstone Projects
+#### - 2D Version of 'Raft'
+#### - Turn-based DSA-inspired game
+#### - Soul-knight-inspired AI-driven game
+#### - R.E.P.O. x Overcooked game
