@@ -12,5 +12,5 @@
 - Karl Cornilla
 - Sydney Galorio
 - Clark Modequillo
-- Jacob Muli
+- John Jacob Muli
 - Moen Rago
