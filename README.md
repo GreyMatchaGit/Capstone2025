@@ -6,9 +6,11 @@
 ### - Soul-knight-inspired AI-driven game
 ### - R.E.P.O. x Overcooked game
 
+<br><br><br>
+
 ## Members
-### - Karl Cornilla
-### - Sydney Galorio
-### - Clark Modequillo
-### - Jacob Muli
-### - Moen Rago
+- Karl Cornilla
+- Sydney Galorio
+- Clark Modequillo
+- Jacob Muli
+- Moen Rago
