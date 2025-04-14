@@ -3,9 +3,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 
-
 <AnchorPane minHeight="600.0" minWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.SplashController">
    <children>
-      <Circle fx:id="randomCircle" fill="DODGERBLUE" layoutX="512.0" layoutY="300.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="randomCircle" fill="DODGERBLUE" layoutX="403.0" layoutY="200.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="randomCircle1" fill="#a11f26" layoutX="650.0" layoutY="441.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="randomCircle2" fill="#ecff1f" layoutX="245.0" layoutY="381.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="randomCircle3" fill="#34ff1f" layoutX="769.0" layoutY="181.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="moon" fill="DODGERBLUE" layoutX="603.0" layoutY="122.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
    </children>
 </AnchorPane>

@@ -12,7 +12,7 @@ import java.io.IOException;
 public class NavService {
 
     private static Stage mainStage = null;
-    private static MainController mainController;
+    public static MainController mainController;
 
     public NavService(Stage mainStage) {
         NavService.mainStage = mainStage;
@@ -33,6 +33,13 @@ public class NavService {
         }
     }
 
+    public static void setFullScreen(boolean toFullScreen) {
+        if (toFullScreen)
+            mainStage.setFullScreen(true);
+        else
+            mainStage.setFullScreen(false);
+    }
+
     private static void setMainController() {
         FXMLLoader loader = new FXMLLoader(
             Eva.class.getResource("main-view.fxml")
@@ -51,5 +58,4 @@ public class NavService {
 
         mainStage.setScene(screen);
     }
-
 }
