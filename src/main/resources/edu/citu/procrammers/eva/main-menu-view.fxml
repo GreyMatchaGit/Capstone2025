@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.MainMenuController">
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../../../../Downloads/ProjectEVA%20Background.png" />
+                  <Image url="@media/img_projecteva_bg.png" />
                </image>
             </ImageView>
             <ImageView fx:id="imgPlayBtn" layoutX="872.0" layoutY="654.0">
                <image>
-                  <Image url="@../../../../../../../../../Downloads/PlayBtn.png" />
+                  <Image url="@media/img_play_btn.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -26,7 +26,7 @@
             </ImageView>
             <ImageView fx:id="imgLogo" fitHeight="321.0" fitWidth="612.0" layoutX="649.0" layoutY="265.0">
                <image>
-                  <Image url="@../../../../../../../../../Downloads/ProjectEVA%20Logo.png" />
+                  <Image url="@media/img_projecteva_logo.png" />
                </image>
             </ImageView>
             <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
