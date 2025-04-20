@@ -1,28 +1,133 @@
-# [Project Title Here]
+# Project EVA
 *A capstone project for the subject, CSIT284: Object Oriented Programming.*
 
-**Team RaGO🏃🏻** </br>
+**Team RaGO🏃🏻**  
 *Tayo'y babangon muli!*
+
 ```kt
 var members = listOf(
-	"Rago, Moen Malone",
-	"Cornilla, Karl Phoenix",
-	"Modequillo, Clark Vincent",
-	"Galorio, Sydney",
-	"Muli, John Jacob"
+    "Rago, Moen Malone",
+    "Cornilla, Karl Phoenix",
+    "Modequillo, Clark Vincent",
+    "Galorio, Sydney",
+    "Muli, John Jacob"
 )
 ```
 
-# Potential Capstone Project Ideas
+---
 
-## 1. 2D Version of 'Raft' (Potential/Initial Project Idea)
-This project involves creating a 2D survival game inspired by the popular game *Raft*. Players must gather resources, craft items, and build a floating platform while surviving against the elements and various threats. The game will focus on core mechanics such as resource management, construction, and exploration, but with a 2D perspective instead of the original's 3D view. The player will have to navigate the ocean, manage their raft, and fend off dangers like sharks while maintaining their health, hunger, and thirst.
+## 📌 Project Overview
 
-## 2. Turn-based DSA-Inspired Game
-This capstone project is focused on creating a turn-based strategy game inspired by Data Structures and Algorithms (DSA). Players will engage in tactical battles where they control units with different abilities, each utilizing key data structure concepts like stacks, queues, and trees. The game could feature a grid-based battlefield where players must plan their moves using algorithmic strategies to defeat enemies, with increasing difficulty as the game progresses.
+**Project EVA** (Enhanced Visualizer for Algorithms) is an educational JavaFX desktop application designed to help students learn and practice data structures and algorithms through interactive visualizations and gamified challenges. The application bridges the gap between traditional algorithm visualizers and our professor's specific teaching methodology.
 
-## 3. Soul-knight-Inspired AI-Driven Game
-This project draws inspiration from *Soul Knight*, a fast-paced dungeon crawler game. The goal is to create a similar experience where players battle through procedurally generated dungeons with an array of weapons and power-ups. The unique aspect of this game is its AI-driven mechanics, where non-player characters (NPCs) and enemies are driven by intelligent behavior patterns that adapt based on the player's actions. The project will focus on AI development to create challenging and dynamic gameplay.
+---
 
-## 4. R.E.P.O. x Overcooked Game
-This project is a hybrid concept combining elements of *R.E.P.O.*, a resource management game, with the chaotic, fast-paced gameplay of *Overcooked*. Players will manage a team in a frantic environment, collecting and delivering resources while handling time-sensitive tasks. The game will have multiple levels of increasing difficulty, with teamwork, resource allocation, and multitasking being key to success. It will challenge players to think on their feet and collaborate under pressure.
+## 🚀 Main Features
+
+### 👤 1. User System
+- **Login/Registration:** Username and password authentication
+- **Profile Management:** One profile per user
+- **Progress Tracking:** Saves completion data for both *Academy* and *Conquest* modes
+
+### 🧭 2. Navigation Structure
+- **Two Primary Modes:**
+    - **Academy Mode (Learning)**
+    - **Conquest Mode (Challenges)**
+- **Home Button:** Always accessible from top navigation to return to the profiles page
+
+---
+
+## 🎓 Academy Mode (Learning)
+
+### 📚 Topic Selector
+- Categories:
+    - Arrays
+    - Linked Lists
+    - Stacks & Queues
+    - Trees
+    - Graphs
+    - Sorting Algorithms
+- Progress indicators: Checkmarks or percentage complete
+
+### 🔍 Visualizer Panel
+- Interactive JavaFX canvas to animate algorithm behavior
+- Controls:
+    - Step-by-step execution
+    - Speed adjustment
+    - Pause/Play/Reset
+- Accepts custom data input for dynamic learning
+
+### 📝 Concept Notes Panel
+- Curated course notes
+- Key theory explanations
+- Pseudocode and Java code snippets
+- Quick-reference concept guides
+
+---
+
+## ⚔️ Conquest Mode (Challenges)
+
+### 1. **Operation Command Game** *(Non-tree structures)*
+- Inspired by **TyperShark**
+- Match target data structure state using typed operations (e.g., `push()`, `pop()`)
+- Threat indicator with time pressure mechanics
+- Increasing difficulty per level
+
+### 2. **Tree Builder Challenge** *(Tree structures)*
+- Drag-and-drop style tree construction
+- Conditions: e.g., "must be balanced", "follow traversal order"
+- Scoring based on time and accuracy
+
+### 🌍 Progression System
+- Map-based interface for navigating challenges
+- Locked/unlocked levels based on completions
+- Increasing difficulty and achievement rewards
+
+---
+
+## 🛠️ Technical Implementation Highlights
+
+- **OOP Framework:** Abstraction and inheritance for algorithm logic
+- **Generics:** Type-safe data structure implementations
+- **Multithreading:** Handles animation, timers, and background saves
+- **Database (JDBC):** User data, progress, and high score tracking
+- **Design Patterns:**
+    - Observer (for visualization updates)
+    - Factory (for algorithm instantiation)
+    - Singleton (user session handling)
+- **JavaFX UI:** Custom interactive components and visual elements
+
+---
+
+## 📅 Development Priorities
+
+- Core visualization framework and basic algorithm implementations
+- User authentication system and database connectivity
+- Academy mode with initial algorithm set
+- Conquest mode game mechanics and progression system
+- UI polish and comprehensive algorithm coverage
+
+---
+
+## 🧪 Installation
+
+To run **Project EVA** locally:
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/Clorkies/LockedIn
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd ProjectEVA
+    ```
+
+3. Open the project in your preferred IDE (IntelliJ IDEA or Eclipse).
+
+4. Build and run the project:
+    - Ensure JDK 11 or higher is installed.
+    - Run the main application class from your IDE.
+
+---
+
