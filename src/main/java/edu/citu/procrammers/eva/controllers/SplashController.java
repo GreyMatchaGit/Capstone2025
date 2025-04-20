@@ -1,183 +1,82 @@
 package edu.citu.procrammers.eva.controllers;
 
-import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.utils.NavService;
-import javafx.animation.Animation;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Random;
-import java.util.ResourceBundle;
+import static edu.citu.procrammers.eva.utils.Constant.Page.MainMenu;
 
-public class SplashController implements Initializable {
+public class SplashController {
+
+    public ImageView imgGlow, imgLogo;
 
     @FXML
-    Circle randomCircle, randomCircle1, randomCircle2, randomCircle3, moon;
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        randomCircle.setStrokeWidth(0);
-        randomCircle1.setStrokeWidth(0);
-        randomCircle2.setStrokeWidth(0);
-        randomCircle3.setStrokeWidth(0);
-        moon.setStrokeWidth(0);
-        try {
-            randomCircle.setFill(
-                new ImagePattern(
-                    new Image(
-                        Eva.class.getResource("earth.png").openStream()
-                    )
-                )
-            );
-            randomCircle1.setFill(
-                    new ImagePattern(
-                            new Image(
-                                    Eva.class.getResource("mars.png").openStream()
-                            )
-                    )
-            );
-            randomCircle2.setFill(
-                    new ImagePattern(
-                            new Image(
-                                    Eva.class.getResource("venus.png").openStream()
-                            )
-                    )
-            );
-            randomCircle3.setFill(
-                    new ImagePattern(
-                            new Image(
-                                    Eva.class.getResource("mercury.png").openStream()
-                            )
-                    )
-            );
-            moon.setFill(
-                    new ImagePattern(
-                            new Image(
-                                    Eva.class.getResource("moon.png").openStream()
-                            )
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Platform.runLater(() -> {
-            animate(
-                randomCircle,
-                randomCircle1,
-                randomCircle2,
-                randomCircle3
-            );
-            setupMoon();
-        });
-    }
+    public void initialize() {
+        imgLogo.setOpacity(0);
+        imgLogo.setScaleX(0.5);
+        imgLogo.setScaleY(0.5);
 
-    private double angle = 0; // Angle in radians
+        imgGlow.setOpacity(0);
+        imgGlow.setScaleX(0);
+        imgGlow.setScaleY(0);
 
-    private void setupMoon() {
-        double orbitRadius = randomCircle.getRadius() + 20; // Orbit distance from center
-        double moonRadius = randomCircle.getRadius() / 4;
-        moon.setRadius(moonRadius);
+        Timeline logoTimeline = new Timeline();
+        Timeline glowTimeline = new Timeline();
 
-        Timeline timeline = new Timeline(
-            new KeyFrame(
-                Duration.millis(1000 / 60.0),
-                event -> {
-                    double centerX = randomCircle.getLayoutX();
-                    double centerY = randomCircle.getLayoutY();
-
-                    // Update angle
-                    angle += Math.toRadians(1); // 1 degree per frame
-                    if (angle > 2 * Math.PI) {
-                        angle -= 2 * Math.PI;
-                    }
-
-                    // Calculate moon's position in orbit
-                    double x = centerX + orbitRadius * Math.cos(angle);
-                    double y = centerY + orbitRadius * Math.sin(angle);
-
-                    moon.setLayoutX(x);
-                    moon.setLayoutY(y);
-                }
-            )
+        KeyFrame logoStart = new KeyFrame(Duration.ZERO,
+                new KeyValue(imgLogo.opacityProperty(), 0),
+                new KeyValue(imgLogo.scaleXProperty(), 0.95),
+                new KeyValue(imgLogo.scaleYProperty(), 0.95)
         );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
+        KeyFrame logoMiddle = new KeyFrame(Duration.millis(800),
+                new KeyValue(imgLogo.opacityProperty(), 1.25),
+                new KeyValue(imgLogo.scaleXProperty(), 1.25),
+                new KeyValue(imgLogo.scaleYProperty(), 1.25)
+        );
+        KeyFrame logoEnd = new KeyFrame(Duration.millis(1700),
+                new KeyValue(imgLogo.opacityProperty(), 1),
+                new KeyValue(imgLogo.scaleXProperty(), 1),
+                new KeyValue(imgLogo.scaleYProperty(), 1)
+        );
+        logoTimeline.getKeyFrames().addAll(logoStart, logoMiddle, logoEnd);
 
-    private void animate(Circle... circles) {
+        KeyFrame glowStart = new KeyFrame(Duration.millis(200),
+                new KeyValue(imgGlow.opacityProperty(), 0),
+                new KeyValue(imgGlow.scaleXProperty(), 0),
+                new KeyValue(imgGlow.scaleYProperty(), 0)
+        );
+        KeyFrame glowMiddle = new KeyFrame(Duration.millis(1100),
+                new KeyValue(imgGlow.opacityProperty(), 1.2),
+                new KeyValue(imgGlow.scaleXProperty(), 1.2),
+                new KeyValue(imgGlow.scaleYProperty(), 1.2)
+        );
+        KeyFrame glowEnd = new KeyFrame(Duration.millis(2000),
+                new KeyValue(imgGlow.opacityProperty(), 1),
+                new KeyValue(imgGlow.scaleXProperty(), 1),
+                new KeyValue(imgGlow.scaleYProperty(), 1)
+        );
+        glowTimeline.getKeyFrames().addAll(glowStart, glowMiddle, glowEnd);
 
-        Random random = new Random();
-        AnchorPane mainScreen  = NavService.mainController.mainScreen;
+        PauseTransition initialPause = new PauseTransition(Duration.seconds(1.5));
+        initialPause.setOnFinished(e -> {
+            SoundManager.playBackgroundMusic("logo_ding.MP3", false);
+            logoTimeline.play();
+            glowTimeline.play();
 
-        final int[] xDirs = {-1, 1};
-        final int[] yDirs = {-1, 1};
-
-        for (Circle circle : circles) {
-            double randomX = random.nextInt((int) mainScreen.getWidth());
-            double randomY = random.nextInt((int) mainScreen.getHeight());
-            circle.setLayoutX(randomX);
-            circle.setLayoutY(randomY);
-
-            final int[] dirX = {random.nextInt(2)};
-            final int[] dirY = {random.nextInt(2)};
-
-            circle.setCursor(Cursor.HAND);
-            circle.setOnMouseClicked(event -> {
-                if (event.getButton() == MouseButton.PRIMARY) {
-                    int prevDirX = dirX[0];
-                    int prevDirY = dirY[0];
-                    while (dirX[0] == prevDirX && dirY[0] == prevDirY) {
-                        dirX[0] = random.nextInt(2);
-                        dirY[0] = random.nextInt(2);
-                    }
-                } else if (event.getButton() == MouseButton.SECONDARY) {
-                    circle.setRadius(
-                        random.nextInt(80) + 20
-                    );
-                }
+            PauseTransition afterAnimation = new PauseTransition(Duration.seconds(3));
+            afterAnimation.setOnFinished(event -> {
+                    SoundManager.stopMusic();
+                    NavService.navigateTo(MainMenu);
             });
-
-            final Timeline timeline = new Timeline(
-                new KeyFrame(
-                    Duration.millis(1000 / 60.0),
-                    actionEvent -> {
-                        if (circle.getLayoutX() < 0 + circle.getRadius())
-                            dirX[0] = 1;
-
-                        if (circle.getLayoutX() >= mainScreen.getWidth() - circle.getRadius())
-                            dirX[0] = 0;
-
-                        if (circle.getLayoutY() < 0 + circle.getRadius())
-                            dirY[0] = 1;
-
-                        if (circle.getLayoutY() >= mainScreen.getHeight() - circle.getRadius())
-                            dirY[0] = 0;
-
-                        circle.setLayoutX(
-                            circle.getLayoutX() + xDirs[dirX[0]] * 4
-                        );
-                        circle.setLayoutY(
-                            circle.getLayoutY() + yDirs[dirY[0]] * 4
-                        );
-                    }
-                )
-            );
-
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
-        }
+            afterAnimation.play();
+        });
+        initialPause.play();
     }
+
 }
