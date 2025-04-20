@@ -16,6 +16,7 @@ public class NavService {
 
     public NavService(Stage mainStage) {
         NavService.mainStage = mainStage;
+        mainStage.setFullScreenExitHint("");
         setMainController();
     }
     public static void navigateTo(String page) {

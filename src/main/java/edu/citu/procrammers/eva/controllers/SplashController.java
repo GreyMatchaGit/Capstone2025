@@ -26,57 +26,57 @@ public class SplashController {
         imgGlow.setScaleX(0);
         imgGlow.setScaleY(0);
 
-        Timeline logoTimeline = new Timeline();
-        Timeline glowTimeline = new Timeline();
+        Timeline logoTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(imgLogo.opacityProperty(), 0),
+                        new KeyValue(imgLogo.scaleXProperty(), 0.95),
+                        new KeyValue(imgLogo.scaleYProperty(), 0.95)
+                ),
+                new KeyFrame(Duration.millis(800),
+                        new KeyValue(imgLogo.opacityProperty(), 1.25),
+                        new KeyValue(imgLogo.scaleXProperty(), 1.25),
+                        new KeyValue(imgLogo.scaleYProperty(), 1.25)
+                ),
+                new KeyFrame(Duration.millis(1700),
+                        new KeyValue(imgLogo.opacityProperty(), 1),
+                        new KeyValue(imgLogo.scaleXProperty(), 1),
+                        new KeyValue(imgLogo.scaleYProperty(), 1)
+                )
+        );
 
-        KeyFrame logoStart = new KeyFrame(Duration.ZERO,
-                new KeyValue(imgLogo.opacityProperty(), 0),
-                new KeyValue(imgLogo.scaleXProperty(), 0.95),
-                new KeyValue(imgLogo.scaleYProperty(), 0.95)
+        Timeline glowTimeline = new Timeline(
+                new KeyFrame(Duration.millis(200),
+                        new KeyValue(imgGlow.opacityProperty(), 0),
+                        new KeyValue(imgGlow.scaleXProperty(), 0),
+                        new KeyValue(imgGlow.scaleYProperty(), 0)
+                ),
+                new KeyFrame(Duration.millis(1100),
+                        new KeyValue(imgGlow.opacityProperty(), 1.2),
+                        new KeyValue(imgGlow.scaleXProperty(), 1.2),
+                        new KeyValue(imgGlow.scaleYProperty(), 1.2)
+                ),
+                new KeyFrame(Duration.millis(2000),
+                        new KeyValue(imgGlow.opacityProperty(), 1),
+                        new KeyValue(imgGlow.scaleXProperty(), 1),
+                        new KeyValue(imgGlow.scaleYProperty(), 1)
+                )
         );
-        KeyFrame logoMiddle = new KeyFrame(Duration.millis(800),
-                new KeyValue(imgLogo.opacityProperty(), 1.25),
-                new KeyValue(imgLogo.scaleXProperty(), 1.25),
-                new KeyValue(imgLogo.scaleYProperty(), 1.25)
-        );
-        KeyFrame logoEnd = new KeyFrame(Duration.millis(1700),
-                new KeyValue(imgLogo.opacityProperty(), 1),
-                new KeyValue(imgLogo.scaleXProperty(), 1),
-                new KeyValue(imgLogo.scaleYProperty(), 1)
-        );
-        logoTimeline.getKeyFrames().addAll(logoStart, logoMiddle, logoEnd);
-
-        KeyFrame glowStart = new KeyFrame(Duration.millis(200),
-                new KeyValue(imgGlow.opacityProperty(), 0),
-                new KeyValue(imgGlow.scaleXProperty(), 0),
-                new KeyValue(imgGlow.scaleYProperty(), 0)
-        );
-        KeyFrame glowMiddle = new KeyFrame(Duration.millis(1100),
-                new KeyValue(imgGlow.opacityProperty(), 1.2),
-                new KeyValue(imgGlow.scaleXProperty(), 1.2),
-                new KeyValue(imgGlow.scaleYProperty(), 1.2)
-        );
-        KeyFrame glowEnd = new KeyFrame(Duration.millis(2000),
-                new KeyValue(imgGlow.opacityProperty(), 1),
-                new KeyValue(imgGlow.scaleXProperty(), 1),
-                new KeyValue(imgGlow.scaleYProperty(), 1)
-        );
-        glowTimeline.getKeyFrames().addAll(glowStart, glowMiddle, glowEnd);
 
         PauseTransition initialPause = new PauseTransition(Duration.seconds(1.5));
         initialPause.setOnFinished(e -> {
-            SoundManager.playBackgroundMusic("logo_ding.MP3", false);
+            SoundManager.playBackgroundMusic("sfx/logo_ding.MP3", false);
             logoTimeline.play();
             glowTimeline.play();
 
             PauseTransition afterAnimation = new PauseTransition(Duration.seconds(3));
             afterAnimation.setOnFinished(event -> {
-                    SoundManager.stopMusic();
-                    NavService.navigateTo(MainMenu);
+                SoundManager.stopMusic();
+                NavService.navigateTo(MainMenu);
             });
             afterAnimation.play();
         });
         initialPause.play();
     }
+
 
 }
