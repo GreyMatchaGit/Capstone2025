@@ -16,9 +16,9 @@ public class Eva extends Application {
     public void start(Stage primaryStage) {
         new NavService(primaryStage);
         NavService.navigateTo(
-            Splash
+            ADT
         );
-        NavService.setFullScreen(true);
+        NavService.setFullScreen(false);
         primaryStage.show();
     }
 }
