@@ -11,4 +11,6 @@ module edu.citu.procrammers.eva {
     opens edu.citu.procrammers.eva.data to javafx.fxml;
     exports edu.citu.procrammers.eva.utils;
     opens edu.citu.procrammers.eva.utils to javafx.fxml;
+    opens edu.citu.procrammers.eva.controllers.ADT to javafx.fxml;
+    exports edu.citu.procrammers.eva.controllers.ADT;
 }
