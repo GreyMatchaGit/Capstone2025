@@ -118,66 +118,66 @@ public class KorlMagicScreen implements Initializable {
     }
 
     private void animate(Circle... circles) {
-
-        Random random = new Random();
-        AnchorPane mainScreen  = NavService.mainController.mainScreen;
-
-        final int[] xDirs = {-1, 1};
-        final int[] yDirs = {-1, 1};
-
-        for (Circle circle : circles) {
-            double randomX = random.nextInt((int) mainScreen.getWidth());
-            double randomY = random.nextInt((int) mainScreen.getHeight());
-            circle.setLayoutX(randomX);
-            circle.setLayoutY(randomY);
-
-            final int[] dirX = {random.nextInt(2)};
-            final int[] dirY = {random.nextInt(2)};
-
-            circle.setCursor(Cursor.HAND);
-            circle.setOnMouseClicked(event -> {
-                if (event.getButton() == MouseButton.PRIMARY) {
-                    int prevDirX = dirX[0];
-                    int prevDirY = dirY[0];
-                    while (dirX[0] == prevDirX && dirY[0] == prevDirY) {
-                        dirX[0] = random.nextInt(2);
-                        dirY[0] = random.nextInt(2);
-                    }
-                } else if (event.getButton() == MouseButton.SECONDARY) {
-                    circle.setRadius(
-                            random.nextInt(80) + 20
-                    );
-                }
-            });
-
-            final Timeline timeline = new Timeline(
-                    new KeyFrame(
-                            Duration.millis(1000 / 60.0),
-                            actionEvent -> {
-                                if (circle.getLayoutX() < 0 + circle.getRadius())
-                                    dirX[0] = 1;
-
-                                if (circle.getLayoutX() >= mainScreen.getWidth() - circle.getRadius())
-                                    dirX[0] = 0;
-
-                                if (circle.getLayoutY() < 0 + circle.getRadius())
-                                    dirY[0] = 1;
-
-                                if (circle.getLayoutY() >= mainScreen.getHeight() - circle.getRadius())
-                                    dirY[0] = 0;
-
-                                circle.setLayoutX(
-                                        circle.getLayoutX() + xDirs[dirX[0]] * 4
-                                );
-                                circle.setLayoutY(
-                                        circle.getLayoutY() + yDirs[dirY[0]] * 4
-                                );
-                            }
-                    )
-            );
-
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
-        }
+//
+//        Random random = new Random();
+//        AnchorPane mainScreen  = NavService.mainController.mainScreen;
+//
+//        final int[] xDirs = {-1, 1};
+//        final int[] yDirs = {-1, 1};
+//
+//        for (Circle circle : circles) {
+//            double randomX = random.nextInt((int) mainScreen.getWidth());
+//            double randomY = random.nextInt((int) mainScreen.getHeight());
+//            circle.setLayoutX(randomX);
+//            circle.setLayoutY(randomY);
+//
+//            final int[] dirX = {random.nextInt(2)};
+//            final int[] dirY = {random.nextInt(2)};
+//
+//            circle.setCursor(Cursor.HAND);
+//            circle.setOnMouseClicked(event -> {
+//                if (event.getButton() == MouseButton.PRIMARY) {
+//                    int prevDirX = dirX[0];
+//                    int prevDirY = dirY[0];
+//                    while (dirX[0] == prevDirX && dirY[0] == prevDirY) {
+//                        dirX[0] = random.nextInt(2);
+//                        dirY[0] = random.nextInt(2);
+//                    }
+//                } else if (event.getButton() == MouseButton.SECONDARY) {
+//                    circle.setRadius(
+//                            random.nextInt(80) + 20
+//                    );
+//                }
+//            });
+//
+//            final Timeline timeline = new Timeline(
+//                    new KeyFrame(
+//                            Duration.millis(1000 / 60.0),
+//                            actionEvent -> {
+//                                if (circle.getLayoutX() < 0 + circle.getRadius())
+//                                    dirX[0] = 1;
+//
+//                                if (circle.getLayoutX() >= mainScreen.getWidth() - circle.getRadius())
+//                                    dirX[0] = 0;
+//
+//                                if (circle.getLayoutY() < 0 + circle.getRadius())
+//                                    dirY[0] = 1;
+//
+//                                if (circle.getLayoutY() >= mainScreen.getHeight() - circle.getRadius())
+//                                    dirY[0] = 0;
+//
+//                                circle.setLayoutX(
+//                                        circle.getLayoutX() + xDirs[dirX[0]] * 4
+//                                );
+//                                circle.setLayoutY(
+//                                        circle.getLayoutY() + yDirs[dirY[0]] * 4
+//                                );
+//                            }
+//                    )
+//            );
+//
+//            timeline.setCycleCount(Timeline.INDEFINITE);
+//            timeline.play();
+//        }
     }
 }

@@ -3,6 +3,7 @@ package edu.citu.procrammers.eva.utils;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.MainController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -18,6 +19,8 @@ public class NavService {
         NavService.mainStage = mainStage;
         mainStage.setFullScreenExitHint("");
         setMainController();
+        mainController.setStage(mainStage);
+        mainController.setContentDynamic();
     }
     public static void navigateTo(String page) {
         FXMLLoader fxml = new FXMLLoader(
@@ -53,10 +56,10 @@ public class NavService {
         }
 
         mainController = loader.getController();
-        Scene screen = new Scene(
+        Scene scene = new Scene(
             loader.getRoot()
         );
 
-        mainStage.setScene(screen);
+        mainStage.setScene(scene);
     }
 }
