@@ -17,6 +17,10 @@ public class MainController implements Initializable {
 
     public void setPage(Node node) {
         mainScreen.getChildren().clear();
+        AnchorPane.setTopAnchor(node, 0.0);
+        AnchorPane.setRightAnchor(node, 0.0);
+        AnchorPane.setBottomAnchor(node, 0.0);
+        AnchorPane.setLeftAnchor(node, 0.0);
         mainScreen.getChildren().addAll(node);
     }
 }

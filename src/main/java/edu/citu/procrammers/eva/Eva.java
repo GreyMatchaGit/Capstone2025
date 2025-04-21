@@ -15,9 +15,10 @@ public class Eva extends Application {
     @Override
     public void start(Stage primaryStage) {
         new NavService(primaryStage);
-        primaryStage.show();
         NavService.navigateTo(
             Splash
         );
+        NavService.setFullScreen(true);
+        primaryStage.show();
     }
 }
