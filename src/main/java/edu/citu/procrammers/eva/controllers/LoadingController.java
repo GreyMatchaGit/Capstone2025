@@ -40,7 +40,7 @@ public class LoadingController {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
-            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic(() -> NavService.navigateTo(Main)));
+            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic());
             fadeOut.play();
         });
 

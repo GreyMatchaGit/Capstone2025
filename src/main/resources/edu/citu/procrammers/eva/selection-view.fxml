@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.SelectionController">
+   <center>
+      <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
+            <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_selection_bg.png" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" layoutX="470.0" layoutY="225.0" prefHeight="640.0" prefWidth="394.0" spacing="20.0">
+               <children>
+                  <StackPane fx:id="spAcademy" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="710.0" fitWidth="480.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_academy_bg.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="293.0" fitWidth="385.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_academy.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </StackPane>
+                  <StackPane fx:id="spConquest" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="710.0" fitWidth="480.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_conquest_Bg.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="344.0" fitWidth="381.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_conquest.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </StackPane>
+               </children>
+            </HBox>
+            <ImageView fx:id="imgSettingsBtn" fitHeight="78.0" fitWidth="78.0" layoutX="1800.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_settings_btn.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
