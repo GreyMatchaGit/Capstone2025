@@ -11,6 +11,7 @@ import javafx.util.Duration;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Loading;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Login;
+import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class MainMenuController {
 
@@ -19,7 +20,9 @@ public class MainMenuController {
 
     @FXML
     public void initialize() {
+
         SoundManager.playBackgroundMusic("music/main_menu_music.m4a", true);
+        setupGlow(imgPlayBtn);
 
         Timeline logoPulseTimeline = new Timeline(
                 new KeyFrame(Duration.ZERO,
@@ -59,8 +62,6 @@ public class MainMenuController {
             fadeOut.play();
         });
 
-        imgPlayBtn.setOnMouseEntered(e -> imgPlayBtn.setEffect(new Glow(0.3)));
 
-        imgPlayBtn.setOnMouseExited(e -> imgPlayBtn.setEffect(null));
     }
 }
