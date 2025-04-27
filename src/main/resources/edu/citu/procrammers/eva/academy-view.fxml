@@ -54,6 +54,14 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <ImageView fx:id="imgChatbotBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1740.0" layoutY="929.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_profile_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
          </children>
       </AnchorPane>
    </center>

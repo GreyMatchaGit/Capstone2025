@@ -15,5 +15,8 @@ public class Constant {
 
         public static final String Academy = "academy-view.fxml";
         public static final String Conquest = "conquest-view.fxml";
+
+        //text
+        public static final String Chatbot = "chatbot-view.fxml";
     }
 }
