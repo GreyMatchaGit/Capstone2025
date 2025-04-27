@@ -18,13 +18,12 @@
    <center>
       <AnchorPane BorderPane.alignment="TOP_LEFT">
          <children>
-            <Pane fx:id="fadePane" layoutX="11.0" layoutY="-10.0" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
-            <ImageView pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <ImageView fitHeight="1088.0" fitWidth="1934.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@media/img_login_bg.png" />
                </image>
             </ImageView>
-            <StackPane layoutX="747.0" layoutY="87.0" prefHeight="435.0" prefWidth="278.0">
+            <StackPane layoutX="749.0" layoutY="87.0" prefHeight="435.0" prefWidth="278.0">
                <children>
                   <ImageView fitHeight="513.0" fitWidth="425.0">
                      <image>
@@ -88,6 +87,55 @@
                   </VBox>
                </children>
             </StackPane>
+            <StackPane fx:id="registerContainer" disable="true" layoutX="749.0" layoutY="87.0" prefHeight="435.0" prefWidth="278.0" visible="false">
+               <children>
+                  <ImageView fitHeight="513.0" fitWidth="425.0">
+                     <image>
+                        <Image url="@media/img_login_box.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                     <children>
+                        <VBox prefHeight="101.0" prefWidth="336.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="tfRegisterUsername" prefHeight="56.0" prefWidth="336.0" promptText="Who art thou?" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="101.0" prefWidth="336.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="tfRegisterPassword" prefHeight="56.0" prefWidth="336.0" />
+                           </children>
+                        </VBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+                        <ImageView fx:id="imgRegisterBtn" fitHeight="65.0" fitWidth="222.0" onMouseClicked="#handleRegister">
+                           <image>
+                              <Image url="@media/img_register_btn.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                     <padding>
+                        <Insets left="45.0" right="45.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </StackPane>
+            <Pane fx:id="fadePane" layoutX="11.0" layoutY="-10.0" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
       </AnchorPane>
    </center>
