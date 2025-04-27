@@ -18,6 +18,7 @@ public class Database {
     private static final String DATABASE_NAME = "dbprojecteva";
 
     private final String DATABASE_URL = LOCALHOST + DATABASE_NAME;
+    private final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private String DB_USERNAME = "root";
     private String DB_PASSWORD = "";
 
@@ -58,7 +59,7 @@ public class Database {
                 DB_PASSWORD
             );
         } catch (SQLException e) {
-            return INVALID_URL;
+            createDatabase();
         }
 
         return NO_ERROR;
@@ -153,5 +154,44 @@ public class Database {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private void createDatabase() {
+        try(Connection initializerConnection = DriverManager.getConnection(LOCALHOST, "root", "")) {
+            Class.forName(JDBC_DRIVER);
+            PreparedStatement createDatabase = initializerConnection.prepareStatement(
+                "CREATE DATABASE dbprojecteva;"
+            );
+
+            createDatabase.execute();
+            establishConnection();
+
+            String createTables = "CREATE TABLE tbluser (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), password VARCHAR(255));";
+
+            // For admin
+            String createAdmin = "INSERT INTO tbluser (username, password) VALUES (?, ?);";
+            String adminUsername = "admin";
+            String adminPassword = Hash.hashPassword("admin");
+
+            try (
+                PreparedStatement createTablesStatement = connection.prepareStatement(createTables);
+                PreparedStatement createAdminStatement = connection.prepareStatement(createAdmin);
+            ){
+                createTablesStatement.executeUpdate();
+                createAdminStatement.setString(1, adminUsername);
+                createAdminStatement.setString(2, adminPassword);
+                createAdminStatement.executeUpdate();
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void fixDatabase() {
+        /**
+         * TODO: Fix the entire database structure if the user's current database structure does not match
+         *  the correct database structure.
+         */
     }
 }
