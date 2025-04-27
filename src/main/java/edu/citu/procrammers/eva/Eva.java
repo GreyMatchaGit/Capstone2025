@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva;
 
+import edu.citu.procrammers.eva.data.User;
 import edu.citu.procrammers.eva.utils.NavService;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -8,6 +9,8 @@ import javafx.stage.Stage;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class Eva extends Application {
+
+    public User currentUser;
 
     public static void main(String[] args) {
         launch(args);
