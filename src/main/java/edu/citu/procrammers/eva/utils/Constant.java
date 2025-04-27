@@ -11,7 +11,6 @@ public class Constant {
         public static final String Selection = "selection-view.fxml";
         public static final String Settings = "settings-view.fxml";
         public static final String MainMenu = "main-menu-view.fxml";
-        public static final String Login = "login-view.fxml";
 
         public static final String Academy = "academy-view.fxml";
         public static final String Conquest = "conquest-view.fxml";

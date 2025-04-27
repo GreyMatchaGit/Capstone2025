@@ -1,33 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.MainMenuController">
    <center>
       <AnchorPane BorderPane.alignment="TOP_LEFT">
          <children>
-            <ImageView pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <ImageView fx:id="imgProjectEvaBG" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
+                  <image>
+                     <Image url="@media/img_projecteva_bg.png" />
+                  </image>
+               </ImageView>
+            </StackPane>
+            <StackPane fx:id="spLoginContainer" layoutX="749.0" layoutY="87.0" prefHeight="435.0" prefWidth="278.0" translateY="-700.0" visible="false">
+               <children>
+                  <ImageView fitHeight="513.0" fitWidth="425.0">
+                     <image>
+                        <Image url="@media/img_login_box.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                     <children>
+                        <VBox prefHeight="101.0" prefWidth="336.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="tfUsername" prefHeight="56.0" prefWidth="336.0" promptText="Who art thou?" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="101.0" prefWidth="336.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="tfPassword" prefHeight="56.0" prefWidth="336.0" />
+                           </children>
+                        </VBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="No account yet?">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <Text fill="#ea4a4a" onMouseClicked="#handleRegister" strokeType="OUTSIDE" strokeWidth="0.0" text="Register">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <ImageView fx:id="imgLoginBtn" fitHeight="65.0" fitWidth="201.0" onMouseClicked="#handleLogin">
+                           <image>
+                              <Image url="@media/img_login_btn.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                     <padding>
+                        <Insets left="45.0" right="45.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </StackPane>
+            <StackPane fx:id="spRegisterContainer" disable="true" layoutX="749.0" layoutY="87.0" prefHeight="435.0" prefWidth="278.0" visible="false">
+               <children>
+                  <ImageView fitHeight="513.0" fitWidth="425.0">
+                     <image>
+                        <Image url="@media/img_login_box.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                     <children>
+                        <VBox prefHeight="101.0" prefWidth="336.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="tfRegisterUsername" prefHeight="56.0" prefWidth="336.0" promptText="Who art thou?" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="101.0" prefWidth="336.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                                 <font>
+                                    <Font name="System Bold" size="21.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="tfRegisterPassword" prefHeight="56.0" prefWidth="336.0" />
+                           </children>
+                        </VBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+                        <ImageView fx:id="imgRegisterBtn" fitHeight="65.0" fitWidth="222.0" onMouseClicked="#handleRegister">
+                           <image>
+                              <Image url="@media/img_register_btn.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                     <padding>
+                        <Insets left="45.0" right="45.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </StackPane>
+            <ImageView fx:id="imgLogo" fitHeight="321.0" fitWidth="612.0" layoutX="649.0" layoutY="265.0">
                <image>
-                  <Image url="@media/img_projecteva_bg.png" />
+                  <Image url="@media/img_projecteva_logo.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="imgPlayBtn" AnchorPane.leftAnchor="872.0" AnchorPane.topAnchor="654.0">
+            <ImageView fx:id="imgPlayBtn" layoutX="872.0" layoutY="654.0">
                <image>
                   <Image url="@media/img_play_btn.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
-            </ImageView>
-            <ImageView fx:id="imgLogo" fitHeight="321.0" fitWidth="612.0" layoutX="649.0" layoutY="265.0" AnchorPane.leftAnchor="649.0" AnchorPane.topAnchor="265.0">
-               <image>
-                  <Image url="@media/img_projecteva_logo.png" />
-               </image>
             </ImageView>
             <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
