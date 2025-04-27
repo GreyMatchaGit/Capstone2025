@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.MainMenuController">
+   <center>
+      <AnchorPane BorderPane.alignment="TOP_LEFT">
+         <children>
+            <ImageView pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <image>
+                  <Image url="@media/img_projecteva_bg.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgPlayBtn" AnchorPane.leftAnchor="872.0" AnchorPane.topAnchor="654.0">
+               <image>
+                  <Image url="@media/img_play_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="imgLogo" fitHeight="321.0" fitWidth="612.0" layoutX="649.0" layoutY="265.0" AnchorPane.leftAnchor="649.0" AnchorPane.topAnchor="265.0">
+               <image>
+                  <Image url="@media/img_projecteva_logo.png" />
+               </image>
+            </ImageView>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

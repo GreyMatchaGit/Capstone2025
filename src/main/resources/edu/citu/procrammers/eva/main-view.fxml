@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<BorderPane minHeight="600.0" minWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.MainController">
-   <center>
-      <AnchorPane fx:id="mainScreen">
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.MainController">
+   <children>
+      <Group fx:id="scaleableGroup">
+         <children>
+            <AnchorPane fx:id="mainScreen">
 
 </AnchorPane>
-   </center>
-</BorderPane>
+         </children>
+      </Group>
+   </children>
+</StackPane>

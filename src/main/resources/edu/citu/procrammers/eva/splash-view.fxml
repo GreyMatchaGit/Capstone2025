@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane minHeight="600.0" minWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.SplashController">
-   <children>
-      <Circle fx:id="randomCircle" fill="DODGERBLUE" layoutX="403.0" layoutY="200.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fx:id="randomCircle1" fill="#a11f26" layoutX="650.0" layoutY="441.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fx:id="randomCircle2" fill="#ecff1f" layoutX="245.0" layoutY="381.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fx:id="randomCircle3" fill="#34ff1f" layoutX="769.0" layoutY="181.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fx:id="moon" fill="DODGERBLUE" layoutX="603.0" layoutY="122.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-   </children>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.SplashController">
+   <center>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/GrayBG.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgGlow" fitHeight="834.0" fitWidth="836.0" layoutX="546.0" layoutY="120.0">
+               <image>
+                  <Image url="@media/BrightBG.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgLogo" fitHeight="420.0" fitWidth="417.0" layoutX="751.0" layoutY="333.0">
+               <image>
+                  <Image url="@media/img_procrammers_logo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

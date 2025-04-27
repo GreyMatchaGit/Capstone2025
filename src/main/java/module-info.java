@@ -1,6 +1,7 @@
 module edu.citu.procrammers.eva {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
 
 
     opens edu.citu.procrammers.eva to javafx.fxml;

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ConquestController">
+   <center>
+      <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
+            <ScrollPane hbarPolicy="NEVER" prefHeight="1080.0" prefWidth="1922.0" vbarPolicy="NEVER">
+               <content>
+                  <ImageView fitHeight="3099.0" fitWidth="1921.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@media/img_loading_screen_bg.jpg" />
+                     </image>
+                  </ImageView>
+               </content>
+            </ScrollPane>
+            <ImageView fx:id="imgBackMenuBtn" fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_back_menu_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <AnchorPane layoutX="37.0" layoutY="156.0" prefHeight="99.0" prefWidth="324.0" style="-fx-border-color: #4E2D2D; -fx-border-width: 10; -fx-background-color: #F16C5E;" />
+            <ImageView fx:id="imgProfileBtn" fitHeight="70.0" fitWidth="70.0" layoutX="1800.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_profile_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
