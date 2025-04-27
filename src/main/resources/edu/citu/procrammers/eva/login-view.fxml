@@ -67,6 +67,9 @@
                                  <font>
                                     <Font name="System Bold" size="21.0" />
                                  </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </Text>
                            </children>
                         </HBox>
