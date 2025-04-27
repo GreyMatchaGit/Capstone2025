@@ -32,8 +32,8 @@ public class LoginController implements Initializable {
             String password = tfPassword.getText();
 
             Eva.currentUser = Database.getInstance().login(
-                username,
-                password
+                username.trim(),
+                password.trim()
             );
 
             if (Eva.currentUser == null) {
@@ -46,10 +46,12 @@ public class LoginController implements Initializable {
 
     private void handleLoginFailed() {
         // TODO: Add UI for failed login attempt.
+        System.out.println("Login failed.");
     }
 
     private void handleLoginSuccessful() {
         // TODO: Add UI for successful login attempt.
+        System.out.println("Successfully logged in.");
         NavService.navigateTo(Loading);
     }
 

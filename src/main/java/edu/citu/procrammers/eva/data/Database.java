@@ -67,11 +67,9 @@ public class Database {
 
     public User login(String username, String password) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM tbluser WHERE username=? AND password=?"
+                "SELECT * FROM tbluser WHERE username=?"
         ))  {
-            String hashedPassword = Hash.hashPassword(password);
             statement.setString(1, username);
-            statement.setString(2, hashedPassword);
             ResultSet resultSet = statement.executeQuery();
 
             int resultUID = -1;
@@ -86,18 +84,23 @@ public class Database {
 
             // TODO: Find a way to implement Null Object Pattern here.
             if (resultUID == -1 || resultUsername == null || resultPassword == null) {
+                System.out.println("Database Login: User not found");
                 return null;
             }
 
-            User loggedInUser = new User(resultUID);
-            loggedInUser.username = resultUsername;
-            loggedInUser.hashedPassword = resultPassword;
+            if (Hash.verifyPassword(password, resultPassword)) {
+                User loggedInUser = new User(resultUID);
+                loggedInUser.username = resultUsername;
+                loggedInUser.hashedPassword = resultPassword;
 
-            return loggedInUser;
+                return loggedInUser;
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
         }
+
+        return null;
     }
 
     public int register(String username, String password) {
