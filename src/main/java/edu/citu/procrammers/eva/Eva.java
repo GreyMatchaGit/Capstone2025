@@ -1,5 +1,7 @@
 package edu.citu.procrammers.eva;
 
+import edu.citu.procrammers.eva.data.Database;
+import edu.citu.procrammers.eva.data.User;
 import edu.citu.procrammers.eva.utils.NavService;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -9,12 +11,15 @@ import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class Eva extends Application {
 
+    public static User currentUser = null;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
+        Database.getInstance();
         new NavService(primaryStage);
         NavService.navigateTo(Splash);
         NavService.setFullScreen(false);
