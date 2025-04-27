@@ -44,12 +44,12 @@ public class UIElementUtils {
             );
 
             c.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
-                scaleDown.stop();  // Stop any down animation if running
+                scaleDown.stop();
                 scaleUp.playFromStart();
             });
 
             c.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
-                scaleUp.stop();    // Stop any up animation if running
+                scaleUp.stop();
                 scaleDown.playFromStart();
             });
         }
