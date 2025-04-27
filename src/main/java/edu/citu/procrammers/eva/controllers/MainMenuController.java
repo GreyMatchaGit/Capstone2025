@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Loading;
+import static edu.citu.procrammers.eva.utils.Constant.Page.Login;
 
 public class MainMenuController {
 
@@ -54,7 +55,7 @@ public class MainMenuController {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
-            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic(() -> NavService.navigateTo(Loading)));
+            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic(() -> NavService.navigateTo(Login)));
             fadeOut.play();
         });
 
