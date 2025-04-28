@@ -124,8 +124,6 @@ public class MainMenuController {
 
         zoomTransition.play();
         slideOutTimeline.play();
-        fadePane.layoutXProperty().set(0);
-        fadePane.layoutYProperty().set(0);
     }
 
     public void handleRegister() {
@@ -137,8 +135,6 @@ public class MainMenuController {
 
     public void handleLogin() {
         SoundManager.playSFX("sfx/btn_click.MP3");
-        fadePane.layoutXProperty().set(0);
-        fadePane.layoutYProperty().set(0);
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
         fadeOut.setFromValue(0);
         fadeOut.setToValue(1);

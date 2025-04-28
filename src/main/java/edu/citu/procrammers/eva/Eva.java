@@ -16,8 +16,8 @@ public class Eva extends Application {
     @Override
     public void start(Stage primaryStage) {
         new NavService(primaryStage);
-//        NavService.navigateTo(Splash);
-        NavService.navigateTo(MainMenu);
+        NavService.navigateTo(Splash);
+//        NavService.navigateTo(MainMenu);
         NavService.setFullScreen(false);
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(360);

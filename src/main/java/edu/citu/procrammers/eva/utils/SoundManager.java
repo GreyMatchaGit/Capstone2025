@@ -22,6 +22,24 @@ public class SoundManager {
     private static double sfxVolume = 1;
     private static final int MAX_CONCURRENT_SFX = 8;
 
+    public static MediaPlayer createPreloadedPlayer(String soundFile, boolean loop) {
+        try {
+            Media media = getSoundFromCache(soundFile);
+            if (media == null) return null;
+
+            MediaPlayer player = new MediaPlayer(media);
+            player.setVolume(musicVolume);
+            if (loop) {
+                player.setCycleCount(MediaPlayer.INDEFINITE);
+            }
+            return player;
+
+        } catch (Exception e) {
+            System.err.println("Error creating preloaded MediaPlayer: " + e.getMessage());
+            return null;
+        }
+    }
+
     public static void playBackgroundMusic(String musicFile, Boolean loop) {
         try {
             if (musicPlayer != null) {
