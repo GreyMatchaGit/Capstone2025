@@ -20,7 +20,7 @@
             <Image url="@media/img_projecteva_bg.png" />
          </image>
       </ImageView>
-      <StackPane fx:id="spLoginContainer" layoutX="759.0" layoutY="200.0" prefHeight="435.0" prefWidth="278.0" visible="false">
+      <StackPane fx:id="spLoginContainer" layoutX="759.0" layoutY="200.0" prefHeight="435.0" prefWidth="278.0" translateY="-190.0" visible="false">
          <children>
             <ImageView fitHeight="513.0" fitWidth="425.0">
                <image>

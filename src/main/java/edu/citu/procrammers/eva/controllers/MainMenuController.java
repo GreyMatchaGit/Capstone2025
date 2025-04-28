@@ -82,7 +82,7 @@ public class MainMenuController {
 
         Timeline slideOutTimeline = new Timeline();
 
-        KeyValue kvLogoUp = new KeyValue(imgPlayBtn.translateYProperty(), -350, Interpolator.EASE_IN);
+        KeyValue kvLogoUp = new KeyValue(imgLogo.translateYProperty(), -250, Interpolator.EASE_IN);
         KeyValue kvLogoFadeOut = new KeyValue(imgLogo.opacityProperty(), 0, Interpolator.EASE_IN);
         KeyFrame kfLogoFadeOut = new KeyFrame(Duration.seconds(0.5), kvLogoFadeOut, kvLogoUp);
         slideOutTimeline.getKeyFrames().add(kfLogoFadeOut);
@@ -99,8 +99,6 @@ public class MainMenuController {
             imgLogo.setDisable(true);
         });
 
-        double centerY = imgProjectEvaBG.getBoundsInLocal().getHeight() / 2;
-
         ParallelTransition zoomTransition = new ParallelTransition();
 
         Timeline scaleTimeline = new Timeline();
@@ -109,18 +107,20 @@ public class MainMenuController {
         KeyFrame kfZoom = new KeyFrame(Duration.seconds(0.8), kvScaleX, kvScaleY);
         scaleTimeline.getKeyFrames().add(kfZoom);
 
-
-
         zoomTransition.getChildren().addAll(scaleTimeline);
 
         Timeline loginContainerTimeline = new Timeline();
         KeyValue kvLoginContainerOpacity = new KeyValue(spLoginContainer.opacityProperty(), 1, Interpolator.EASE_OUT);
-        KeyFrame kfLoginContainer = new KeyFrame(Duration.seconds(0.5), kvLoginContainerOpacity);
+        KeyValue kvLoginContainrY = new KeyValue(spLoginContainer.translateYProperty(), 0, Interpolator.EASE_OUT);
+        KeyFrame kfLoginContainer = new KeyFrame(Duration.seconds(0.5), kvLoginContainerOpacity, kvLoginContainrY);
         loginContainerTimeline.getKeyFrames().add(kfLoginContainer);
 
-        spLoginContainer.setOpacity(0);
-        spLoginContainer.setVisible(true);
-        loginContainerTimeline.play();
+
+        zoomTransition.setOnFinished(e -> {
+            spLoginContainer.setOpacity(0);
+            spLoginContainer.setVisible(true);
+            loginContainerTimeline.play();
+        });
 
         zoomTransition.play();
         slideOutTimeline.play();
