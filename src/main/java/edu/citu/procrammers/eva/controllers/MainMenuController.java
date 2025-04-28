@@ -82,16 +82,23 @@ public class MainMenuController {
 
         Timeline slideOutTimeline = new Timeline();
 
-        KeyValue kvLogoUp = new KeyValue(imgLogo.translateYProperty(), -850, Interpolator.EASE_IN);
-        KeyFrame kfLogoUp = new KeyFrame(Duration.seconds(.5), kvLogoUp);
-        slideOutTimeline.getKeyFrames().add(kfLogoUp);
+        KeyValue kvLogoUp = new KeyValue(imgPlayBtn.translateYProperty(), -350, Interpolator.EASE_IN);
+        KeyValue kvLogoFadeOut = new KeyValue(imgLogo.opacityProperty(), 0, Interpolator.EASE_IN);
+        KeyFrame kfLogoFadeOut = new KeyFrame(Duration.seconds(0.5), kvLogoFadeOut, kvLogoUp);
+        slideOutTimeline.getKeyFrames().add(kfLogoFadeOut);
 
-        KeyValue kvPlayDown = new KeyValue(imgPlayBtn.translateYProperty(), 850, Interpolator.EASE_IN);
-        KeyFrame kfPlayDown = new KeyFrame(Duration.seconds(.5), kvPlayDown);
-        slideOutTimeline.getKeyFrames().add(kfPlayDown);
+        KeyValue kvPlayDown = new KeyValue(imgPlayBtn.translateYProperty(), 350, Interpolator.EASE_IN);
+        KeyValue kvPlayFadeOut = new KeyValue(imgPlayBtn.opacityProperty(), 0, Interpolator.EASE_IN);
+        KeyFrame kfPlayFadeOut = new KeyFrame(Duration.seconds(0.5), kvPlayFadeOut, kvPlayDown);
+        slideOutTimeline.getKeyFrames().add(kfPlayFadeOut);
 
+        slideOutTimeline.setOnFinished(e -> {
+            imgPlayBtn.setVisible(false);
+            imgPlayBtn.setDisable(true);
+            imgLogo.setVisible(false);
+            imgLogo.setDisable(true);
+        });
 
-        double centerX = imgProjectEvaBG.getBoundsInLocal().getWidth() / 2;
         double centerY = imgProjectEvaBG.getBoundsInLocal().getHeight() / 2;
 
         ParallelTransition zoomTransition = new ParallelTransition();
@@ -102,33 +109,21 @@ public class MainMenuController {
         KeyFrame kfZoom = new KeyFrame(Duration.seconds(0.8), kvScaleX, kvScaleY);
         scaleTimeline.getKeyFrames().add(kfZoom);
 
-        Timeline translateTimeline = new Timeline();
-        KeyValue kvTranslateX = new KeyValue(imgProjectEvaBG.translateXProperty(), -centerX * .6, Interpolator.EASE_OUT);
-        KeyValue kvTranslateY = new KeyValue(imgProjectEvaBG.translateYProperty(), -centerY * .6, Interpolator.EASE_OUT);
-        KeyFrame kfTranslate = new KeyFrame(Duration.seconds(0.8), kvTranslateX, kvTranslateY);
-        translateTimeline.getKeyFrames().add(kfTranslate);
-
-        Timeline bgOffsetTimeline = new Timeline();
-        KeyValue kvOffsetX= new KeyValue(imgProjectEvaBG.translateXProperty(), 0, Interpolator.EASE_OUT);
-        KeyValue kvOffsetY = new KeyValue(imgProjectEvaBG.translateYProperty(), -100, Interpolator.EASE_OUT);
-        KeyFrame kfOffset = new KeyFrame(Duration.seconds(0.8), kvOffsetX, kvOffsetY);
-        bgOffsetTimeline.getKeyFrames().add(kfOffset);
-
-        zoomTransition.getChildren().addAll(scaleTimeline, translateTimeline, bgOffsetTimeline);
 
 
-        final double originalX = spLoginContainer.getTranslateX();
-        spLoginContainer.translateXProperty().set(originalX);
+        zoomTransition.getChildren().addAll(scaleTimeline);
 
         Timeline loginContainerTimeline = new Timeline();
-        KeyValue kvLoginContainerY = new KeyValue(spLoginContainer.translateYProperty(), 0, Interpolator.EASE_OUT);
-        KeyFrame kfLoginContainer = new KeyFrame(Duration.seconds(0.5), kvLoginContainerY);
+        KeyValue kvLoginContainerOpacity = new KeyValue(spLoginContainer.opacityProperty(), 1, Interpolator.EASE_OUT);
+        KeyFrame kfLoginContainer = new KeyFrame(Duration.seconds(0.5), kvLoginContainerOpacity);
         loginContainerTimeline.getKeyFrames().add(kfLoginContainer);
+
+        spLoginContainer.setOpacity(0);
         spLoginContainer.setVisible(true);
+        loginContainerTimeline.play();
 
         zoomTransition.play();
         slideOutTimeline.play();
-        loginContainerTimeline.play();
         fadePane.layoutXProperty().set(0);
         fadePane.layoutYProperty().set(0);
     }
@@ -144,13 +139,11 @@ public class MainMenuController {
         SoundManager.playSFX("sfx/btn_click.MP3");
         fadePane.layoutXProperty().set(0);
         fadePane.layoutYProperty().set(0);
-        System.out.println("FadePane Y Property: " + fadePane.getLayoutY());;
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
         fadeOut.setFromValue(0);
         fadeOut.setToValue(1);
         fadeOut.setOnFinished(e -> {
             SoundManager.fadeOutMusic();
-            System.out.println("(In SOF Func) FadePane Y Property: " + fadePane.getLayoutY());;
             NavService.navigateTo(Loading);
 
             PauseTransition delay = new PauseTransition(Duration.seconds(2));
@@ -158,7 +151,6 @@ public class MainMenuController {
             delay.play();
         });
 
-        System.out.println("(Out SOF Func) FadePane Y Property: " + fadePane.getLayoutY());;
         fadeOut.play();
     }
 }

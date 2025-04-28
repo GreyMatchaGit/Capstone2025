@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class NavService {
 
@@ -59,6 +60,8 @@ public class NavService {
         Scene scene = new Scene(
             loader.getRoot()
         );
+
+        scene.getStylesheets().add(Objects.requireNonNull(NavService.class.getResource("/edu/citu/procrammers/eva/css/fonts.css")).toExternalForm());
 
         mainStage.setScene(scene);
     }
