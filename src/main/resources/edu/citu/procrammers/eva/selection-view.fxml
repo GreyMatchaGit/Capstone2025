@@ -61,6 +61,9 @@
                <image>
                   <Image url="@media/img_settings_btn.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </AnchorPane>
