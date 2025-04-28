@@ -37,6 +37,8 @@ public class SelectionController {
             NavService.navigateTo(Conquest);
         });
 
+        spAcademy.setOnMouseEntered(e -> SoundManager.playSFX("sfx/academy_hover.mp3"));
+        spConquest.setOnMouseEntered(e -> SoundManager.playSFX("sfx/conquest_hover.mp3"));
 
     }
 }

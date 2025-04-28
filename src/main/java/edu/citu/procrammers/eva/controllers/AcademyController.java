@@ -17,11 +17,13 @@ public class AcademyController {
     @FXML
     public void initialize() {
 
+        SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
+
         setupGlow(imgLessonsBkmrk, imgTutorBkmrk, imgBackMenuBtn, imgProfileBtn);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
-            NavService.navigateTo(Selection);
+            SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
         });
 
     }

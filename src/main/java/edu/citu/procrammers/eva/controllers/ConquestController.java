@@ -16,12 +16,13 @@ public class ConquestController {
     @FXML
     public void initialize() {
 
+        SoundManager.playBackgroundMusic("music/conquest_music.MP3", true);
+
         setupGlow(imgBackMenuBtn, imgProfileBtn);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
-            NavService.navigateTo(Selection);
+            SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
         });
-
     }
 }
