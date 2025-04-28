@@ -34,6 +34,9 @@ public class MainController implements Initializable {
     private double baseWidth = -1;
     private double baseHeight = -1;
 
+    /**
+     * TODO: This function creates the surrounding white borders.
+     */
     public void setContentDynamic() {
         primaryStage.setOnShown(event -> {
             // Get the actual size after rendering

@@ -20,7 +20,7 @@ public class NavService {
         mainStage.setFullScreenExitHint("");
         setMainController();
         mainController.setStage(mainStage);
-        mainController.setContentDynamic();
+//        mainController.setContentDynamic();
     }
     public static void navigateTo(String page) {
         FXMLLoader fxml = new FXMLLoader(

@@ -22,10 +22,10 @@ public class Eva extends Application {
         Database.getInstance();
         new NavService(primaryStage);
         NavService.navigateTo(Splash);
-        NavService.setFullScreen(false);
+        NavService.setFullScreen(true);
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(360);
-        lockAspectRatio(primaryStage);
+//        lockAspectRatio(primaryStage);
         primaryStage.show();
     }
 
