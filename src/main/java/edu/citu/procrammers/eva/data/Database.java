@@ -49,8 +49,18 @@ public class Database {
      */
     public int establishConnection() {
         int serverStatus = checkServerStatus();
-        if (serverStatus != NO_ERROR)
+        if (serverStatus != NO_ERROR) {
+            String message = "";
+            switch (serverStatus) {
+                case UNKNOWN_ERROR -> message = "An unknown error has occurred.";
+                case INVALID_URL -> message = "The database connection URL is invalid.";
+                case BOTH_NOT_RUNNING -> message = "Both Apache and MySQL modules aren't running.";
+                case APACHE_NOT_RUNNING -> message = "The Apache module in XAMPP isn't running.";
+                case MYSQL_NOT_RUNNING -> message = "The MySQL module in XAMPP isn't running.";
+            }
+            System.out.println("[Database] ERROR: " + message);
             return serverStatus;
+        }
 
         try {
             connection = DriverManager.getConnection(
@@ -104,8 +114,10 @@ public class Database {
     }
 
     public int register(String username, String password) {
-        if (!isUsernameAvailable(username))
+        if (!isUsernameAvailable(username)) {
+            System.out.printf("[Database] ERROR: The username %s has already been taken.\n", username);
             return USERNAME_TAKEN;
+        }
 
         try (PreparedStatement statement = connection.prepareStatement(
             "INSERT INTO tbluser (username, password) values (?, ?)"
