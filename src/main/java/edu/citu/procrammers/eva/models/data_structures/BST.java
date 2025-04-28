@@ -26,8 +26,6 @@ public class BST extends Tree {
         w = ap.getWidth();
         h = ap.getHeight();
 
-        System.out.println(w);
-
         FIRST_PRINT_POS_X  = 50;
         PRINT_VERTICAL_GAP  = 20;
         PRINT_HORIZONTAL_GAP = 50;
@@ -152,7 +150,7 @@ public class BST extends Tree {
             else if (side == 1) {
                 xPosition = xPosition + tree.leftWidth;
 //                System.out.println("Left width: " + tree.leftWidth);
-//                System.out.println("in right side x = " + xPosition);
+//                System.out.println("in right side x = " + xPx osition);
             }
             tree.x.set(xPosition);
 //            System.out.printf("Node %d new pos(%.2f, %.2f)\n", tree.element, tree.x.get(), tree.y.get());
@@ -167,7 +165,7 @@ public class BST extends Tree {
             return 0;
         }
         tree.leftWidth = Math.max(this.resizeWidths(tree.getLeft()), WIDTH_DELTA / 2);
-        tree.rightWidth = Math.max(this.resizeWidths(tree.getLeft()), WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.getRight()), WIDTH_DELTA / 2);
 //        System.out.printf("Node %d width: %.2f, %.2f", tree.element, tree.leftWidth, tree.rightWidth);
         return tree.leftWidth + tree.rightWidth;
     }

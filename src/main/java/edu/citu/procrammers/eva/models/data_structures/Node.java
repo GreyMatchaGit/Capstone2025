@@ -17,12 +17,16 @@ public class Node {
         x = new SimpleDoubleProperty(0);
         y = new SimpleDoubleProperty(0);
         this.element = element;
+        leftWidth = 0;
+        rightWidth = 0;
     }
 
     public Node(int element, double x, double y) {
         this.element = element;
         this.x = new SimpleDoubleProperty(x);
         this.y = new SimpleDoubleProperty(y);
+        leftWidth = 0;
+        rightWidth = 0;
     }
 
     public int getElement() {

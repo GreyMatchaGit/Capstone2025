@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -68,7 +70,9 @@ public class ADTViewController {
 
 //            node.x.bind(nodeView.layoutXProperty());
 //            node.y.bind(nodeView.layoutYProperty());
-//
+            StackPane stackPane = (StackPane) nodeView;
+            Circle circle  = (Circle)(stackPane.getChildren().getFirst());
+            circle.setRadius(20);
 
             apMain.getChildren().add(nodeView);
             nodeView.setLayoutX(node.x.getValue());
