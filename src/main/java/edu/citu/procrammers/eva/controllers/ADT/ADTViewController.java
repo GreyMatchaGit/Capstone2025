@@ -71,7 +71,7 @@ public class ADTViewController {
 //            node.x.bind(nodeView.layoutXProperty());
 //            node.y.bind(nodeView.layoutYProperty());
             StackPane stackPane = (StackPane) nodeView;
-            Circle circle  = (Circle)(stackPane.getChildren().getFirst());
+            Circle circle  = (Circle)(stackPane.getChildren().get(0));
             circle.setRadius(20);
 
             apMain.getChildren().add(nodeView);
