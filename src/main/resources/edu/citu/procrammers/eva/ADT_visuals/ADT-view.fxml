@@ -4,14 +4,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="apMain" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ADT.ADTViewController">
    <children>
       <ToolBar layoutX="35.0" layoutY="-6.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <Button fx:id="btnInsert" mnemonicParsing="false" text="Insert" onAction="#onButtonInsertClicked"/>
+          <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onButtonInsertClicked" text="Insert" />
             <TextField fx:id="tfInput" />
         </items>
       </ToolBar>
+      <AnchorPane layoutX="386.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="btnSubmit" layoutY="174.0" mnemonicParsing="false" text="Button" />
+            <TextField fx:id="tfChat" layoutX="52.0" layoutY="174.0" />
+            <VBox fx:id="vbChat" prefHeight="173.0" prefWidth="203.0" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

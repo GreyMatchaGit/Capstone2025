@@ -6,22 +6,36 @@ import edu.citu.procrammers.eva.models.BinaryTreeIterator;
 import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
 import edu.citu.procrammers.eva.utils.TreeLayoutCalculator;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 
 public class ADTViewController {
+    public TextField tfChat;
+    public Button btnSubmit;
+    public VBox vbChat;
     @FXML
     private AnchorPane apMain;
     @FXML
@@ -36,7 +50,79 @@ public class ADTViewController {
             System.out.println("Width after layout: " + newVal.doubleValue());
             BST = new BST(apMain);
         });
+        btnSubmit.setOnAction(e -> {
+            loadChatbot();
+        });
     }
+
+    private void loadChatbot() {
+        String input = tfChat.getText().trim();
+        if (input.isEmpty()) { return;}
+
+        tfChat.clear();
+
+        Label chat = new Label(input);
+        chat.setWrapText(true);
+
+        vbChat.getChildren().add(chat);
+
+        String apiKey = System.getenv("OPENAI_API_KEY");
+        if(apiKey == null || apiKey.isEmpty()) {
+            System.out.println("API Key not set");
+            return;
+        }
+
+        JSONObject prompt = readPrompt();
+        if(prompt == null) {return;}
+        updateContent(prompt, input);
+        sendChat(apiKey, prompt);
+
+    }
+
+    private void sendChat(String apiKey, JSONObject prompt) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create("https://api.openai.com/v1/chat/completions"))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + apiKey)
+                        .POST(HttpRequest.BodyPublishers.ofString(prompt.toString()))
+                        .build();
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                JSONObject jsonResponse = new JSONObject(response.body());
+                String replyText = jsonResponse
+                        .getJSONArray("choices")
+                        .getJSONObject(0)
+                        .getJSONObject("message")
+                        .getString("content");
+
+                Platform.runLater(() -> vbChat.getChildren().add(new Label(replyText)));
+
+            } catch (IOException | InterruptedException e) {
+                Platform.runLater(() -> System.out.println("Failed to communicate with API: " + e.getMessage()));
+            }
+        });
+    }
+
+    private void updateContent(JSONObject prompt, String input) {
+        prompt.getJSONArray("messages")
+                .getJSONObject(1)
+                .put("content", input);
+    }
+
+    private JSONObject readPrompt() {
+        try {
+            String content = Files.readString(Paths.get("prompt.json"));
+            return new JSONObject(content);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
 
     @FXML
     private void onButtonInsertClicked() {
