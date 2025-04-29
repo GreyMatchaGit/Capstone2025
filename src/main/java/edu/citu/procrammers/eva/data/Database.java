@@ -30,6 +30,11 @@ public class Database {
         public static final int MYSQL_NOT_RUNNING = 3;
         public static final int BOTH_NOT_RUNNING = 4;
         public static final int USERNAME_TAKEN = 5;
+        public static final int EMPTY_USERNAME = 6;
+        public static final int EMPTY_PASSWORD = 7;
+        public static final int EMPTY_USERNAME_PASSWORD = 8;
+        public static final int TOO_LONG_USERNAME =  9;
+        public static final int TOO_LONG_PASSWORD = 10;
     }
 
     private Connection connection;
@@ -94,7 +99,7 @@ public class Database {
 
             // TODO: Find a way to implement Null Object Pattern here.
             if (resultUID == -1 || resultUsername == null || resultPassword == null) {
-                System.out.println("Database Login: User not found");
+                System.out.println("[Database] Login: User not found");
                 return null;
             }
 
@@ -114,6 +119,12 @@ public class Database {
     }
 
     public int register(String username, String password) {
+        int validationResult = validateUsernamePassword(username, password);
+
+        if (validationResult != NO_ERROR) {
+            return validationResult;
+        }
+
         if (!isUsernameAvailable(username)) {
             System.out.printf("[Database] ERROR: The username %s has already been taken.\n", username);
             return USERNAME_TAKEN;
@@ -128,11 +139,33 @@ public class Database {
 
             statement.executeUpdate();
 
+            System.out.printf("[Database] %s has been successfully registered.\n", username);
             return NO_ERROR;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return UNKNOWN_ERROR;
         }
+    }
+
+    public int validateUsernamePassword(String username, String password) {
+        if (username.isEmpty() && password.isEmpty()) {
+            System.out.println("[Database] Both username and password can't be empty.");
+            return EMPTY_USERNAME_PASSWORD;
+        } else if (username.isEmpty()) {
+            System.out.println("[Database] Username can't be empty.");
+            return EMPTY_USERNAME;
+        } else if (password.isEmpty()) {
+            System.out.println("[Database] Password can't be empty.");
+            return EMPTY_PASSWORD;
+        } else if (username.length() > 20) {
+            System.out.println("[Database] Username can't exceed 20 characters.");
+            return TOO_LONG_USERNAME;
+        } else if (password.length() > 25) {
+            System.out.println("[Database] Password can't exceed 25 characters.");
+            return TOO_LONG_PASSWORD;
+        }
+
+        return NO_ERROR;
     }
 
     private boolean isUsernameAvailable(String username) {
