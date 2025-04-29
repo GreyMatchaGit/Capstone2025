@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.AcademyController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.AcademyController">
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
@@ -30,14 +30,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="imgProfileBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1677.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <image>
-                  <Image url="@media/img_profile_btn.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
             <ImageView fx:id="imgLessonsBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1498.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_bookmark_lessons.png" />
@@ -49,6 +41,14 @@
             <ImageView fx:id="imgTutorBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1511.0" layoutY="453.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_bookmark_tutor.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="imgSettingsBtn" fitHeight="63.0" fitWidth="71.0" layoutX="1680.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_settings_btn.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />

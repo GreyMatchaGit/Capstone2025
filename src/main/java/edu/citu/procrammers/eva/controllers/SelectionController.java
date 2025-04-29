@@ -21,13 +21,9 @@ public class SelectionController {
     @FXML
     public void initialize() {
 
-        setupGlow(spAcademy, spConquest, imgSettingsBtn);
+        setupGlow(spAcademy, spConquest);
         setupScalingAnimation( 1.1, spAcademy, spConquest);
 
-        imgSettingsBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
-            NavService.navigateTo(Settings);
-        });
         spAcademy.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             NavService.navigateTo(Academy);

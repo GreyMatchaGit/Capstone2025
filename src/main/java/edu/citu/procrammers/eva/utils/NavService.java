@@ -2,6 +2,7 @@ package edu.citu.procrammers.eva.utils;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.MainController;
+import edu.citu.procrammers.eva.controllers.SelectionController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -11,10 +12,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
+
 public class NavService {
 
     private static Stage mainStage = null;
     public static MainController mainController;
+    public static String previousPage = Selection;
 
     public NavService(Stage mainStage) {
         NavService.mainStage = mainStage;

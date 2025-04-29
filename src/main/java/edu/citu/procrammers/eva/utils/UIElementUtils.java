@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
+import javafx.scene.control.Slider;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
@@ -55,5 +56,18 @@ public class UIElementUtils {
         }
     }
 
+    public static void setupSliderUI(Slider... sliders) {
+        for (Slider s: sliders) {
+            s.valueProperty().addListener((obs, oldVal, newVal) -> {
+                double percent = newVal.doubleValue() / s.getMax();
+                String style = String.format(
+                        "-fx-background-color: linear-gradient(to right, #4F2D2A %.2f%%, #C7AFAD %.2f%%);"
+                                + "-fx-background-insets: 0; -fx-background-radius: 0;",
+                        percent * 100, percent * 100
+                );
+                s.lookup(".track").setStyle(style);
+            });
+        }
+    }
 
 }

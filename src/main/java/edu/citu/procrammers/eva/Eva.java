@@ -1,6 +1,8 @@
 package edu.citu.procrammers.eva;
 
+import edu.citu.procrammers.eva.data.AudioSettings;
 import edu.citu.procrammers.eva.utils.NavService;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
@@ -10,14 +12,17 @@ import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 public class Eva extends Application {
 
     public static void main(String[] args) {
+        AudioSettings settings = SoundManager.loadAudioSettings();
+        SoundManager.setMusicVolume(settings.musicVolume);
+        SoundManager.setSfxVolume(settings.sfxVolume);
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
         new NavService(primaryStage);
-        NavService.navigateTo(Splash);
-//        NavService.navigateTo(MainMenu);
+//        NavService.navigateTo(Splash);
+        NavService.navigateTo(Selection);
         NavService.setFullScreen(true);
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(360);

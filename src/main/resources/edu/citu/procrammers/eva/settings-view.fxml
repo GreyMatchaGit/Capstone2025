@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.SettingsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@css/custom-slider.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.SettingsController">
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
@@ -46,8 +46,8 @@
                   <Image url="@media/image_sfx_txt.png" />
                </image>
             </ImageView>
-            <Slider fx:id="sldrMusicVolume" layoutX="909.0" layoutY="319.0" prefHeight="23.0" prefWidth="307.0" />
-            <Slider fx:id="sldrSfxVolume" layoutX="909.0" layoutY="398.0" prefHeight="23.0" prefWidth="307.0" />
+            <Slider fx:id="sldrMusicVolume" blockIncrement="0.01" layoutX="909.0" layoutY="319.0" max="1.0" prefHeight="23.0" prefWidth="307.0" />
+            <Slider fx:id="sldrSfxVolume" blockIncrement="0.01" layoutX="909.0" layoutY="398.0" max="1.0" prefHeight="23.0" prefWidth="307.0" />
          </children>
       </AnchorPane>
    </center>
