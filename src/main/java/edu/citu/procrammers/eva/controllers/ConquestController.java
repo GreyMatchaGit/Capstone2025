@@ -11,14 +11,14 @@ import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class ConquestController {
     public Pane fadePane;
-    public ImageView imgBackMenuBtn, imgProfileBtn;
+    public ImageView imgBackMenuBtn;
 
-    @FXML
+    @FXML   
     public void initialize() {
 
         SoundManager.playBackgroundMusic("music/conquest_music.MP3", true);
 
-        setupGlow(imgBackMenuBtn, imgProfileBtn);
+        setupGlow(imgBackMenuBtn);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
