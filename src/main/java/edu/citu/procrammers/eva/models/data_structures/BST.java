@@ -2,6 +2,7 @@ package edu.citu.procrammers.eva.models.data_structures;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
 
 public class BST extends Tree {
     public final double w;
@@ -110,6 +111,7 @@ public class BST extends Tree {
 
                 elem.x.set(parent.x.getValue() + WIDTH_DELTA/2);
                 elem.y.set(parent.y.getValue() + HEIGHT_DELTA);
+
                 System.out.printf("Node %d at (%.2f, %.2f)\n", elem.element, elem.x.get(), elem.y.get());
 //                elem.y = parent.y + HEIGHT_DELTA;
 //                this.cmd("Move", elem.graphicID, elem.x, elem.y);
