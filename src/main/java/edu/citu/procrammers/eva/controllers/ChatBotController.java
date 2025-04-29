@@ -34,8 +34,14 @@ public class ChatBotController {
         String input = tfChatBox.getText().trim();
         if (input.isEmpty()) return;
 
+        //Styling
+        Label message = new Label(input);
+        message.setWrapText(true);
+
+        vbConversation.getChildren().add(message);
+
         tfChatBox.clear();
-        vbConversation.getChildren().add(new Label(input));
+
 
         String apiKey = System.getenv("OPENAI_API_KEY");
         if (apiKey == null) {
@@ -88,7 +94,10 @@ public class ChatBotController {
                         .getJSONObject("message")
                         .getString("content");
 
-                Platform.runLater(() -> vbConversation.getChildren().add(new Label(replyText)));
+                Label reply = new Label(replyText);
+                reply.setWrapText(true);
+
+                Platform.runLater(() -> vbConversation.getChildren().add(reply));
 
             } catch (IOException | InterruptedException e) {
                 Platform.runLater(() -> showError("Failed to communicate with API: " + e.getMessage()));

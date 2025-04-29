@@ -62,6 +62,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <AnchorPane fx:id="apChat" layoutX="1429.0" layoutY="262.0" prefHeight="660.0" prefWidth="372.0" />
          </children>
       </AnchorPane>
    </center>
