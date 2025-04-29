@@ -18,7 +18,7 @@ public class Eva extends Application {
         new NavService(primaryStage);
         NavService.navigateTo(Splash);
 //        NavService.navigateTo(MainMenu);
-        NavService.setFullScreen(false);
+        NavService.setFullScreen(true);
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(360);
 //        lockAspectRatio(primaryStage);
