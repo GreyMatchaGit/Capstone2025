@@ -2,6 +2,7 @@ package edu.citu.procrammers.eva.controllers.ADT;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.models.BTInorderIterator;
+import edu.citu.procrammers.eva.models.BinaryTreeIterator;
 import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
 import edu.citu.procrammers.eva.utils.TreeLayoutCalculator;
@@ -13,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,6 +44,8 @@ public class ADTViewController {
 
         Node newNode = BST.insertElement(key);
 
+//        BTInorderIterator iterator = new BTInorderIterator(BST.getRoot());
+
         addNewNodeUI(newNode);
 
 //        BTInorderIterator inorderIterator = new BTInorderIterator(BST.getRoot());
@@ -65,9 +69,6 @@ public class ADTViewController {
             nodeController.setText(strNodeElem);
 
             System.out.println(node.getElement() + " added");
-
-
-
 //            node.x.bind(nodeView.layoutXProperty());
 //            node.y.bind(nodeView.layoutYProperty());
             StackPane stackPane = (StackPane) nodeView;
@@ -87,6 +88,18 @@ public class ADTViewController {
                 nodeView.setLayoutY(newValue.doubleValue());
             });
 
+            if (BST.getRoot() != node) {
+                Line line = new Line();
+
+                line.setStartX(node.getParent().x.doubleValue());
+                line.setStartY(node.getParent().y.doubleValue());
+
+                line.setEndX(node.x.doubleValue());
+                line.setEndY(node.y.doubleValue());
+
+                apMain.getChildren().add(line);
+            }
+
 
 
 //            nodeView.setLayoutX(node.x.getValue());
@@ -100,8 +113,8 @@ public class ADTViewController {
 
     
 
-    private void highlightNodeInView(Node node) {
+//    private void highlightNodeInView(Node node) {
 //        NodeController nodeController = nodeMap.get(node);
 ////        nodeController.getCircle().setStroke(Paint.valueOf("GREEN"));
-    }
+//    }
 }
