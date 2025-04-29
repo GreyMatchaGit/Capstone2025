@@ -21,7 +21,7 @@ public class Eva extends Application {
         NavService.setFullScreen(false);
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(360);
-        lockAspectRatio(primaryStage);
+//        lockAspectRatio(primaryStage);
         primaryStage.show();
     }
 

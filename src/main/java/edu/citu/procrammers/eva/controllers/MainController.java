@@ -62,10 +62,10 @@ public class MainController implements Initializable {
                 double dy = (newHeight - (baseHeight * scaleRatio)) / 2.0;
 
 
-                scaleableGroup.setScaleX(scaleRatio);
-                scaleableGroup.setScaleY(scaleRatio);
-                scaleableGroup.setTranslateX(dx);
-                scaleableGroup.setTranslateY(dy);
+                scaleableGroup.setScaleX(widthRatio);
+                scaleableGroup.setScaleY(heightRatio);
+                scaleableGroup.setTranslateX(0);
+                scaleableGroup.setTranslateY(0);
 
                 System.out.printf("Scale: %.2f | TranslateX: %.2f | TranslateY: %.2f\n", scaleRatio, dx, dy);
             };
