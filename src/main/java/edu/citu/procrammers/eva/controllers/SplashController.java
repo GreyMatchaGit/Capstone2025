@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.KeyFrame;
@@ -20,6 +21,11 @@ public class SplashController {
 
     @FXML
     public void initialize() {
+        animate();
+    }
+
+    private void animate() {
+
         MediaPlayer logoDing = SoundManager.createPreloadedPlayer("sfx/logo_ding.MP3", false);
         imgLogo.setOpacity(0);
         imgLogo.setScaleX(0.5);
@@ -77,7 +83,14 @@ public class SplashController {
                     PauseTransition afterAnimation = new PauseTransition(Duration.seconds(3));
                     afterAnimation.setOnFinished(event -> {
                         SoundManager.stopMusic();
-                        NavService.navigateTo(MainMenu);
+                        if (Database.getInstance().establishConnection() == Database.Error.NO_ERROR) {
+                            NavService.navigateTo(MainMenu);
+                        } else {
+                            // TODO: Add the page for database error. Application must not run without database.
+                            System.out.println(
+                                    "Error screen here."
+                            );
+                        }
                     });
                     afterAnimation.play();
                 });

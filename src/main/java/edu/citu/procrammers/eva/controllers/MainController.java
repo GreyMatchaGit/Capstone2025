@@ -36,6 +36,7 @@ public class MainController implements Initializable {
 
     public void setContentDynamic() {
         primaryStage.setOnShown(event -> {
+            // Get the actual size after rendering
             baseWidth = primaryStage.getWidth();
             baseHeight = primaryStage.getHeight();
 
@@ -43,31 +44,31 @@ public class MainController implements Initializable {
                 double newWidth = primaryStage.getWidth();
                 double newHeight = primaryStage.getHeight();
 
+                // Update base dimensions for fullscreen mode
+                if (primaryStage.isFullScreen()) {
+                    baseWidth = newWidth;
+                    baseHeight = newHeight;
+                }
+
                 if (baseWidth <= 0 || baseHeight <= 0) {
                     System.out.println("Base dimensions not yet valid.");
                     return;
                 }
 
+                // Stretch to fit the window
                 double widthRatio = newWidth / baseWidth;
                 double heightRatio = newHeight / baseHeight;
 
-                double scaleRatio = Math.min(widthRatio, heightRatio);
+                double scaleRatioX = widthRatio;
+                double scaleRatioY = heightRatio;
 
-                if (Double.isNaN(scaleRatio) || Double.isInfinite(scaleRatio)) {
-                    System.out.println("Invalid scale: " + scaleRatio);
-                    return;
-                }
+                // Apply the scaling to stretch content
+                scaleableGroup.setScaleX(scaleRatioX);
+                scaleableGroup.setScaleY(scaleRatioY);
 
-                double dx = (newWidth - (baseWidth * scaleRatio)) / 2.0;
-                double dy = (newHeight - (baseHeight * scaleRatio)) / 2.0;
-
-
-                scaleableGroup.setScaleX(widthRatio);
-                scaleableGroup.setScaleY(heightRatio);
+                // Remove the translation for centering
                 scaleableGroup.setTranslateX(0);
                 scaleableGroup.setTranslateY(0);
-
-                System.out.printf("Scale: %.2f | TranslateX: %.2f | TranslateY: %.2f\n", scaleRatio, dx, dy);
             };
 
             primaryStage.widthProperty().addListener(resizeListener);
