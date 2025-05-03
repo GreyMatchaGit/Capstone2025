@@ -14,11 +14,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.json.JSONObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class ArraylistViewController {
 
+    public VBox vbChat;
+    public TextField tfInput;
+    public Button btnSubmit;
     private double centerX, centerY;
 
     public AnchorPane apVisualizer;
@@ -30,12 +43,15 @@ public class ArraylistViewController {
     private List<VBox> vBoxes;
     private int size, capacity;
 
+    private JSONObject arrayJSON;
+
     public void initialize() {
         arrayList = new ArrayList<>();
         stackPanes = new ArrayList<>();
         vBoxes = new ArrayList<>();
         size=0;
         capacity=0;
+        arrayJSON = new JSONObject();
 
         apVisualizer.widthProperty().addListener((obs, oldVal, newVal) -> {
             double centerX = newVal.doubleValue() / 2;
@@ -54,6 +70,113 @@ public class ArraylistViewController {
                 createBox("");
             }
         });
+
+        btnSubmit.setOnAction(e -> {
+            loadChatbot();
+        });
+    }
+
+    private void loadChatbot() {
+        String input = tfInput.getText().trim();
+        if (input.isEmpty()) { return;}
+
+        tfInput.clear();
+
+        Label chat = new Label(input);
+        chat.setWrapText(true);
+
+        vbChat.getChildren().add(chat);
+
+        String apiKey = System.getenv("OPENAI_API_KEY");
+        if(apiKey == null || apiKey.isEmpty()) {
+            System.out.println("API Key not set");
+            return;
+        }
+
+        JSONObject prompt = readJSON("prompt.json");
+        if(prompt == null) return;
+
+        updateContent(prompt, 1, arrayJSON.toString());
+        updateContent(prompt, 2, input);
+        sendChat(apiKey, prompt);
+    }
+
+    public static void updateContent(JSONObject prompt, int index, String input) {
+        prompt.getJSONArray("messages")
+                .getJSONObject(index)
+                .put("content", input);
+    }
+
+    private void sendChat(String apiKey, JSONObject prompt) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create("https://api.openai.com/v1/chat/completions"))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + apiKey)
+                        .POST(HttpRequest.BodyPublishers.ofString(prompt.toString()))
+                        .build();
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                JSONObject jsonResponse = new JSONObject(response.body());
+                String replyText = jsonResponse
+                        .getJSONArray("choices")
+                        .getJSONObject(0)
+                        .getJSONObject("message")
+                        .getString("content");
+
+                Label reply = new Label(replyText);
+                reply.setWrapText(true);
+                Platform.runLater(() -> vbChat.getChildren().add(reply));
+
+            } catch (IOException | InterruptedException e) {
+                Platform.runLater(() -> System.out.println("Failed to communicate with API: " + e.getMessage()));
+            }
+        });
+    }
+
+    private void writeJSON() {
+        arrayJSON.put("array", arrayList.toString());
+
+        JSONObject prompt = readJSON("prompt.json");
+        if(prompt == null) return;
+
+        try (FileWriter file = new FileWriter("array.json")) {
+            file.write(arrayJSON.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write array.json", e);
+        }
+
+        prompt.getJSONArray("messages")
+                .getJSONObject(1)
+                .put("content", arrayJSON.toString());
+
+        try (FileWriter file = new FileWriter("prompt.json")) {
+            file.write(prompt.toString(2));
+        } catch (IOException e) {
+            System.out.println("Failed to write prompt.json");
+        }
+    }
+
+    private void writePreviousStateJSON(){
+        arrayJSON.put("previousArray", arrayList.toString());
+
+        try (FileWriter file = new FileWriter("array.json")) {
+            file.write(arrayJSON.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write array.json", e);
+        }
+    }
+
+    private JSONObject readJSON(String dir) {
+        try {
+            String content = Files.readString(Paths.get(dir));
+            return new JSONObject(content);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public void onButtonClick(ActionEvent event) {
@@ -118,6 +241,7 @@ public class ArraylistViewController {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
         arrayList.add(num);
+        writeJSON();
 
         if(size == capacity) {
             int additional = (int) Math.ceil(capacity * 0.5);
@@ -158,6 +282,7 @@ public class ArraylistViewController {
         Label l = null;
         if(pos == size+1) {
             arrayList.add(num);
+            writeJSON();
             StackPane sp = stackPanes.get(pos-1);
             for (Node n : sp.getChildren()) {
                 if (n instanceof Label) {
@@ -169,6 +294,7 @@ public class ArraylistViewController {
             }
         } else {
             arrayList.add(pos-1, num);
+            writeJSON();
             for(int i = pos-1; i < stackPanes.size() && i < arrayList.size(); ++i) {
                 for (Node n : stackPanes.get(i).getChildren()) {
                     if (n instanceof Label) {
@@ -191,7 +317,9 @@ public class ArraylistViewController {
 
         if(arrayList.contains(num)) {
             int index = arrayList.indexOf(num);
+            writePreviousStateJSON();
             arrayList.remove(index);
+            writeJSON();
             Rectangle r = null;
             Label l = null;
             for(int i = index; i < stackPanes.size() || i < arrayList.size(); ++i) {
@@ -225,7 +353,9 @@ public class ArraylistViewController {
             return;
         }
 
+        writePreviousStateJSON();
         arrayList.remove(pos-1);
+        writeJSON();
         for(int i = pos-1; i < stackPanes.size() || i < arrayList.size(); ++i) {
             for (Node n : stackPanes.get(i).getChildren()) {
                 if (n instanceof Label) {
@@ -263,7 +393,9 @@ public class ArraylistViewController {
 
     public void onClearOperation() {
         tfPrompt.setText("");
+        writePreviousStateJSON();
         arrayList.clear();
+        writeJSON();
 
         // Highlight Everything
         for(StackPane sp : stackPanes) {

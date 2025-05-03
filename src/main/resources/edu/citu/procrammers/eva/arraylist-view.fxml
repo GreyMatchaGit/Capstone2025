@@ -5,11 +5,12 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ArraylistViewController">
-   <center>
-      <AnchorPane fx:id="apVisualizer" prefHeight="720.0" prefWidth="1280.0">
+   <bottom>
+      <AnchorPane fx:id="apVisualizer" prefHeight="720.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
          <children>
             <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
@@ -22,7 +23,18 @@
                   <Button fx:id="btnClear" mnemonicParsing="false" onAction="#onButtonClick" prefWidth="100.0" text="CLEAR" />
               </items>
             </ToolBar>
+            <AnchorPane layoutY="419.0" prefHeight="301.0" prefWidth="319.0">
+               <children>
+                  <VBox fx:id="vbChat" layoutY="-9.0" prefHeight="275.0" prefWidth="628.0" />
+                  <HBox layoutX="-10.0" layoutY="266.0" prefHeight="50.0" prefWidth="637.0">
+                     <children>
+                        <TextField fx:id="tfInput" prefHeight="53.0" prefWidth="388.0" />
+                        <Button fx:id="btnSubmit" mnemonicParsing="false" text="Button" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
-   </center>
+   </bottom>
 </BorderPane>
