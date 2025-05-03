@@ -3,12 +3,14 @@ package edu.citu.procrammers.eva.controllers.ADT;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
+import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -37,7 +39,7 @@ public class ADTViewController {
 
     public void initialize() {
         initializeSlider();
-
+//        initializeStyles();
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
@@ -186,6 +188,17 @@ public class ADTViewController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void initializeStyles() {
+        Scene scene = NavService.mainController.mainScreen.getScene();
+
+        scene.getStylesheets().add(Eva.class.getResource("styles/ADT-view.css").toExternalForm());
+
+        btnPlay.getStyleClass().addAll("button", "play-button");
+////        btnPlay.setText("Play");
+        btnBackward.getStyleClass().addAll("button", "backward-button");
+        btnForward.getStyleClass().addAll("button", "forward-button");
     }
 //    private void highlightNodeInView(Node node) {
 //        NodeController nodeController = nodeMap.get(node);
