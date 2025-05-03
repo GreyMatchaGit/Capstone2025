@@ -8,12 +8,14 @@ import javafx.scene.shape.Line;
 import java.util.HashMap;
 
 public class DrawEdgeCommand extends Command {
+    int id;
     int startId;
     int endId;
     AnchorPane canvas;
     HashMap<Integer, Node> graphicMap;
 
-    public DrawEdgeCommand(int startId, int endId, AnchorPane canvas, HashMap<Integer, Node> graphicMap) {
+    public DrawEdgeCommand(int id, int startId, int endId, AnchorPane canvas, HashMap<Integer, Node> graphicMap) {
+        this.id = id;
         this.startId = startId;
         this.endId = endId;
         this.canvas = canvas;
@@ -25,7 +27,16 @@ public class DrawEdgeCommand extends Command {
         Node v1 = graphicMap.get(startId);
         Node v2 = graphicMap.get(endId);
 
-        Line line = new Line();
+        Line line;
+
+        if (graphicMap.containsKey(id)) {
+            line = (Line) graphicMap.get(id);
+        }
+        else {
+            System.out.println("creating new ling");
+            line = new Line(startId, endId, startId, endId);
+        }
+
 
         canvas.getChildren().add(line);
 
@@ -59,6 +70,12 @@ public class DrawEdgeCommand extends Command {
 //        line.endXProperty().bind(v2.layoutXProperty());
 //        line.endYProperty().bind(v2.layoutYProperty());
 
+        graphicMap.put(id, line);
         onFinish.run();
     }
+
+    @Override public void undo(Runnable onUndo) {
+        canvas.getChildren().remove(graphicMap.get(id));
+    }
+
 }

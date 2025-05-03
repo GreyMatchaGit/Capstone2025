@@ -23,4 +23,15 @@ public class SetHighlightCommand extends Command {
         }
         onFinished.run();
     }
+
+    @Override public void undo(Runnable onFinished) {
+        if (isOn == 0) {
+            System.out.println("turning on");
+            circle.setStroke(Paint.valueOf("RED"));
+        }
+        else {
+            System.out.println("turning off");
+            circle.setStroke(Paint.valueOf("BLACK"));
+        }
+    }
 }

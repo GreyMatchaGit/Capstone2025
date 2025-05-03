@@ -136,8 +136,8 @@ public class BST extends Tree {
                 parent.setLeft(elem);
                 elem.setParent(parent);
 
-
-                commands.add(am.newCommand(new String[] {"Connect", parentId, childId}));
+                String lineId = Integer.toString(id++);
+                commands.add(am.newCommand(new String[] {"Connect", lineId, parentId, childId}));
 //                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
             }
             else
@@ -161,7 +161,8 @@ public class BST extends Tree {
                 elem.x.set(parent.x.getValue() + WIDTH_DELTA/2);
                 elem.y.set(parent.y.getValue() + HEIGHT_DELTA);
 
-                commands.add(am.newCommand(new String[] {"Connect", parentId, childId}));
+                String lineId = Integer.toString(id++);
+                commands.add(am.newCommand(new String[] {"Connect", lineId, parentId, childId}));
 
                 System.out.printf("Node %d at (%.2f, %.2f)\n", elem.element, elem.x.get(), elem.y.get());
 //                elem.y = parent.y + HEIGHT_DELTA;

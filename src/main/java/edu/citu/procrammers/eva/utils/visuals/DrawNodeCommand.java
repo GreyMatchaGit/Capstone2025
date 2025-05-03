@@ -45,40 +45,28 @@ public class DrawNodeCommand extends Command {
     @Override
     public void execute(Runnable onFinished) {
         try {
-            FXMLLoader loader = new FXMLLoader(Eva.class.getResource("ADT_visuals/node-view.fxml"));
-            Node nodeView = loader.load();
+            StackPane nodeView = (StackPane) graphicMap.get(graphicId);
+            Circle circle;
+            if (nodeView == null) {
+                FXMLLoader loader = new FXMLLoader(Eva.class.getResource("ADT_visuals/node-view.fxml"));
+                nodeView = loader.load();
 
-            NodeController nodeController = loader.getController();
+                NodeController nodeController = loader.getController();
 
-            String strNodeElem = Integer.toString(key);
-            nodeController.setText(strNodeElem);
+                String strNodeElem = Integer.toString(key);
+                nodeController.setText(strNodeElem);
 
-            System.out.println("Node " + key + ", GraphicID: " + graphicId + " added");
-            StackPane stackPane = (StackPane) nodeView;
+                System.out.println("Node " + key + ", GraphicID: " + graphicId + " added");
+                circle  = (Circle)(nodeView.getChildren().getFirst());
+                circle.setRadius(20);
+            }
 
-            Circle circle  = (Circle)(stackPane.getChildren().getFirst());
-            circle.setRadius(20);
+            circle  = (Circle)(nodeView.getChildren().getFirst());
+
 
             canvas.getChildren().add(nodeView);
             nodeView.setLayoutX(x - circle.getRadius());
             nodeView.setLayoutY(y - circle.getRadius());
-
-//            node.x.addListener((observable, oldValue, newValue) -> {
-//                Timeline timeline = new Timeline();
-//                KeyValue kv = new KeyValue(nodeView.layoutXProperty(), newValue.doubleValue() - circle.getRadius());
-//                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
-//                timeline.getKeyFrames().add(kf);
-//                timeline.play();
-//            });
-//
-//            node.y.addListener((observable, oldValue, newValue) -> {
-//                Timeline timeline = new Timeline();
-//                KeyValue kv = new KeyValue(nodeView.layoutYProperty(), newValue.doubleValue());
-//                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
-//                timeline.getKeyFrames().add(kf);
-//                timeline.play();
-//            });
-
 
             graphicMap.put(graphicId, nodeView);
 
@@ -87,5 +75,9 @@ public class DrawNodeCommand extends Command {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override public void undo(Runnable onUndo) {
+        canvas.getChildren().remove(graphicMap.get(graphicId));
     }
 }

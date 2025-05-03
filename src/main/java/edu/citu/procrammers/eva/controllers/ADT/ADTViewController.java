@@ -10,7 +10,9 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -21,16 +23,21 @@ import java.io.IOException;
 
 
 public class ADTViewController {
-    @FXML
-    private AnchorPane apMain;
-    @FXML
-    private Button btnInsert;
-    @FXML
-    private TextField tfInput;
+    @FXML private Button btnBackward;
+    @FXML private Button btnPlay;
+    @FXML private Button btnForward;
+    @FXML private ToggleButton tglIsContinuous;
+    @FXML private Slider sliderSpeed;
+    @FXML private AnchorPane apMain;
+    @FXML private Button btnInsert;
+    @FXML private TextField tfInput;
+
     private BST BST;
     private AnimationManager animationManager;
 
     public void initialize() {
+        initializeSlider();
+
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
@@ -38,14 +45,48 @@ public class ADTViewController {
         });
     }
 
+
+    private void initializeSlider () {
+        sliderSpeed.setShowTickLabels(true);
+        sliderSpeed.setShowTickMarks(true);
+        sliderSpeed.setMin(0);
+        sliderSpeed.setMax(1);
+        sliderSpeed.setValue(.5);
+
+        sliderSpeed.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                System.out.println("Slider change is done. Final value: " + sliderSpeed.getValue());
+                animationManager.setSpeed(sliderSpeed.getValue());
+            }
+        });
+    }
+
+
     @FXML
     private void onButtonInsertClicked() {
+        System.out.println("playing speed: " + animationManager.speed + " seconds ");
         int key = Integer.parseInt(tfInput.textProperty().getValue());
 
         animationManager.commands = BST.insertElement(key);
         animationManager.play();
 //        Node newNode = BST.insertElement(key);
 //        addNewNodeUI(newNode);
+    }
+
+    @FXML private void onButtonBackwardClicked() {
+        animationManager.undo();
+    }
+
+    @FXML private void onButtonPlayClicked() {
+//        animationManager.play();
+    }
+
+    @FXML private void onButtonForwardClick() {
+        animationManager.play();
+    }
+
+    @FXML private void toggleContinuous() {
+        animationManager.isContinuous = !animationManager.isContinuous;
     }
 
     private void addNewNodeUI(Node node) {

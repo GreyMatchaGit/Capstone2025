@@ -18,8 +18,8 @@ public class AnimationManager {
     private Stack<Command> history;
     public HashMap<Integer, Node> objects;
     private int currentIndex;
-    private long speed;
-    private boolean isContinous;
+    public double speed;
+    public boolean isContinuous;
 
     public AnimationManager(AnchorPane canves) {
         this.canves = canves;
@@ -27,7 +27,15 @@ public class AnimationManager {
         history = new Stack<>();
         objects = new HashMap<>();
         currentIndex = 0;
-        isContinous = true;
+        isContinuous = true;
+        speed = .5;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = 1- speed;
+        if (this.speed < .1) {
+            this.speed = .1;
+        }
     }
 
     public Command newCommand(String[] args) {
@@ -59,11 +67,12 @@ public class AnimationManager {
 
                     return new MoveCommand(graphicId, newX, newY, objects);
                 case "CONNECT":
-                    System.out.println("Connect Command creating...") ;
+                    System.out.println("Connect Command creating...");
+                    int lineId = Integer.parseInt(args[++i]);
                     int startId = Integer.parseInt(args[++i]);
                     int endId = Integer.parseInt(args[++i]);
 
-                    return new DrawEdgeCommand(startId, endId, canves, objects);
+                    return new DrawEdgeCommand(lineId, startId, endId, canves, objects);
             }
         }
         return null;
@@ -76,30 +85,35 @@ public class AnimationManager {
     }
 
     public void undo() {
-//        commands.add(history.pop());
+        if (!history.isEmpty()) {
+            System.out.println("Undo Command: ");
+            history.pop().undo(() -> {});
+            currentIndex--;
+        }
     }
 
     public void play() {
-        System.out.println("playing..");
         if (currentIndex >= commands.size()) {
             System.out.println("No more commands to play");
+            history = new Stack<>();
+            commands.clear();
             currentIndex = 0;
             return;
         }
         Command command = commands.get(currentIndex);
+        history.push(command);
         System.out.println("Executing Command: " + command);
 
-        if (isContinous) {
+        if (isContinuous) {
             command.execute(() -> {
                 currentIndex++;
-                PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+                PauseTransition pause = new PauseTransition(Duration.seconds(speed));
                 pause.setOnFinished(e -> play());
                 pause.play();
-
             });
         }
         else {
-//            step();
+            step();
         }
     }
 
