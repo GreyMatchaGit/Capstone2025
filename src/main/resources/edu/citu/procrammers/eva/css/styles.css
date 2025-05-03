@@ -1,0 +1,11 @@
+.text-area {
+    -fx-background-color: transparent;
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.AcademyController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@css/fonts.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.AcademyController">
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
@@ -49,6 +55,64 @@
             <ImageView fx:id="imgSettingsBtn" fitHeight="63.0" fitWidth="71.0" layoutX="1680.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_settings_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text fx:id="txtTopicNum" fill="WHITE" layoutX="466.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="00" textAlignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+            <Text fx:id="txtToppicTitle" fill="WHITE" layoutX="555.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="Topic Title">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+            <TextArea fx:id="taDiscussion" layoutX="457.0" layoutY="283.0" prefHeight="481.0" prefWidth="430.0" styleClass="text-area" stylesheets="@css/styles.css" />
+            <ImageView fx:id="imgViewVisualizer" fitHeight="173.0" fitWidth="407.0" layoutX="1005.0" layoutY="309.0" onMouseClicked="#viewVisualizer" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_view_visualizer.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text layoutX="1008.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Click to view visualizer">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Text>
+            <Text layoutX="1009.0" layoutY="515.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Code snippet">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Text>
+            <StackPane layoutX="1007.0" layoutY="526.0" prefHeight="219.0" prefWidth="397.0">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #4E2D2D;" />
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" stylesheets="@css/styles.css" vbarPolicy="NEVER">
+                     <StackPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </StackPane.margin>
+                     <content>
+                        <TextArea fx:id="taCodeSnippet" prefHeight="199.0" prefWidth="378.0" styleClass="text-area" stylesheets="@css/styles.css" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </StackPane>
+            <ImageView fx:id="imgBackBtn" fitHeight="28.0" fitWidth="82.0" layoutX="458.0" layoutY="788.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_back_page_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="imgNextBtn" fitHeight="28.0" fitWidth="82.0" layoutX="1336.0" layoutY="788.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_next_page_btn.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
