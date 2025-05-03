@@ -3,6 +3,17 @@ package edu.citu.procrammers.eva.models.data_structures;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import static edu.citu.procrammers.eva.controllers.ADT.ADTViewController.*;
 
 public class BST extends Tree {
     public final double w;
@@ -21,6 +32,8 @@ public class BST extends Tree {
     public final double PRINT_VERTICAL_GAP;
     public final int PRINT_HORIZONTAL_GAP;
 
+    public JSONObject tree;
+
     public BST(AnchorPane ap) {
         root = null;
         size = 0;
@@ -38,6 +51,7 @@ public class BST extends Tree {
         WIDTH_DELTA  = 50;
         HEIGHT_DELTA = 50;
         STARTING_Y = 50;
+        tree = new JSONObject();
     }
 
     public void addLeft(Node parent, Node child) {
@@ -50,9 +64,51 @@ public class BST extends Tree {
         child.setParent(parent);
     }
 
+    public void writeIntoJson(){
+        tree.put("root", buildTreeJson(root));
+
+        JSONObject prompt = readJSON("prompt.json");
+        if(prompt == null) return;
+
+        try (FileWriter file = new FileWriter("tree.json")) {
+            file.write(tree.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write tree.json", e);
+        }
+
+        prompt.getJSONArray("messages")
+                .getJSONObject(1)
+                .put("content", tree.toString(2));
+
+
+        try (FileWriter file = new FileWriter("prompt.json")) {
+            file.write(prompt.toString(2));
+        } catch (IOException e) {
+            System.out.println("Failed to write prompt.json");
+        }
+    }
+
+    private JSONObject buildTreeJson(Node n) {
+        if(n == null) return null;
+
+        JSONObject obj = new JSONObject();
+
+        obj.put("element", n.getElement());
+
+        JSONObject left = buildTreeJson(n.getLeft());
+        JSONObject right = buildTreeJson(n.getRight());
+
+        if(left != null) obj.put("left", left);
+        if(right != null) obj.put("right", right);
+
+        return obj;
+    }
+
+
     public Node insertElement(int insertedValue) {
         if (root == null) {
             root = new Node(insertedValue, startingX, STARTING_Y);
+            writeIntoJson();
             return root;
         }
         else {
@@ -89,6 +145,7 @@ public class BST extends Tree {
 //                this.cmd("SetHighlight", elem.graphicID, 0);
                 parent.setLeft(elem);
                 elem.setParent(parent);
+                writeIntoJson();
 //                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
             }
             else
@@ -115,6 +172,7 @@ public class BST extends Tree {
                 System.out.printf("Node %d at (%.2f, %.2f)\n", elem.element, elem.x.get(), elem.y.get());
 //                elem.y = parent.y + HEIGHT_DELTA;
 //                this.cmd("Move", elem.graphicID, elem.x, elem.y);
+                writeIntoJson();
             }
             else {
 //                this.cmd("CreateHighlightCircle", this.highlightID, HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
@@ -185,6 +243,7 @@ public class BST extends Tree {
             }
             if (root == null) {
                 root = newNode;
+                JSONObject tree = new JSONObject();
             }
             size++;
             return newNode;

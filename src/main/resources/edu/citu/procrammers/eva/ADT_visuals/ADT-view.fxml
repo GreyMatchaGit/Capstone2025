@@ -14,11 +14,11 @@
             <TextField fx:id="tfInput" />
         </items>
       </ToolBar>
-      <AnchorPane layoutX="386.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane layoutX="-2.0" layoutY="200.0" prefHeight="200.0" prefWidth="591.0">
          <children>
             <Button fx:id="btnSubmit" layoutY="174.0" mnemonicParsing="false" text="Button" />
             <TextField fx:id="tfChat" layoutX="52.0" layoutY="174.0" />
-            <VBox fx:id="vbChat" prefHeight="173.0" prefWidth="203.0" />
+            <VBox fx:id="vbChat" layoutX="7.0" prefHeight="173.0" prefWidth="591.0" />
          </children>
       </AnchorPane>
    </children>

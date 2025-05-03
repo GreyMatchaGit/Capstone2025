@@ -20,6 +20,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import org.json.JSONObject;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -43,7 +44,6 @@ public class ADTViewController {
     @FXML
     private TextField tfInput;
     private BST BST;
-
 
     public void initialize() {
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -72,9 +72,11 @@ public class ADTViewController {
             return;
         }
 
-        JSONObject prompt = readPrompt();
-        if(prompt == null) {return;}
-        updateContent(prompt, input);
+        JSONObject prompt = readJSON("prompt.json");
+        JSONObject tree = readJSON("tree.json");
+        if(prompt == null) return;
+
+        updateContent(prompt, 2, input);
         sendChat(apiKey, prompt);
 
     }
@@ -99,7 +101,9 @@ public class ADTViewController {
                         .getJSONObject("message")
                         .getString("content");
 
-                Platform.runLater(() -> vbChat.getChildren().add(new Label(replyText)));
+                Label reply = new Label(replyText);
+                reply.setWrapText(true);
+                Platform.runLater(() -> vbChat.getChildren().add(reply));
 
             } catch (IOException | InterruptedException e) {
                 Platform.runLater(() -> System.out.println("Failed to communicate with API: " + e.getMessage()));
@@ -107,15 +111,15 @@ public class ADTViewController {
         });
     }
 
-    private void updateContent(JSONObject prompt, String input) {
+    public static void updateContent(JSONObject prompt, int index, String input) {
         prompt.getJSONArray("messages")
-                .getJSONObject(1)
+                .getJSONObject(index)
                 .put("content", input);
     }
 
-    private JSONObject readPrompt() {
+    public static JSONObject readJSON(String dir) {
         try {
-            String content = Files.readString(Paths.get("prompt.json"));
+            String content = Files.readString(Paths.get(dir));
             return new JSONObject(content);
         } catch (IOException e) {
             return null;
