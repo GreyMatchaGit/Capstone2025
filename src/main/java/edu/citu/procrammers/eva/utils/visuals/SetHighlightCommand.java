@@ -15,11 +15,11 @@ public class SetHighlightCommand extends Command {
     public void execute(Runnable onFinished) {
         if (isOn == 1) {
             System.out.println("turning on");
-            circle.setStroke(Paint.valueOf("RED"));
+            circle.setFill(Paint.valueOf("PINK"));
         }
         else {
             System.out.println("turning off");
-            circle.setStroke(Paint.valueOf("BLACK"));
+            circle.setFill(Paint.valueOf("3366cc"));
         }
         onFinished.run();
     }
@@ -27,11 +27,11 @@ public class SetHighlightCommand extends Command {
     @Override public void undo(Runnable onFinished) {
         if (isOn == 0) {
             System.out.println("turning on");
-            circle.setStroke(Paint.valueOf("RED"));
+            circle.setFill(Paint.valueOf("PINK"));
         }
         else {
             System.out.println("turning off");
-            circle.setStroke(Paint.valueOf("BLACK"));
+            circle.setFill(Paint.valueOf("3366cc"));
         }
     }
 }
