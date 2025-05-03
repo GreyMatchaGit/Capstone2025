@@ -52,10 +52,19 @@ public class ADTViewController {
         sliderSpeed.setMin(0);
         sliderSpeed.setMax(1);
         sliderSpeed.setValue(.5);
+        sliderSpeed.setBlockIncrement(1);
 
         sliderSpeed.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging) {
-                System.out.println("Slider change is done. Final value: " + sliderSpeed.getValue());
+                System.out.println("Slider drag finished. Final value: " + sliderSpeed.getValue());
+                animationManager.setSpeed(sliderSpeed.getValue());
+            }
+        });
+
+// 2. Update after click on the track
+        sliderSpeed.setOnMouseReleased(event -> {
+            if (!sliderSpeed.isValueChanging()) {
+                System.out.println("Slider clicked. Final value: " + sliderSpeed.getValue());
                 animationManager.setSpeed(sliderSpeed.getValue());
             }
         });
@@ -78,7 +87,8 @@ public class ADTViewController {
     }
 
     @FXML private void onButtonPlayClicked() {
-//        animationManager.play();
+        toggleContinuous();
+        animationManager.play();
     }
 
     @FXML private void onButtonForwardClick() {
