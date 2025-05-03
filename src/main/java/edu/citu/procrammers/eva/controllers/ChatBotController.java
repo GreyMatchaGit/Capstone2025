@@ -29,7 +29,11 @@ public class ChatBotController {
         btnSubmit.setOnAction(e -> handleChatSubmit());
         btnClose.setOnAction(e -> NavService.navigateTo(Academy));
     }
-
+/*
+* When clicking the submit button we create an JSONObject instance of prompt.json
+* Then we write our input on prompt.json's user content
+* We then pass our prompt.json with updated values and pass it on the chat request actual params
+*/
     private void handleChatSubmit() {
         String input = tfChatBox.getText().trim();
         if (input.isEmpty()) return;
@@ -58,6 +62,39 @@ public class ChatBotController {
         updatePromptWithInput(promptJson, input);
         sendChatRequest(apiKey, promptJson);
     }
+
+    /*
+    * When implementing trees updatePrompt at index 1 of system messages
+    * Since put() method is only alive at runtime use FileWriter to save the file and view changes.
+    */
+
+    /*
+
+    */
+
+    /*
+    * private void updateTree()
+    *       - in this method we would read the tree recursively
+    *         and wrapping this in a root object
+    *
+    *       tree.put("root", buildTreeJson(root));
+    *
+    *       - we then update prompt.json's content at index 1 of system messages
+    */
+
+    /*
+    * private JSONObject buildTreeJson(Node n)
+    *
+    *   obj.put("element", n.getElement());
+    *
+    *   JSONObject left = buildTreeJson(n.getLeft());
+    *   JSONObject right = buildTreeJson(n.getRight());
+    *
+    *   if(left != null) obj.put("left", left);
+    *   if(right != null) obj.put("right", right);
+    *
+    *   return obj;
+    */
 
     private JSONObject readPromptJson() {
         try {
