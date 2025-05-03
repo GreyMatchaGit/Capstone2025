@@ -17,5 +17,6 @@ public class Constant {
         public static final String Conquest = "conquest-view.fxml";
 
         public static final String Arrays = "arraylist-view.fxml";
+        public static final String Queue = "queue-view.fxml";
     }
 }
