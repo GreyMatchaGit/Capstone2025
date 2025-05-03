@@ -31,22 +31,39 @@ public class AnimationManager {
     }
 
     public Command newCommand(String[] args) {
+        int graphicId;
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].toUpperCase();
             switch (arg) {
                 case "CREATECIRCLE":
-//                    int key = Integer.parseInt(args[++i]);
-//                    double x = Double.parseDouble(args[++i]);
-//                    double y = Double.parseDouble(args[++i]);
-//                    edu.citu.procrammers.eva.models.data_structures.Node node = new edu.citu.procrammers.eva.models.data_structures.Node(key, x, y);
-//                    return new DrawNodeCommand(node, canves);
+                    int key = Integer.parseInt(args[++i]);
+                    graphicId = Integer.parseInt(args[++i]);
+                    double x = Double.parseDouble(args[++i]);
+                    double y = Double.parseDouble(args[++i]);
+                    System.out.println("CREATENODE ID = " + graphicId);
+                    return new DrawNodeCommand(key, graphicId, x, y, canves, objects);
                 case "SETHIGHLIGHT":
-                    int graphicId = Integer.parseInt(args[++i]);
+                    graphicId = Integer.parseInt(args[++i]);
                     int isOn = Integer.parseInt(args[++i]);
 
                     StackPane sp = (StackPane) objects.get(graphicId);
                     Circle circle = (Circle) sp.getChildren().getFirst();
                     return new SetHighlightCommand(isOn, circle);
+                case "MOVE":
+                    graphicId = Integer.parseInt(args[++i]);
+
+                    System.out.println("Move Command: " + graphicId);
+
+                    double newX = Double.parseDouble(args[++i]);
+                    double newY = Double.parseDouble(args[++i]);
+
+                    return new MoveCommand(graphicId, newX, newY, objects);
+                case "CONNECT":
+                    System.out.println("Connect Command creating...") ;
+                    int startId = Integer.parseInt(args[++i]);
+                    int endId = Integer.parseInt(args[++i]);
+
+                    return new DrawEdgeCommand(startId, endId, canves, objects);
             }
         }
         return null;
@@ -70,11 +87,12 @@ public class AnimationManager {
             return;
         }
         Command command = commands.get(currentIndex);
+        System.out.println("Executing Command: " + command);
 
         if (isContinous) {
             command.execute(() -> {
                 currentIndex++;
-                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
                 pause.setOnFinished(e -> play());
                 pause.play();
 

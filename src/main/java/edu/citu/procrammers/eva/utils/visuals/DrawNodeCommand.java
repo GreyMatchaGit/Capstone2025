@@ -18,13 +18,29 @@ import java.util.HashMap;
 public class DrawNodeCommand extends Command {
     HashMap<Integer, Node> graphicMap;
     AnchorPane canvas;
-    edu.citu.procrammers.eva.models.data_structures.Node node;
+//    edu.citu.procrammers.eva.models.data_structures.Node node;
 
-    public DrawNodeCommand(edu.citu.procrammers.eva.models.data_structures.Node node, AnchorPane canvas, HashMap<Integer, Node> graphicMap) {
-        this.node = node;
+    int key;
+    int graphicId;
+    double x;
+    double y;
+
+    public DrawNodeCommand(int key, int graphicId, double x, double y, AnchorPane canvas, HashMap<Integer, Node> graphicMap) {
+//        this.node = node;
+        this.key = key;
+        this.graphicId = graphicId;
+        this.x = x;
+        this.y = y;
+
         this.canvas = canvas;
         this.graphicMap = graphicMap;
     }
+
+//    public DrawNodeCommand(edu.citu.procrammers.eva.models.data_structures.Node node, AnchorPane canvas, HashMap<Integer, Node> graphicMap) {
+//        this.node = node;
+//        this.canvas = canvas;
+//        this.graphicMap = graphicMap;
+//    }
 
     @Override
     public void execute(Runnable onFinished) {
@@ -34,35 +50,37 @@ public class DrawNodeCommand extends Command {
 
             NodeController nodeController = loader.getController();
 
-            String strNodeElem = Integer.toString(node.getElement());
+            String strNodeElem = Integer.toString(key);
             nodeController.setText(strNodeElem);
 
-            System.out.println(node.getElement() + " added");
+            System.out.println("Node " + key + ", GraphicID: " + graphicId + " added");
             StackPane stackPane = (StackPane) nodeView;
+
             Circle circle  = (Circle)(stackPane.getChildren().getFirst());
             circle.setRadius(20);
 
             canvas.getChildren().add(nodeView);
-            nodeView.setLayoutX(node.x.getValue() - circle.getRadius());
-            nodeView.setLayoutY(node.y.getValue() - circle.getRadius());
+            nodeView.setLayoutX(x - circle.getRadius());
+            nodeView.setLayoutY(y - circle.getRadius());
 
-            node.x.addListener((observable, oldValue, newValue) -> {
-                Timeline timeline = new Timeline();
-                KeyValue kv = new KeyValue(nodeView.layoutXProperty(), newValue.doubleValue() - circle.getRadius());
-                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
-                timeline.getKeyFrames().add(kf);
-                timeline.play();
-            });
+//            node.x.addListener((observable, oldValue, newValue) -> {
+//                Timeline timeline = new Timeline();
+//                KeyValue kv = new KeyValue(nodeView.layoutXProperty(), newValue.doubleValue() - circle.getRadius());
+//                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
+//                timeline.getKeyFrames().add(kf);
+//                timeline.play();
+//            });
+//
+//            node.y.addListener((observable, oldValue, newValue) -> {
+//                Timeline timeline = new Timeline();
+//                KeyValue kv = new KeyValue(nodeView.layoutYProperty(), newValue.doubleValue());
+//                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
+//                timeline.getKeyFrames().add(kf);
+//                timeline.play();
+//            });
 
-            node.y.addListener((observable, oldValue, newValue) -> {
-                Timeline timeline = new Timeline();
-                KeyValue kv = new KeyValue(nodeView.layoutYProperty(), newValue.doubleValue());
-                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
-                timeline.getKeyFrames().add(kf);
-                timeline.play();
-            });
 
-            graphicMap.put(node.graphicId, nodeView);
+            graphicMap.put(graphicId, nodeView);
 
             onFinished.run();
 
