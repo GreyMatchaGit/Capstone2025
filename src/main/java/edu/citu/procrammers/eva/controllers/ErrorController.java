@@ -6,12 +6,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public class ErrorController {
-    public static String errorMsg;
-    public ImageView lblErrorMsg;
+    public static String errorMsg = "Error";
+    public Label lblErrorMsg;
     public Pane fadePane;
 
     @FXML
     public void initialize() {
-
+        lblErrorMsg.setText(errorMsg);
     }
 }

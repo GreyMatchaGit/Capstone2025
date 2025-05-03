@@ -12,12 +12,12 @@
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="lblErrorMsg" fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_error_screen.jpg" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="511.0" layoutY="473.0" prefHeight="124.0" prefWidth="895.0" text="Error message here" textAlignment="CENTER">
+            <Label fx:id="lblErrorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="511.0" layoutY="473.0" prefHeight="124.0" prefWidth="895.0" text="Error message here" textAlignment="CENTER">
                <font>
                   <Font size="22.0" />
                </font>
