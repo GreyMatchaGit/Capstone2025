@@ -73,6 +73,12 @@ public class AnimationManager {
                     int endId = Integer.parseInt(args[++i]);
 
                     return new DrawEdgeCommand(lineId, startId, endId, canves, objects);
+                case "DELETE":
+                    System.out.println("Delete Command creating...");
+                    graphicId = Integer.parseInt(args[++i]);
+
+                    return new DeleteCommand(graphicId, canves, objects);
+
             }
         }
         return null;

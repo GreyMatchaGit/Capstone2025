@@ -23,6 +23,8 @@ public class MoveCommand extends Command {
         this.graphicId = graphicId;
         this.newX = newX;
         this.newY = newY;
+        this.prevX = newX;
+        this.prevY = newY;
         this.graphicMap = graphicMap;
     }
 
@@ -32,15 +34,19 @@ public class MoveCommand extends Command {
 //        Circle circle = ((Circle) ((StackPane) node).getChildren().getFirst());
         Node node = graphicMap.get(graphicId);
 
-        this.prevX = node.getLayoutX();
-        this.prevY = node.getLayoutY();
+        if (node != null) {
+            this.prevX = node.getLayoutX();
+            this.prevY = node.getLayoutY();
 
-        KeyValue kvX = new KeyValue(node.layoutXProperty(), newX - 20);
-        KeyValue kvY = new KeyValue(node.layoutYProperty(), newY - 20);
-        KeyFrame kf = new KeyFrame(Duration.millis(300), kvX, kvY); // 300ms animation
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        onFinished.run();
+            KeyValue kvX = new KeyValue(node.layoutXProperty(), newX - 20);
+            KeyValue kvY = new KeyValue(node.layoutYProperty(), newY - 20);
+            KeyFrame kf = new KeyFrame(Duration.millis(300), kvX, kvY); // 300ms animation
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            onFinished.run();
+        }
+
+
     }
 
     @Override public void undo(Runnable onUndo) {

@@ -20,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -33,6 +34,8 @@ public class ADTViewController {
     @FXML private AnchorPane apMain;
     @FXML private Button btnInsert;
     @FXML private TextField tfInput;
+    @FXML private TextField tfDelete;
+    @FXML private Button btnDelete;
 
     private BST BST;
     private AnimationManager animationManager;
@@ -70,6 +73,12 @@ public class ADTViewController {
                 animationManager.setSpeed(sliderSpeed.getValue());
             }
         });
+    }
+
+    @FXML private void onDeleteButtonClicked() {
+        int key = Integer.parseInt(tfDelete.getText());
+        animationManager.commands = BST.deleteElement(key);
+        animationManager.play();
     }
 
 
