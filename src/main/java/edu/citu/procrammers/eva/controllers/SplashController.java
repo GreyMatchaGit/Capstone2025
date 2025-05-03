@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.data.AudioSettings;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
@@ -9,10 +10,10 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+import static edu.citu.procrammers.eva.utils.Constant.Page.ErrorScreen;
 import static edu.citu.procrammers.eva.utils.Constant.Page.MainMenu;
 
 public class SplashController {
@@ -22,6 +23,10 @@ public class SplashController {
     @FXML
     public void initialize() {
         animate();
+
+        AudioSettings settings = SoundManager.loadAudioSettings();
+        SoundManager.setMusicVolume(settings.musicVolume);
+        SoundManager.setSfxVolume(settings.sfxVolume);
     }
 
     private void animate() {
@@ -86,10 +91,8 @@ public class SplashController {
                         if (Database.getInstance().establishConnection() == Database.Error.NO_ERROR) {
                             NavService.navigateTo(MainMenu);
                         } else {
-                            // TODO: Add the page for database error. Application must not run without database.
-                            System.out.println(
-                                    "Error screen here."
-                            );
+                            ErrorController.errorMsg = "Error 404: XAMPP Database not initialized.";
+                            NavService.navigateTo(ErrorScreen);
                         }
                     });
                     afterAnimation.play();

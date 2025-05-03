@@ -17,9 +17,6 @@ public class Eva extends Application {
     public static User currentUser = null;
 
     public static void main(String[] args) {
-        AudioSettings settings = SoundManager.loadAudioSettings();
-        SoundManager.setMusicVolume(settings.musicVolume);
-        SoundManager.setSfxVolume(settings.sfxVolume);
         launch(args);
     }
 
