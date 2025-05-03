@@ -72,7 +72,7 @@ public class ArraylistViewController {
         }
     }
 
-    public int getNum() {
+    private int getNum() {
         String prompt = tfPrompt.getText();
         int num = Integer.MIN_VALUE;
         try {
@@ -85,7 +85,7 @@ public class ArraylistViewController {
         return num;
     }
 
-    public Pair<Integer, Integer> getNumAndPos() {
+    private Pair<Integer, Integer> getNumAndPos() {
         int num = Integer.MIN_VALUE;
         int pos;
 
@@ -108,13 +108,13 @@ public class ArraylistViewController {
         return new Pair<>(pos, num);
     }
 
-    public void updateList(int n) {
+    private void updateList(int n) {
         for(int i=1; i<=n; ++i) {
             createBox("");
         }
     }
 
-    public void addElement() {
+    private void addElement() {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
         arrayList.add(num);
@@ -141,7 +141,7 @@ public class ArraylistViewController {
         size++;
     }
 
-    public void addAtElement() {
+    private void addAtElement() {
         Pair pair = getNumAndPos();
         int num = (int) pair.getValue();
         int pos = (int) pair.getKey();
@@ -185,7 +185,7 @@ public class ArraylistViewController {
         ++size;
     }
 
-    public void removeElement() {
+    private void removeElement() {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
 
@@ -217,7 +217,7 @@ public class ArraylistViewController {
         }
     }
 
-    public void removeAtElement() {
+    private void removeAtElement() {
         int pos = getNum();
 
         if(pos <= 0 || pos > size || pos == Integer.MIN_VALUE) {
@@ -237,7 +237,7 @@ public class ArraylistViewController {
         --size;
     }
 
-    public void searchElement() {
+    private void searchElement() {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
 
@@ -261,7 +261,7 @@ public class ArraylistViewController {
         }
     }
 
-    public void onClearOperation() {
+    private void onClearOperation() {
         tfPrompt.setText("");
         arrayList.clear();
 
@@ -295,7 +295,7 @@ public class ArraylistViewController {
 
 
     // Animation utils
-    public void createBox(String num) {
+    private void createBox(String num) {
         Rectangle rect = new Rectangle(50, 50);
         rect.setFill(Color.WHITE);
         rect.setStroke(Color.BLACK);
@@ -318,24 +318,20 @@ public class ArraylistViewController {
         shiftX(-25);
         capacity++;
 
-        // Create fade-in animation
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), vbox);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.setCycleCount(1);
 
-        // Create slide-down animation
         TranslateTransition slideDown = new TranslateTransition(Duration.seconds(1), vbox);
         slideDown.setByY(100); // Move down by 100 units
         slideDown.setCycleCount(1);
 
-        // Play both animations in sequence
         fadeIn.setOnFinished(event -> slideDown.play());
         fadeIn.play();
     }
 
-    public void highlightNode(Rectangle r, Label l) {
-        // Create color change animation (black to orange and back)
+    private void highlightNode(Rectangle r, Label l) {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO,
                         new KeyValue(r.strokeProperty(), Color.BLACK),
@@ -355,33 +351,30 @@ public class ArraylistViewController {
         timeline.play();
     }
 
-    public void destroyBox(VBox vbox) {
+    private void destroyBox(VBox vbox) {
 
-        // Fadeout animation
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), vbox);
-        fadeOut.setFromValue(1); // Start from transparent
-        fadeOut.setToValue(0);   // End at fully visible
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
         fadeOut.setCycleCount(1);
 
-        // Create slide-up animation
         TranslateTransition slideUp = new TranslateTransition(Duration.seconds(1), vbox);
         slideUp.setByY(-100);
         slideUp.setCycleCount(1);
 
-        // Play both animations in sequence
         slideUp.setOnFinished(event -> fadeOut.play());
         slideUp.play();
 
         fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
     }
 
-    public void shiftX(int val) {
+    private void shiftX(int val) {
         for(VBox vb : vBoxes) {
             vb.setLayoutX(vb.getLayoutX() + val);
         }
     }
 
-    public void phantomDelete(double x, double y, String num, int indexing) {
+    private void phantomDelete(double x, double y, String num, int indexing) {
         Rectangle rect = new Rectangle(50, 50);
         rect.setFill(Color.WHITE);
         rect.setStroke(Color.BLACK);
