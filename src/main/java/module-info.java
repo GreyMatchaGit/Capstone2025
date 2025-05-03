@@ -1,6 +1,7 @@
 module edu.citu.procrammers.eva {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
     opens edu.citu.procrammers.eva to javafx.fxml;
@@ -16,4 +17,7 @@ module edu.citu.procrammers.eva {
 
     opens edu.citu.procrammers.eva.models.data_structures to javafx.fxml;
     exports edu.citu.procrammers.eva.models.data_structures;
+
+    opens edu.citu.procrammers.eva.utils.visuals to javafx.fxml;
+    exports edu.citu.procrammers.eva.utils.visuals;
 }

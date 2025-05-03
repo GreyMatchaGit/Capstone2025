@@ -1,12 +1,19 @@
 package edu.citu.procrammers.eva.models.data_structures;
 
-import javafx.beans.property.DoubleProperty;
+import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
+import edu.citu.procrammers.eva.utils.visuals.Command;
+import edu.citu.procrammers.eva.utils.visuals.DrawNodeCommand;
+import edu.citu.procrammers.eva.utils.visuals.SetHighlightCommand;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Line;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BST extends Tree {
     public final double w;
     public final double h;
+
+    private AnchorPane canvas;
 
     public final double startingX;
     public final double first_print_pos_y;
@@ -21,11 +28,14 @@ public class BST extends Tree {
     public final double PRINT_VERTICAL_GAP;
     public final int PRINT_HORIZONTAL_GAP;
 
-    public BST(AnchorPane ap) {
+    private int id;
+    public BST(AnimationManager animationManager, double width, double height, AnchorPane canvas) {
+        super(animationManager, width, height);
+        this.canvas = canvas;
         root = null;
         size = 0;
-        w = ap.getWidth();
-        h = ap.getHeight();
+        w = width;
+        h = height;
 
         FIRST_PRINT_POS_X  = 50;
         PRINT_VERTICAL_GAP  = 20;
@@ -37,8 +47,11 @@ public class BST extends Tree {
 
         WIDTH_DELTA  = 50;
         HEIGHT_DELTA = 50;
-        STARTING_Y = 50;
+        STARTING_Y = 80;
+
+        id = 0;
     }
+
 
     public void addLeft(Node parent, Node child) {
         parent.setLeft(child);
@@ -50,21 +63,31 @@ public class BST extends Tree {
         child.setParent(parent);
     }
 
-    public Node insertElement(int insertedValue) {
+    public List<Command> insertElement(int insertedValue) {
+        List<Command> commands = new ArrayList<>();
+
         if (root == null) {
-            root = new Node(insertedValue, startingX, STARTING_Y);
-            return root;
+            root = new Node(insertedValue, id++, startingX, STARTING_Y);
+            commands.add(new DrawNodeCommand(root, canvas, am.objects));
         }
         else {
-            Node insertElem = new Node(insertedValue, 100, 100);
-            insert(insertElem, root);
+            Node insertElem = new Node(insertedValue, id++, 100, 100);
+            insert(insertElem, root, commands);
             resizeTree();
-            return insertElem;
+            commands.add(new DrawNodeCommand(insertElem, canvas, am.objects));
         }
 
+        return commands;
     }
 
-    private void insert(Node elem, Node parent) {
+    private void insert(Node elem, Node parent, List<Command> commands) {
+        String parentId = Integer.toString(parent.graphicId);
+
+        commands.add(am.newCommand(new String[] {
+                "SetHighlight",
+                parentId,
+                Integer.toString(1),
+        }));
 //        this.cmd("SetHighlight", tree.graphicID , 1);
 //        this.cmd("SetHighlight", elem.graphicID , 1);
 
@@ -77,6 +100,12 @@ public class BST extends Tree {
 //            this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");
 //        }
 //        this.cmd("Step");
+
+        commands.add(am.newCommand(new String[] {
+                "SetHighlight",
+                parentId,
+                Integer.toString(0),
+        }));
 //        this.cmd("SetHighlight", tree.graphicID, 0);
 //        this.cmd("SetHighlight", elem.graphicID, 0);
 
@@ -97,7 +126,7 @@ public class BST extends Tree {
 //                this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
 //                this.cmd("Step");
 //                this.cmd("Delete", this.highlightID);
-                this.insert(elem, parent.getLeft());
+                this.insert(elem, parent.getLeft(), commands);
             }
         }
         else
@@ -121,7 +150,7 @@ public class BST extends Tree {
 //                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
 //                this.cmd("Step");
 //                this.cmd("Delete", this.highlightID);
-                this.insert(elem, parent.getRight());
+                this.insert(elem, parent.getRight(), commands);
             }
         }
     }

@@ -1,12 +1,12 @@
 package edu.citu.procrammers.eva.controllers.ADT;
 
 import edu.citu.procrammers.eva.Eva;
-import edu.citu.procrammers.eva.models.BTInorderIterator;
-import edu.citu.procrammers.eva.models.BinaryTreeIterator;
 import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
-import edu.citu.procrammers.eva.utils.TreeLayoutCalculator;
-import javafx.event.ActionEvent;
+import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -15,10 +15,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ADTViewController {
@@ -29,12 +28,13 @@ public class ADTViewController {
     @FXML
     private TextField tfInput;
     private BST BST;
-
+    private AnimationManager animationManager;
 
     public void initialize() {
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
-            BST = new BST(apMain);
+            animationManager = new AnimationManager(apMain);
+            BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
         });
     }
 
@@ -42,21 +42,10 @@ public class ADTViewController {
     private void onButtonInsertClicked() {
         int key = Integer.parseInt(tfInput.textProperty().getValue());
 
-        Node newNode = BST.insertElement(key);
-
-//        BTInorderIterator iterator = new BTInorderIterator(BST.getRoot());
-
-        addNewNodeUI(newNode);
-
-//        BTInorderIterator inorderIterator = new BTInorderIterator(BST.getRoot());
-//
-//        Node curr = null;
-//        if (inorderIterator.hasNext()) {
-//            curr = inorderIterator.next();
-//            highlightNodeInView(curr);  // Custom method to update the visual state
-//        }
-//
-//        addNewNodeUI(curr);
+        animationManager.commands = BST.insertElement(key);
+        animationManager.play();
+//        Node newNode = BST.insertElement(key);
+//        addNewNodeUI(newNode);
     }
 
     private void addNewNodeUI(Node node) {
@@ -69,50 +58,84 @@ public class ADTViewController {
             nodeController.setText(strNodeElem);
 
             System.out.println(node.getElement() + " added");
-//            node.x.bind(nodeView.layoutXProperty());
-//            node.y.bind(nodeView.layoutYProperty());
             StackPane stackPane = (StackPane) nodeView;
             Circle circle  = (Circle)(stackPane.getChildren().getFirst());
             circle.setRadius(20);
 
             apMain.getChildren().add(nodeView);
-            nodeView.setLayoutX(node.x.getValue());
-            nodeView.setLayoutY(node.y.getValue());
+            nodeView.setLayoutX(node.x.getValue() - circle.getRadius());
+            nodeView.setLayoutY(node.y.getValue() - circle.getRadius());
 
-            node.x.addListener((observable, oldvalue, newValue) -> {
-                nodeView.setLayoutX(newValue.doubleValue());
-                System.out.printf("Node %d: x = %.2f\n", node.getElement(), newValue.doubleValue());
+            node.x.addListener((observable, oldValue, newValue) -> {
+                Timeline timeline = new Timeline();
+                KeyValue kv = new KeyValue(nodeView.layoutXProperty(), newValue.doubleValue() - circle.getRadius());
+                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
+                timeline.getKeyFrames().add(kf);
+                timeline.play();
             });
 
-            node.y.addListener((observable, oldvalue, newValue) -> {
-                nodeView.setLayoutY(newValue.doubleValue());
+            node.y.addListener((observable, oldValue, newValue) -> {
+                Timeline timeline = new Timeline();
+                KeyValue kv = new KeyValue(nodeView.layoutYProperty(), newValue.doubleValue());
+                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
+                timeline.getKeyFrames().add(kf);
+                timeline.play();
             });
 
             if (BST.getRoot() != node) {
                 Line line = new Line();
 
-                line.setStartX(node.getParent().x.doubleValue());
-                line.setStartY(node.getParent().y.doubleValue());
+                // Bind the startX and startY to the parent's position
+                line.setStartX(node.getParent().x.get());
+                node.getParent().x.addListener((obs, oldX, newX) -> {
+                    Timeline timeline = new Timeline();
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
+                            new KeyValue(line.startXProperty(), newX.doubleValue())));
+                    timeline.play();
+                });
+                line.setStartY(node.getParent().y.get());
+                node.getParent().y.addListener((obs, oldX, newX) -> {
+                    Timeline timeline = new Timeline();
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
+                            new KeyValue(line.startYProperty(), newX.doubleValue())));
+                    timeline.play();
+                });
 
-                line.setEndX(node.x.doubleValue());
-                line.setEndY(node.y.doubleValue());
+                // Initialize endX and endY
+                line.setEndX(node.x.get());
+                line.setEndY(node.y.get());
 
+                node.getParent().x.addListener((obs, oldX, newX) -> {
+                    Timeline timeline = new Timeline();
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
+                            new KeyValue(line.startXProperty(), newX.doubleValue())));
+                    timeline.play();
+                });
+
+
+                node.x.addListener((obs, oldX, newX) -> {
+                    Timeline timeline = new Timeline();
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
+                            new KeyValue(line.endXProperty(), newX.doubleValue())));
+                    timeline.play();
+                });
+
+                // Animate endY when node.y changes
+                node.y.addListener((obs, oldY, newY) -> {
+                    Timeline timeline = new Timeline();
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
+                            new KeyValue(line.endYProperty(), newY.doubleValue())));
+                    timeline.play();
+                });
                 apMain.getChildren().add(line);
+                line.toBack();
             }
-
-
-
-//            nodeView.setLayoutX(node.x.getValue());
-//            nodeView.setLayoutY(node.y.getValue());
 
             System.out.printf("Node %d at (%.2f, %.2f)\n", node.getElement(), node.x.get(), node.y.get());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-    
-
 //    private void highlightNodeInView(Node node) {
 //        NodeController nodeController = nodeMap.get(node);
 ////        nodeController.getCircle().setStroke(Paint.valueOf("GREEN"));

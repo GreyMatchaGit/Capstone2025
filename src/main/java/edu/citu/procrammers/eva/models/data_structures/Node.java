@@ -4,6 +4,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
 public class Node {
+    public int graphicId;
     int element;
     public DoubleProperty x;
     public DoubleProperty y;
@@ -21,7 +22,8 @@ public class Node {
         rightWidth = 0;
     }
 
-    public Node(int element, double x, double y) {
+    public Node(int element, int graphicId, double x, double y) {
+        this.graphicId = graphicId;
         this.element = element;
         this.x = new SimpleDoubleProperty(x);
         this.y = new SimpleDoubleProperty(y);
