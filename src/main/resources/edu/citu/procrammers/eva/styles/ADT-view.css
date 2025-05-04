@@ -1,0 +1,23 @@
+.button {
+    -fx-background-color: transparent;
+    -fx-background-size: 24px 24px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 10;
+}
+
+.play-button {
+    -fx-background-image: url("../icons/play-icon.png");
+}
+
+.pause-button {
+    -fx-background-image: url("../icons/pause-icon.png");
+}
+
+.next-button {
+    -fx-background-image: url("../icons/forward-icon.png");
+}
+
+.back-button {
+    -fx-background-image: url("../icons/backward-icon.png");
+}

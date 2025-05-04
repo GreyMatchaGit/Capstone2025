@@ -9,17 +9,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="apMain" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ADT.ADTViewController">
+<AnchorPane fx:id="apMain" prefHeight="400.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ADT.ADTViewController">
    <children>
       <ToolBar layoutX="-3.0" layoutY="318.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <items>
             <HBox alignment="CENTER">
                <children>
                 <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onButtonInsertClicked" text="Insert" />
-                  <TextField fx:id="tfInput" />
+                  <TextField fx:id="tfInput" prefHeight="26.0" prefWidth="95.0" />
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteButtonClicked" text="Delete" />
+                  <TextField fx:id="tfDelete" prefHeight="26.0" prefWidth="77.0" />
                   <VBox alignment="CENTER">
                      <children>
-                        <Slider fx:id="sliderSpeed"/>
+                        <Slider fx:id="sliderSpeed" />
                         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0">
                            <children>
                               <Button fx:id="btnBackward" mnemonicParsing="false" onAction="#onButtonBackwardClicked" text="&lt;&lt;" />

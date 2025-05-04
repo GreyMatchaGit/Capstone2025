@@ -14,6 +14,8 @@ public class Node {
     public double leftWidth;
     public double rightWidth;
 
+    public int lineId;
+
     public Node(int element) {
         x = new SimpleDoubleProperty(0);
         y = new SimpleDoubleProperty(0);

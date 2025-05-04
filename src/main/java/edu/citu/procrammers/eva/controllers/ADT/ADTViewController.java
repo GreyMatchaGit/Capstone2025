@@ -3,12 +3,14 @@ package edu.citu.procrammers.eva.controllers.ADT;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
+import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -18,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -31,13 +34,15 @@ public class ADTViewController {
     @FXML private AnchorPane apMain;
     @FXML private Button btnInsert;
     @FXML private TextField tfInput;
+    @FXML private TextField tfDelete;
+    @FXML private Button btnDelete;
 
     private BST BST;
     private AnimationManager animationManager;
 
     public void initialize() {
         initializeSlider();
-
+//        initializeStyles();
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
@@ -68,6 +73,12 @@ public class ADTViewController {
                 animationManager.setSpeed(sliderSpeed.getValue());
             }
         });
+    }
+
+    @FXML private void onDeleteButtonClicked() {
+        int key = Integer.parseInt(tfDelete.getText());
+        animationManager.commands = BST.deleteElement(key);
+        animationManager.play();
     }
 
 
@@ -186,6 +197,17 @@ public class ADTViewController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void initializeStyles() {
+        Scene scene = NavService.mainController.mainScreen.getScene();
+
+        scene.getStylesheets().add(Eva.class.getResource("styles/ADT-view.css").toExternalForm());
+
+        btnPlay.getStyleClass().addAll("button", "play-button");
+////        btnPlay.setText("Play");
+        btnBackward.getStyleClass().addAll("button", "backward-button");
+        btnForward.getStyleClass().addAll("button", "forward-button");
     }
 //    private void highlightNodeInView(Node node) {
 //        NodeController nodeController = nodeMap.get(node);
