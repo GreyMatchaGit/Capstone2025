@@ -1,12 +1,19 @@
 package edu.citu.procrammers.eva.models.data_structures;
 
-import javafx.beans.property.DoubleProperty;
+import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
+import edu.citu.procrammers.eva.utils.visuals.Command;
+import edu.citu.procrammers.eva.utils.visuals.DrawNodeCommand;
+import edu.citu.procrammers.eva.utils.visuals.SetHighlightCommand;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Line;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BST extends Tree {
     public final double w;
     public final double h;
+
+    private AnchorPane canvas;
 
     public final double startingX;
     public final double first_print_pos_y;
@@ -21,11 +28,14 @@ public class BST extends Tree {
     public final double PRINT_VERTICAL_GAP;
     public final int PRINT_HORIZONTAL_GAP;
 
-    public BST(AnchorPane ap) {
+    private int id;
+    public BST(AnimationManager animationManager, double width, double height, AnchorPane canvas) {
+        super(animationManager, width, height);
+        this.canvas = canvas;
         root = null;
         size = 0;
-        w = ap.getWidth();
-        h = ap.getHeight();
+        w = width;
+        h = height;
 
         FIRST_PRINT_POS_X  = 50;
         PRINT_VERTICAL_GAP  = 20;
@@ -37,8 +47,11 @@ public class BST extends Tree {
 
         WIDTH_DELTA  = 50;
         HEIGHT_DELTA = 50;
-        STARTING_Y = 50;
+        STARTING_Y = 80;
+
+        id = 0;
     }
+
 
     public void addLeft(Node parent, Node child) {
         parent.setLeft(child);
@@ -50,21 +63,48 @@ public class BST extends Tree {
         child.setParent(parent);
     }
 
-    public Node insertElement(int insertedValue) {
+    public List<Command> insertElement(int insertedValue) {
+        List<Command> commands = new ArrayList<>();
+        String insertee = Integer.toString(insertedValue);
+
+        String graphicId;
+        String x = Double.toString(startingX);
+        String y = Double.toString(STARTING_Y);
+
         if (root == null) {
-            root = new Node(insertedValue, startingX, STARTING_Y);
-            return root;
+            root = new Node(insertedValue, id++, startingX, STARTING_Y);
+            graphicId = Integer.toString(root.graphicId);
+            System.out.println("Command Creation: id = " + graphicId);
+            commands.add(am.newCommand(new String[] {"CreateCircle", insertee, graphicId, x, y}));
         }
         else {
-            Node insertElem = new Node(insertedValue, 100, 100);
-            insert(insertElem, root);
-            resizeTree();
-            return insertElem;
+            Node insertElem = new Node(insertedValue, id++, 100, 100);
+            graphicId = Integer.toString(insertElem.graphicId);
+            System.out.println("Command Creation: id = " + graphicId);
+
+            x = Double.toString(100);
+            y = Double.toString(100);
+
+            commands.add(am.newCommand(new String[] {"CreateCircle", insertee, graphicId, x, y}));
+
+            insert(insertElem, root, commands);
+
+            resizeTree(commands);
+
         }
 
+        return commands;
     }
 
-    private void insert(Node elem, Node parent) {
+    private void insert(Node elem, Node parent, List<Command> commands) {
+        String parentId = Integer.toString(parent.graphicId);
+        String childId = Integer.toString(elem.graphicId);
+
+        commands.add(am.newCommand(new String[] {
+                "SetHighlight",
+                parentId,
+                Integer.toString(1),
+        }));
 //        this.cmd("SetHighlight", tree.graphicID , 1);
 //        this.cmd("SetHighlight", elem.graphicID , 1);
 
@@ -77,6 +117,12 @@ public class BST extends Tree {
 //            this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");
 //        }
 //        this.cmd("Step");
+
+        commands.add(am.newCommand(new String[] {
+                "SetHighlight",
+                parentId,
+                Integer.toString(0),
+        }));
 //        this.cmd("SetHighlight", tree.graphicID, 0);
 //        this.cmd("SetHighlight", elem.graphicID, 0);
 
@@ -89,6 +135,9 @@ public class BST extends Tree {
 //                this.cmd("SetHighlight", elem.graphicID, 0);
                 parent.setLeft(elem);
                 elem.setParent(parent);
+
+                String lineId = Integer.toString(id++);
+                commands.add(am.newCommand(new String[] {"Connect", lineId, parentId, childId}));
 //                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
             }
             else
@@ -97,7 +146,7 @@ public class BST extends Tree {
 //                this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
 //                this.cmd("Step");
 //                this.cmd("Delete", this.highlightID);
-                this.insert(elem, parent.getLeft());
+                this.insert(elem, parent.getLeft(), commands);
             }
         }
         else
@@ -112,6 +161,9 @@ public class BST extends Tree {
                 elem.x.set(parent.x.getValue() + WIDTH_DELTA/2);
                 elem.y.set(parent.y.getValue() + HEIGHT_DELTA);
 
+                String lineId = Integer.toString(id++);
+                commands.add(am.newCommand(new String[] {"Connect", lineId, parentId, childId}));
+
                 System.out.printf("Node %d at (%.2f, %.2f)\n", elem.element, elem.x.get(), elem.y.get());
 //                elem.y = parent.y + HEIGHT_DELTA;
 //                this.cmd("Move", elem.graphicID, elem.x, elem.y);
@@ -121,12 +173,12 @@ public class BST extends Tree {
 //                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
 //                this.cmd("Step");
 //                this.cmd("Delete", this.highlightID);
-                this.insert(elem, parent.getRight());
+                this.insert(elem, parent.getRight(), commands);
             }
         }
     }
 
-    private void resizeTree() {
+    private void resizeTree(List<Command> commands) {
         double startingPoint  = this.startingX;
         this.resizeWidths(this.root);
         if (this.root != null) {
@@ -138,8 +190,26 @@ public class BST extends Tree {
             }
 
             this.setNewPositions(this.root, startingPoint, STARTING_Y, 0);
-//            this.animateNewPositions(this.treeRoot);
+            this.animateNewPositions(root, commands);
 //            this.cmd("Step");
+        }
+    }
+
+    private void animateNewPositions(Node node, List<Command> commands) {
+        if (node != null) {
+            String graphicId = Integer.toString(node.graphicId);
+
+            String newX = Double.toString(node.x.get());
+            String newY = Double.toString(node.y.get());
+//            System.out.println("Moving: " + graphicId);
+            commands.add(am.newCommand(new String[] {
+                    "Move",
+                    graphicId,
+                    newX,
+                    newY
+            }));
+            animateNewPositions(node.getLeft(), commands);
+            animateNewPositions(node.getRight(), commands);
         }
     }
 
