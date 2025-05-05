@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -85,7 +86,7 @@ public class ChatBotController {
             return;
         }
 
-        JSONObject promptJSON = readJSON(PROMPT_PATH);
+        JSONObject promptJSON = ChatService.readJSON(PROMPT_PATH);
         if (promptJSON == null) {
             showError("Error reading prompt.json.");
             return;
@@ -93,15 +94,6 @@ public class ChatBotController {
 
         updatePrompt(promptJSON, 2, input);
         sendChatRequest(apiKey, promptJSON);
-    }
-
-    public static JSONObject readJSON(String path) {
-        try {
-            String content = Files.readString(Paths.get(path));
-            return new JSONObject(content);
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     private void updatePrompt(JSONObject promptJSON, int index, String input) {
@@ -141,26 +133,7 @@ public class ChatBotController {
         });
     }
 
-    public static void updateData(JSONObject dataJSON){
-        JSONObject prompt = readJSON(PROMPT_PATH);
-        if(prompt == null) return;
 
-        try (FileWriter file = new FileWriter(DATA_PATH)) {
-            file.write(dataJSON.toString(2));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write data.json", e);
-        }
-
-        prompt.getJSONArray("messages")
-                .getJSONObject(1)
-                .put("content", dataJSON.toString());
-
-        try (FileWriter file = new FileWriter(PROMPT_PATH)) {
-            file.write(prompt.toString(2));
-        } catch (IOException e) {
-            System.out.println("Failed to write prompt.json");
-        }
-    }
 
     private void showError(String message) {
         System.out.println(message);

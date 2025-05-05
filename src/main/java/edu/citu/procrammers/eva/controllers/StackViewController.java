@@ -1,6 +1,7 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.Eva;
+import edu.citu.procrammers.eva.utils.ChatService;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -66,34 +67,17 @@ public class StackViewController {
             pointY = apVisualizer.getHeight() * 0.9;
         });
 
-        imgChatbotBtn.setOnMouseClicked(e -> { loadChatbot(); });
-    }
-
-    private void loadChatbot() {
-        try{
-            FXMLLoader loader = new FXMLLoader(Eva.class.getResource(Chatbot));
-            BorderPane chatbotUI = loader.load();
-            chatBotController = loader.getController();
-            chatBotController.setParentContainer(apChat);
-            apChat.getChildren().setAll(chatbotUI);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        imgChatbotBtn.setOnMouseClicked(e -> { ChatService.loadChatbot(chatBotController, apChat); });
     }
 
     private void writeDataJSON() {
         dataJSON.put("stack", stack.toString());
-        ChatBotController.updateData(dataJSON);
+        ChatService.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON(){
         dataJSON.put("previousStack", stack.toString());
-
-        try (FileWriter file = new FileWriter(DATA_PATH)) {
-            file.write(dataJSON.toString(2));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write data.json", e);
-        }
+        ChatService.fileWriter(dataJSON, DATA_PATH);
     }
 
     public void onButtonClick(ActionEvent e) {
