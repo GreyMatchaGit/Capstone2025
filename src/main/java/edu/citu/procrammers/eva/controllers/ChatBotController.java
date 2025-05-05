@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -138,6 +139,27 @@ public class ChatBotController {
                 Platform.runLater(() -> showError("Failed to communicate with API: " + e.getMessage()));
             }
         });
+    }
+
+    public static void updateData(JSONObject dataJSON){
+        JSONObject prompt = readJSON(PROMPT_PATH);
+        if(prompt == null) return;
+
+        try (FileWriter file = new FileWriter(DATA_PATH)) {
+            file.write(dataJSON.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write data.json", e);
+        }
+
+        prompt.getJSONArray("messages")
+                .getJSONObject(1)
+                .put("content", dataJSON.toString());
+
+        try (FileWriter file = new FileWriter(PROMPT_PATH)) {
+            file.write(prompt.toString(2));
+        } catch (IOException e) {
+            System.out.println("Failed to write prompt.json");
+        }
     }
 
     private void showError(String message) {

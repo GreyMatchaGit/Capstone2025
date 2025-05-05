@@ -1,23 +1,34 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.Eva;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.json.JSONObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Stack;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class StackViewController {
     public Button btnPush, btnPop, btnTop, btnClear;
     public AnchorPane apVisualizer;
     public TextField tfPrompt;
+    public ImageView imgChatbotBtn;
+    public AnchorPane apChat;
 
     private double centerX, centerY, pointY, startY;
 
@@ -27,11 +38,16 @@ public class StackViewController {
     private ParallelTransition pt;
     private double originalScaleX, originalScaleY;
 
+    public JSONObject dataJSON;
+
+    public ChatBotController chatBotController;
+
     public void initialize() {
         stack = new Stack<>();
         stackPanes = new Stack<>();
         labels = new Stack<>();
         pt = null;
+        dataJSON = new JSONObject();
 
         // For Animation purposes
         startY = 100;
@@ -49,6 +65,35 @@ public class StackViewController {
             centerY = apVisualizer.getHeight() / 2;
             pointY = apVisualizer.getHeight() * 0.9;
         });
+
+        imgChatbotBtn.setOnMouseClicked(e -> { loadChatbot(); });
+    }
+
+    private void loadChatbot() {
+        try{
+            FXMLLoader loader = new FXMLLoader(Eva.class.getResource(Chatbot));
+            BorderPane chatbotUI = loader.load();
+            chatBotController = loader.getController();
+            chatBotController.setParentContainer(apChat);
+            apChat.getChildren().setAll(chatbotUI);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeDataJSON() {
+        dataJSON.put("stack", stack.toString());
+        ChatBotController.updateData(dataJSON);
+    }
+
+    private void writePreviousDataJSON(){
+        dataJSON.put("previousStack", stack.toString());
+
+        try (FileWriter file = new FileWriter(DATA_PATH)) {
+            file.write(dataJSON.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write data.json", e);
+        }
     }
 
     public void onButtonClick(ActionEvent e) {
@@ -99,6 +144,7 @@ public class StackViewController {
         this.originalScaleY = sp.getScaleY();
 
         stack.push(num);
+        writeDataJSON();
         stackPanes.push(sp);
         ft.play();
         pt.play();
@@ -108,7 +154,9 @@ public class StackViewController {
     private void popElement() {
         if (!stack.isEmpty() && !stackPanes.isEmpty()) {
             StackPane sp = stackPanes.pop();
+            writePreviousDataJSON();
             stack.pop();
+            writeDataJSON();
             labels.pop();
             FadeTransition ft = fadeOut(sp);
             TranslateTransition tt = slideUp(sp);

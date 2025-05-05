@@ -31,8 +31,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Chatbot;
-import static edu.citu.procrammers.eva.utils.Constant.Page.PROMPT_PATH;
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class ArraylistViewController {
 
@@ -95,31 +94,13 @@ public class ArraylistViewController {
 
     private void writeDataJSON() {
         dataJSON.put("array", arrayList.toString());
-
-        JSONObject prompt = ChatBotController.readJSON(PROMPT_PATH);
-        if(prompt == null) return;
-
-        try (FileWriter file = new FileWriter("data.json")) {
-            file.write(dataJSON.toString(2));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write data.json", e);
-        }
-
-        prompt.getJSONArray("messages")
-                .getJSONObject(1)
-                .put("content", dataJSON.toString());
-
-        try (FileWriter file = new FileWriter("prompt.json")) {
-            file.write(prompt.toString(2));
-        } catch (IOException e) {
-            System.out.println("Failed to write prompt.json");
-        }
+        ChatBotController.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON(){
         dataJSON.put("previousArray", arrayList.toString());
 
-        try (FileWriter file = new FileWriter("data.json")) {
+        try (FileWriter file = new FileWriter(DATA_PATH)) {
             file.write(dataJSON.toString(2));
         } catch (IOException e) {
             throw new RuntimeException("Failed to write data.json", e);
