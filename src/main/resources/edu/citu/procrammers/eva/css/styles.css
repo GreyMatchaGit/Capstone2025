@@ -1,0 +1,64 @@
+.text-area,
+.text-area .viewport,
+.text-area .content  {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-prompt-text-fill: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane,
+.scroll-pane .viewport,
+.scroll-pane .content,
+.scroll-pane .corner {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-prompt-text-fill: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+#taDiscussion, #taDiscussionPreface {
+    -fx-text-fill: black;
+    -fx-font-family: "Pixelify Sans Regular";
+    -fx-font-size: 17px;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+#txtOath {
+    -fx-text-fill: black;
+    -fx-font-family: "Pixelify Sans Bold";
+    -fx-font-size: 50px;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+#taCodeSnippet {
+    -fx-text-fill: white;
+    -fx-font-family: "Pixelify Sans Regular";
+    -fx-font-size: 17px;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+#txtTopicNum {
+    -fx-text-fill: white;
+    -fx-font-family: "Pixelify Sans Bold";
+    -fx-font-size: 25px;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+#txtTopicTitle {
+    -fx-text-fill: white;
+    -fx-font-family: "Pixelify Sans Bold";
+    -fx-font-size: 31px;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}

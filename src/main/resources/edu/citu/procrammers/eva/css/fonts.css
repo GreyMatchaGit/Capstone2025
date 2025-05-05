@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Pixelify';
+    src: url('../fonts/PixelifySans-Regular.ttf');
+}
+
+.label, .text, .header {
+    -fx-font-family: 'Pixelify';
+}
+
+.bold-text {
+    -fx-font-family: 'Pixelify';
+    -fx-font-weight: bold;
+}
