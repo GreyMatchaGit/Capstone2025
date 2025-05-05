@@ -38,10 +38,7 @@ public class NavService {
     }
 
     public static void setFullScreen(boolean toFullScreen) {
-        if (toFullScreen)
-            mainStage.setFullScreen(true);
-        else
-            mainStage.setFullScreen(false);
+        mainStage.setFullScreen(toFullScreen);
     }
 
     private static void setMainController() {
