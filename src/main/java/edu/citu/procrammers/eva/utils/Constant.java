@@ -20,5 +20,6 @@ public class Constant {
         public static final String Stack = "stack-view.fxml";
 
         public static final String Chatbot = "chatbot-view.fxml";
+        public static final String ADT = "ADT_visuals/ADT-view.fxml";
     }
 }
