@@ -133,8 +133,6 @@ public class ChatBotController {
         });
     }
 
-
-
     private void showError(String message) {
         System.out.println(message);
     }
