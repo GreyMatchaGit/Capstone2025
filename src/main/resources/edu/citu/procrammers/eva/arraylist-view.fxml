@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ArraylistViewController">
    <bottom>
@@ -23,17 +24,15 @@
                   <Button fx:id="btnClear" mnemonicParsing="false" onAction="#onButtonClick" prefWidth="100.0" text="CLEAR" />
               </items>
             </ToolBar>
-            <AnchorPane layoutY="419.0" prefHeight="301.0" prefWidth="319.0">
-               <children>
-                  <VBox fx:id="vbChat" layoutY="-9.0" prefHeight="275.0" prefWidth="628.0" />
-                  <HBox layoutX="-10.0" layoutY="266.0" prefHeight="50.0" prefWidth="637.0">
-                     <children>
-                        <TextField fx:id="tfInput" prefHeight="53.0" prefWidth="388.0" />
-                        <Button fx:id="btnSubmit" mnemonicParsing="false" text="Button" />
-                     </children>
-                  </HBox>
-               </children>
-            </AnchorPane>
+             <ImageView fx:id="imgChatbotBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1740.0" layoutY="929.0" pickOnBounds="true" preserveRatio="true">
+                 <image>
+                     <Image url="@media/img_profile_btn.png" />
+                 </image>
+                 <cursor>
+                     <Cursor fx:constant="HAND" />
+                 </cursor>
+             </ImageView>
+             <AnchorPane fx:id="apChat" layoutX="1429.0" layoutY="262.0" prefHeight="660.0" prefWidth="372.0" />
          </children>
       </AnchorPane>
    </bottom>

@@ -9,7 +9,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ChatBotController">
    <top>
-      <HBox prefHeight="36.0" prefWidth="433.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="36.0" prefWidth="433.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="btnClose" mnemonicParsing="false" text="x" />
             <Label text="Chat" />
@@ -17,10 +17,10 @@
       </HBox>
    </top>
    <center>
-      <VBox fx:id="vbConversation" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+      <VBox fx:id="vbConversation" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
-      <HBox prefHeight="17.0" prefWidth="433.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="17.0" prefWidth="433.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="tfChatBox" />
             <Button fx:id="btnSubmit" mnemonicParsing="false" text="Submit" />

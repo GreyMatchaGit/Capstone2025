@@ -6,7 +6,7 @@
     },
     {
       "role": "system",
-      "content": "{\"array\":\"[6, 2, 2]\",\"previousArray\":\"[6, 4, 2, 2]\"}"
+      "content": "{\"array\":\"[16]\"}"
     },
     {
       "role": "user",

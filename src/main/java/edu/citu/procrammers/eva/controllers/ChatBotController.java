@@ -2,10 +2,13 @@ package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.utils.NavService;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -17,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class ChatBotController {
     public VBox vbConversation;
@@ -25,20 +28,49 @@ public class ChatBotController {
     public Button btnSubmit;
     public Button btnClose;
 
+    private Pane parentContainer;
+
+//    private static ChatBotController instance;
+//
+//    private ChatBotController() {}
+//
+//    public static ChatBotController getInstance() {
+//        if (instance == null) {
+//            instance = new ChatBotController();
+//        }
+//        return instance;
+//    }
+
+
     public void initialize() {
         btnSubmit.setOnAction(e -> handleChatSubmit());
-        btnClose.setOnAction(e -> NavService.navigateTo(Academy));
+        btnClose.setOnAction(e -> {
+            onCloseButtonClicked();
+        });
     }
+
+    public void setParentContainer(Pane parentContainer) {
+        this.parentContainer = parentContainer;
+    }
+
+    @FXML
+    private void onCloseButtonClicked() {
+        if (parentContainer != null) {
+            parentContainer.getChildren().clear();
+        }
+    }
+    //TODO centralize all autobots and roll out
+
 /*
 * When clicking the submit button we create an JSONObject instance of prompt.json
 * Then we write our input on prompt.json's user content
 * We then pass our prompt.json with updated values and pass it on the chat request actual params
 */
+
     private void handleChatSubmit() {
         String input = tfChatBox.getText().trim();
         if (input.isEmpty()) return;
 
-        //Styling
         Label message = new Label(input);
         message.setWrapText(true);
 
@@ -46,79 +78,45 @@ public class ChatBotController {
 
         tfChatBox.clear();
 
-
         String apiKey = System.getenv("OPENAI_API_KEY");
         if (apiKey == null) {
             showError("API key not set.");
             return;
         }
 
-        JSONObject promptJson = readPromptJson();
-        if (promptJson == null) {
+        JSONObject promptJSON = readJSON(PROMPT_PATH);
+        if (promptJSON == null) {
             showError("Error reading prompt.json.");
             return;
         }
 
-        updatePromptWithInput(promptJson, input);
-        sendChatRequest(apiKey, promptJson);
+        updatePrompt(promptJSON, 2, input);
+        sendChatRequest(apiKey, promptJSON);
     }
 
-    /*
-    * When implementing trees updatePrompt at index 1 of system messages
-    * Since put() method is only alive at runtime use FileWriter to save the file and view changes.
-    */
-
-    /*
-
-    */
-
-    /*
-    * private void updateTree()
-    *       - in this method we would read the tree recursively
-    *         and wrapping this in a root object
-    *
-    *       tree.put("root", buildTreeJson(root));
-    *
-    *       - we then update prompt.json's content at index 1 of system messages
-    */
-
-    /*
-    * private JSONObject buildTreeJson(Node n)
-    *
-    *   obj.put("element", n.getElement());
-    *
-    *   JSONObject left = buildTreeJson(n.getLeft());
-    *   JSONObject right = buildTreeJson(n.getRight());
-    *
-    *   if(left != null) obj.put("left", left);
-    *   if(right != null) obj.put("right", right);
-    *
-    *   return obj;
-    */
-
-    private JSONObject readPromptJson() {
+    public static JSONObject readJSON(String path) {
         try {
-            String content = Files.readString(Paths.get("prompt.json"));
+            String content = Files.readString(Paths.get(path));
             return new JSONObject(content);
         } catch (IOException e) {
             return null;
         }
     }
 
-    private void updatePromptWithInput(JSONObject promptJson, String input) {
-        promptJson.getJSONArray("messages")
-                .getJSONObject(1)
+    private void updatePrompt(JSONObject promptJSON, int index, String input) {
+        promptJSON.getJSONArray("messages")
+                .getJSONObject(index)
                 .put("content", input);
     }
 
-    private void sendChatRequest(String apiKey, JSONObject promptJson) {
+    private void sendChatRequest(String apiKey, JSONObject promptJSON) {
         CompletableFuture.runAsync(() -> {
             try {
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create("https://api.openai.com/v1/chat/completions"))
                         .header("Content-Type", "application/json")
                         .header("Authorization", "Bearer " + apiKey)
-                        .POST(HttpRequest.BodyPublishers.ofString(promptJson.toString()))
+                        .POST(HttpRequest.BodyPublishers.ofString(promptJSON.toString()))
                         .build();
 
                 HttpClient client = HttpClient.newHttpClient();

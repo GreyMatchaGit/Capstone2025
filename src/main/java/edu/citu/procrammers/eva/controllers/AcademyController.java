@@ -19,8 +19,7 @@ public class AcademyController {
     public Pane fadePane;
     public ImageView imgLessonsBkmrk, imgTutorBkmrk, imgBackMenuBtn, imgProfileBtn, imgChatbotBtn;
     public AnchorPane apChat;
-
-    private ChatBotController chatBotController;
+    public ChatBotController chatBotController;
 
     @FXML
     public void initialize() {
@@ -33,6 +32,7 @@ public class AcademyController {
             FXMLLoader loader = new FXMLLoader(Eva.class.getResource(Chatbot));
             BorderPane chatbotUI = loader.load();
             chatBotController = loader.getController();
+            chatBotController.setParentContainer(apChat);
             apChat.getChildren().setAll(chatbotUI);
         } catch (IOException e) {
             e.printStackTrace();

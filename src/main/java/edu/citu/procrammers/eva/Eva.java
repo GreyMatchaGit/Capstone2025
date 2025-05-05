@@ -26,7 +26,7 @@ public class Eva extends Application {
         new NavService(primaryStage);
 //        NavService.navigateTo(Splash);
 //        NavService.navigateTo(Arrays);
-        NavService.navigateTo(Stack);
+        NavService.navigateTo(Arrays);
         NavService.setFullScreen(true);
         primaryStage.show();
     }
