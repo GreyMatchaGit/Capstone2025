@@ -21,3 +21,51 @@
     -fx-background-color: rgba(255, 255, 255, 0.3);
 }
 
+.pixel-button {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+    -fx-padding: 8 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-cursor: hand;
+}
+.pixel-button:hover {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #4E2D2D;
+    -fx-border-color: #4E2D2D;
+}
+.pixel-button:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
+}
+
+.pixel-textfield {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-padding: 6 10;
+    -fx-highlight-fill: #CBB1A6;
+    -fx-highlight-text-fill: #4E2D2D;
+    -fx-caret-color: #CBB1A6;
+}
+.pixel-textfield:focused {
+    -fx-border-color: #CBB1A6;
+    -fx-effect: dropshadow(gaussian, #CBB1A6, 4, 0.4, 0, 0);
+}
+
+.pixel-pane {
+    -fx-background-color: linear-gradient(to bottom, #4E2D2D, #3B1F1F);
+    -fx-background-insets: 0;
+    -fx-padding: 10;
+}

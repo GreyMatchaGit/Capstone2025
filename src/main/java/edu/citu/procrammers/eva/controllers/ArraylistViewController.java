@@ -1,5 +1,7 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.utils.NavService;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -7,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -17,6 +21,9 @@ import javafx.util.Pair;
 
 import java.util.*;
 
+import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
+
 public class ArraylistViewController {
 
     private double centerX, centerY;
@@ -24,6 +31,7 @@ public class ArraylistViewController {
     public AnchorPane apVisualizer;
     public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
     public TextField tfPrompt;
+    public ImageView imgBackBtn;
 
     private List<Integer> arrayList;
     private List<StackPane> stackPanes;
@@ -31,6 +39,9 @@ public class ArraylistViewController {
     private int size, capacity;
 
     public void initialize() {
+
+        setupGlow(imgBackBtn);
+
         arrayList = new ArrayList<>();
         stackPanes = new ArrayList<>();
         vBoxes = new ArrayList<>();
@@ -393,5 +404,10 @@ public class ArraylistViewController {
         apVisualizer.getChildren().add(vbox);
         highlightNode(rect, value);
         destroyBox(vbox);
+    }
+
+    public void navigatePreviousScreen() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
+        NavService.navigateTo(Academy);
     }
 }

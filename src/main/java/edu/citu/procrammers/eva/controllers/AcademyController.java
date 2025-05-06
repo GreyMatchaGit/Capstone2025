@@ -4,6 +4,7 @@ import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.LessonContent;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
@@ -11,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,6 +58,7 @@ public class AcademyController {
     }
 
     public void viewVisualizer() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
         NavService.navigateTo(lessons.get(index).getVisualizerPath());
     }
 
