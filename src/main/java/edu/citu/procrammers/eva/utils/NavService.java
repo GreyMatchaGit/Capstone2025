@@ -2,21 +2,30 @@ package edu.citu.procrammers.eva.utils;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.MainController;
+import edu.citu.procrammers.eva.controllers.SelectionController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 
 public class NavService {
 
     private static Stage mainStage = null;
     public static MainController mainController;
+    public static String previousPage = Selection;
 
     public NavService(Stage mainStage) {
         NavService.mainStage = mainStage;
+        mainStage.setFullScreenExitHint("");
         setMainController();
+        mainController.setStage(mainStage);
+//        mainController.setContentDynamic();
     }
     public static void navigateTo(String page) {
         FXMLLoader fxml = new FXMLLoader(
@@ -34,10 +43,7 @@ public class NavService {
     }
 
     public static void setFullScreen(boolean toFullScreen) {
-        if (toFullScreen)
-            mainStage.setFullScreen(true);
-        else
-            mainStage.setFullScreen(false);
+        mainStage.setFullScreen(toFullScreen);
     }
 
     private static void setMainController() {
@@ -52,10 +58,12 @@ public class NavService {
         }
 
         mainController = loader.getController();
-        Scene screen = new Scene(
+        Scene scene = new Scene(
             loader.getRoot()
         );
 
-        mainStage.setScene(screen);
+        scene.getStylesheets().add(Objects.requireNonNull(NavService.class.getResource("/edu/citu/procrammers/eva/css/fonts.css")).toExternalForm());
+
+        mainStage.setScene(scene);
     }
 }
