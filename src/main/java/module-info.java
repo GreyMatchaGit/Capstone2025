@@ -1,6 +1,10 @@
 module edu.citu.procrammers.eva {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
+    requires java.sql;
+    requires spring.security.crypto;
+    requires  mysql.connector.java;
     requires java.desktop;
 
 
