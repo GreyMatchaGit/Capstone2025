@@ -25,9 +25,9 @@ public class Eva extends Application {
         primaryStage.setMinHeight(360);
         Database.getInstance();
         new NavService(primaryStage);
-        NavService.navigateTo(ADT);
-//        NavService.navigateTo(Academy);
-//        NavService.setFullScreen(true);
+//        NavService.navigateTo(ADT);
+        NavService.navigateTo(Splash);
+        NavService.setFullScreen(true);
         primaryStage.show();
     }
 }
