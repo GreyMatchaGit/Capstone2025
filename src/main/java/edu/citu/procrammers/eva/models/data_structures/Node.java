@@ -64,4 +64,9 @@ public class Node {
     public void setParent(Node parent) {
         this.parent = parent;
     }
+
+    @Override
+    public String toString() {
+        return String.format("GID: %d, Element: %d (%.2f, %.2f)", graphicId, element, x.get(), y.get());
+    }
 }

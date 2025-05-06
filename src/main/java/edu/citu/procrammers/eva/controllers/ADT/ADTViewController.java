@@ -5,6 +5,7 @@ import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,12 +17,15 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import org.w3c.dom.Text;
 
+import java.awt.*;
 import java.io.IOException;
 
 
@@ -36,18 +40,37 @@ public class ADTViewController {
     @FXML private TextField tfInput;
     @FXML private TextField tfDelete;
     @FXML private Button btnDelete;
+    @FXML private ToggleButton tglSeratoMode;
 
     private BST BST;
     private AnimationManager animationManager;
 
     public void initialize() {
         initializeSlider();
-//        initializeStyles();
+        initializeStyles();
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
             BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
+
+//            Circle c1 = new Circle(20, 5, 2);
+//            c1.setStyle("-fx-fill: white;");
+//            apMain.getChildren().add(c1);
+//            c1.setLayoutX(492);
+//            c1.setLayoutY(60);
+//
+//            Circle c2 = new Circle(20, 5, 2);
+//            c2.setStyle("-fx-fill: black;");
+//            apMain.getChildren().add(c2);
+//            c2.setLayoutX(512);
+//            c2.setLayoutY(80);
+//            (492.00, 60.00) to (512.00, 80.00)
         });
+    }
+
+    private void clearFields() {
+        tfInput.clear();
+        tfDelete.clear();
     }
 
 
@@ -77,6 +100,7 @@ public class ADTViewController {
 
     @FXML private void onDeleteButtonClicked() {
         int key = Integer.parseInt(tfDelete.getText());
+        clearFields();
         animationManager.commands = BST.deleteElement(key);
         animationManager.play();
     }
@@ -86,6 +110,7 @@ public class ADTViewController {
     private void onButtonInsertClicked() {
         System.out.println("playing speed: " + animationManager.speed + " seconds ");
         int key = Integer.parseInt(tfInput.textProperty().getValue());
+        clearFields();
 
         animationManager.commands = BST.insertElement(key);
         animationManager.play();
@@ -199,15 +224,62 @@ public class ADTViewController {
         }
     }
 
+    @FXML
+    private void changeSuccessorMode() {
+        BST.isStandard = tglSeratoMode.isSelected();
+    }
+
     private void initializeStyles() {
         Scene scene = NavService.mainController.mainScreen.getScene();
 
         scene.getStylesheets().add(Eva.class.getResource("styles/ADT-view.css").toExternalForm());
 
-        btnPlay.getStyleClass().addAll("button", "play-button");
-////        btnPlay.setText("Play");
-        btnBackward.getStyleClass().addAll("button", "backward-button");
-        btnForward.getStyleClass().addAll("button", "forward-button");
+        tglIsContinuous.getStyleClass().add("switch-toggle");
+
+        Region thumb = new Region();
+        thumb.getStyleClass().add("thumb");
+        tglIsContinuous.setGraphic(thumb);
+
+//        tglIsContinuous.selectedProperty().addListener((obs, oldVal, newVal) -> {
+//            if (newVal) {
+//                thumb.setTranslateX(24);
+//            } else {
+//                thumb.setTranslateX(4);
+//            }
+//        });
+
+        tglSeratoMode.getStyleClass().add("switch-toggle");
+
+        Region thumb2 = new Region();
+        thumb.getStyleClass().add("thumb");
+        tglSeratoMode.setGraphic(thumb2);
+
+        tglIsContinuous.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            double targetX = newVal ? 24 : 4;
+
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.millis(250),
+                            new KeyValue(thumb.translateXProperty(), targetX)
+                    )
+            );
+            timeline.play();
+        });
+
+//        tglIsContinuous.selectedProperty().addListener((obs, oldVal, newVal) -> {
+//            double targetX = newVal ? 24 : 4;
+//
+//            Timeline timeline = new Timeline(
+//                    new KeyFrame(Duration.millis(100),
+//                            new KeyValue(thumb.translateXProperty(), targetX)
+//                    )
+//            );
+//            timeline.play();
+//        });
+
+//        btnPlay.getStyleClass().addAll("button", "play-button");
+//////        btnPlay.setText("Play");
+//        btnBackward.getStyleClass().addAll("button", "backward-button");
+//        btnForward.getStyleClass().addAll("button", "forward-button");
     }
 //    private void highlightNodeInView(Node node) {
 //        NodeController nodeController = nodeMap.get(node);

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class AnimationManager {
-    private AnchorPane canves;
+    private AnchorPane canvas;
     public List<Command> commands;
     private Stack<Command> history;
     public HashMap<Integer, Node> objects;
@@ -21,8 +21,8 @@ public class AnimationManager {
     public double speed;
     public boolean isContinuous;
 
-    public AnimationManager(AnchorPane canves) {
-        this.canves = canves;
+    public AnimationManager(AnchorPane canvas) {
+        this.canvas = canvas;
         commands = new ArrayList<>();
         history = new Stack<>();
         objects = new HashMap<>();
@@ -38,7 +38,7 @@ public class AnimationManager {
         }
     }
 
-    public Command newCommand(String[] args) {
+    public Command newCommand(String... args) {
         int graphicId;
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].toUpperCase();
@@ -49,7 +49,7 @@ public class AnimationManager {
                     double x = Double.parseDouble(args[++i]);
                     double y = Double.parseDouble(args[++i]);
                     System.out.println("CREATENODE ID = " + graphicId);
-                    return new DrawNodeCommand(key, graphicId, x, y, canves, objects);
+                    return new DrawNodeCommand(key, graphicId, x, y, canvas, objects);
                 case "SETHIGHLIGHT":
                     graphicId = Integer.parseInt(args[++i]);
                     int isOn = Integer.parseInt(args[++i]);
@@ -72,12 +72,26 @@ public class AnimationManager {
                     int startId = Integer.parseInt(args[++i]);
                     int endId = Integer.parseInt(args[++i]);
 
-                    return new DrawEdgeCommand(lineId, startId, endId, canves, objects);
+                    return new DrawEdgeCommand(lineId, startId, endId, canvas, objects);
                 case "DELETE":
                     System.out.println("Delete Command creating...");
                     graphicId = Integer.parseInt(args[++i]);
 
-                    return new DeleteCommand(graphicId, canves, objects);
+                    return new DeleteCommand(graphicId, canvas, objects);
+
+                case "CHANGENODEELEMENTUI":
+                    graphicId = Integer.parseInt(args[++i]);
+                    String newElement = args[++i];
+
+                    return new ChangeElementCommand(newElement, objects.get(graphicId));
+
+                case "SETTEXT":
+                    graphicId = Integer.parseInt(args[++i]);
+                    String text = args[++i];
+                    double tX = Double.parseDouble(args[++i]);
+                    double tY = Double.parseDouble(args[++i]);
+
+                    return new SetTextCommand(graphicId, text, tX, tY, canvas, objects);
 
             }
         }

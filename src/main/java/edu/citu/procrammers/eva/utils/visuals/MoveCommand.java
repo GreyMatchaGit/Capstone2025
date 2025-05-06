@@ -34,18 +34,18 @@ public class MoveCommand extends Command {
 //        Circle circle = ((Circle) ((StackPane) node).getChildren().getFirst());
         Node node = graphicMap.get(graphicId);
 
-        if (node != null) {
-            this.prevX = node.getLayoutX();
-            this.prevY = node.getLayoutY();
+        System.out.println("Not found so will create one...");
+        this.prevX = node.getLayoutX();
+        this.prevY = node.getLayoutY();
 
-            KeyValue kvX = new KeyValue(node.layoutXProperty(), newX - 20);
-            KeyValue kvY = new KeyValue(node.layoutYProperty(), newY - 20);
-            KeyFrame kf = new KeyFrame(Duration.millis(300), kvX, kvY); // 300ms animation
-            timeline.getKeyFrames().add(kf);
-            timeline.play();
-            onFinished.run();
-        }
+        KeyValue kvX = new KeyValue(node.layoutXProperty(), newX - 20);
+        KeyValue kvY = new KeyValue(node.layoutYProperty(), newY - 20);
+        KeyFrame kf = new KeyFrame(Duration.millis(300), kvX, kvY); // 300ms animation
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
 
+        System.out.printf("Graphic %d moved from (%.2f, %.2f) to (%.2f, %.2f)\n", graphicId, prevX, prevY, newX, newY);
+        onFinished.run();
 
     }
 
@@ -57,5 +57,10 @@ public class MoveCommand extends Command {
         KeyFrame kf = new KeyFrame(Duration.millis(300), kvX, kvY); // 300ms animati
         timeline.getKeyFrames().add(kf);// on
         timeline.play();
+    }
+
+    @Override
+    public String toString() {
+        return "Move Command";
     }
 }

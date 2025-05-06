@@ -59,6 +59,9 @@ public class DrawNodeCommand extends Command {
                 System.out.println("Node " + key + ", GraphicID: " + graphicId + " added");
                 circle  = (Circle)(nodeView.getChildren().getFirst());
                 circle.setRadius(20);
+
+                circle.setStyle("-fx-stroke: black; -fx-stroke-width: 2; -fx-fill: white;");
+
             }
 
             circle  = (Circle)(nodeView.getChildren().getFirst());
@@ -79,5 +82,10 @@ public class DrawNodeCommand extends Command {
 
     @Override public void undo(Runnable onUndo) {
         canvas.getChildren().remove(graphicMap.get(graphicId));
+    }
+
+    @Override
+    public String toString() {
+        return "Draw Node Command";
     }
 }
