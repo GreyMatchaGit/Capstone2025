@@ -57,15 +57,15 @@ public class ArraylistViewController {
         size=0;
         capacity=0;
 
-        apVisualizer.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double centerX = newVal.doubleValue() / 2;
-            this.centerX = centerX;
-        });
-
-        apVisualizer.heightProperty().addListener((obs, oldVal, newVal) -> {
-            double centerY = newVal.doubleValue() / 2;
-            this.centerY = centerY;
-
+        apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                Platform.runLater(() -> {
+                    double centerX = apVisualizer.getWidth() / 2;
+                    double centerY = apVisualizer.getHeight() / 2;
+                    this.centerX = centerX;
+                    this.centerY = centerY;
+                });
+            }
         });
 
         // Create initial nodes, capacity = 5
@@ -130,6 +130,7 @@ public class ArraylistViewController {
         for(int i=0; i<n; ++i) {
             double currentX = (centerX) + capacity*30;
             double currentY = centerY-100;
+            System.out.println(capacity+ " " +currentX);
             VBox vBox = createBoxes(capacity,"", currentX, currentY, false);
             FadeTransition ft = fadeIn(vBox);
             TranslateTransition tt = slideY(vBox, 100);
@@ -236,32 +237,59 @@ public class ArraylistViewController {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
 
-//        if(arrayList.contains(num)) {
-//            int index = arrayList.indexOf(num);
-//            arrayList.remove(index);
-//            Rectangle r = null;
-//            Label l = null;
-//            for(int i = index; i < stackPanes.size() || i < arrayList.size(); ++i) {
-//                for (Node n : stackPanes.get(i).getChildren()) {
-//                    if (n instanceof Label) {
-//                        String label = i < arrayList.size() ? Integer.toString(arrayList.get(i)) : "";
-//                        ((Label) n).setText(label);
-//                        l = (Label) n;
-//                    } else if(n instanceof Rectangle) {
-//                        r = (Rectangle) n;
-//                    }
-//                }
-//                if(i == index) {
-//                    highlightNode(r, l, DEFAULT, NEGATIVE);
-//                    VBox vbox = (VBox) stackPanes.get(i).getParent();
-//                    phantomDelete(vbox.getLayoutX(), vbox.getLayoutY(), Integer.toString(num), i);
-//                }
-//            }
-//
-//            --size;
-//        } else {
-//            System.err.println("Number is non-existent");
-//        }
+        boolean isExisting = false;
+        VBox currentVBox = null;
+        Rectangle r = null;
+        Label l;
+        int index;
+        SequentialTransition traversal = new SequentialTransition();
+        for (index = 0; index < size; index++) {
+            currentVBox = vBoxes.get(index);
+            r = rectangles.get(index);
+            l = labels.get(index);
+
+            FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+            FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+            SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+            traversal.getChildren().add(nodeTransition);
+
+            if (arrayList.get(index) == num) {
+                isExisting = true;
+                break;
+            }
+        }
+
+        // After traversal, do the slideY animation
+        if (isExisting) {
+            VBox finalCurrentVBox = currentVBox;
+            Rectangle finalRectangle = r;
+            traversal.setOnFinished(e -> {
+                FillTransition highlight = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
+                FillTransition reset = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
+                SequentialTransition fullSequence = new SequentialTransition(
+                        highlight,
+                        reset
+                );
+                fullSequence.play();
+                fullSequence.setOnFinished(ee -> {
+                    destroyBox(finalCurrentVBox);
+                    vBoxes.remove(finalCurrentVBox);
+                });
+            });
+        } else {
+            traversal.setOnFinished(e-> {
+                for (int i = 0; i < size; i++) {
+                    Rectangle rr = rectangles.get(i);
+                    Label ll = labels.get(i);
+                    FillTransition highlight = fillRectangle(0.3, rr, DEFAULTR, NEGATIVE);
+                    FillTransition reset = fillRectangle(0.3, rr, NEGATIVE, DEFAULTR);
+                    SequentialTransition st = new SequentialTransition(highlight, reset);
+                    st.play();
+                }
+            });
+        }
+        traversal.play();
+
     }
 
     private void removeAtElement() {
@@ -381,30 +409,6 @@ public class ArraylistViewController {
                     labels.size() + " " +
                     vBoxes.size());
         }
-        shiftX(25 * removed);
-    }
-
-
-    // Animation utils
-    private void phantomDelete(double x, double y, String num, int indexing) {
-        Rectangle rect = new Rectangle(50, 50);
-        rect.setFill(Color.WHITE);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(2);
-        Label value = new Label(num);
-        value.setStyle("-fx-font-weight: bold;");
-        StackPane sp = new StackPane(rect, value);
-        Label index = new Label(Integer.toString(indexing));
-        index.setStyle("-fx-font-weight: bold;");
-        VBox vbox = new VBox(2);
-        vbox.getChildren().addAll(sp, index);
-        vbox.setStyle("-fx-alignment: center;");
-        vbox.setLayoutX(x);
-        vbox.setLayoutY(y);
-
-        apVisualizer.getChildren().add(vbox);
-//        highlightNode(rect, value, NEGATIVE);
-        destroyBox(vbox);
     }
 
     // Better Utilities
@@ -525,27 +529,6 @@ public class ArraylistViewController {
             VBox vb = vBoxes.get(i);
             vb.setLayoutX(vb.getLayoutX() + val);
         }
-    }
-
-    private void phantomDelete(double x, double y, String num, int indexing) {
-        Rectangle rect = new Rectangle(50, 50);
-        rect.setFill(Color.WHITE);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(2);
-        Label value = new Label(num);
-        value.setStyle("-fx-font-weight: bold;");
-        StackPane sp = new StackPane(rect, value);
-        Label index = new Label(Integer.toString(indexing));
-        index.setStyle("-fx-font-weight: bold;");
-        VBox vbox = new VBox(2);
-        vbox.getChildren().addAll(sp, index);
-        vbox.setStyle("-fx-alignment: center;");
-        vbox.setLayoutX(x);
-        vbox.setLayoutY(y);
-
-        apVisualizer.getChildren().add(vbox);
-        highlightNode(rect, value);
-        destroyBox(vbox);
     }
 
     public void navigatePreviousScreen() {

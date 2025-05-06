@@ -56,7 +56,7 @@
                            <Image url="@media/img_visualizer_bg.jpg" />
                         </image>
                      </ImageView>
-                       <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1812.0" />
+                       <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
                   </children>
                </StackPane>
             </children>
