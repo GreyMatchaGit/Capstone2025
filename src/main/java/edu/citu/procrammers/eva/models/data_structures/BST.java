@@ -136,10 +136,12 @@ public class BST extends Tree {
                 parent.setLeft(elem);
                 elem.setParent(parent);
 
-                elem.lineId = id;
-                String lineId = Integer.toString(id++);
+                int lineId = id++;
+                parent.outgoingLineId = lineId;
+                elem.incomingLineId = lineId;
 
-                commands.add(am.newCommand("Connect", lineId, parentId, childId));
+
+                commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
 //                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
             }
             else
@@ -163,7 +165,8 @@ public class BST extends Tree {
                 elem.x.set(parent.x.getValue() + WIDTH_DELTA/2);
                 elem.y.set(parent.y.getValue() + HEIGHT_DELTA);
 
-                elem.lineId = id;
+                parent.outgoingLineId = id;
+                elem.incomingLineId = id;
                 String lineId = Integer.toString(id++);
                 commands.add(am.newCommand("Connect", lineId, parentId, childId));
 
@@ -284,7 +287,7 @@ public class BST extends Tree {
                 if (node.getLeft() == null && node.getRight() == null) {
 //                    this.cmd("SetText", 0, "Node to delete is a leaf.  Delete it.");
 //                    this.cmd("Delete", tree.graphicID);
-                    commands.add(am.newCommand("Delete", Integer.toString(node.lineId)));
+                    commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
 
                     commands.add(am.newCommand("Delete", nodeId));
                     if (leftchild && node.getParent() != null) {
@@ -306,7 +309,9 @@ public class BST extends Tree {
 //                    this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");
                     if (node.getParent() != null) {
 //                        this.cmd("Disconnect",  tree.parent.graphicID, tree.graphicID);
-                        commands.add(am.newCommand("Delete", Integer.toString(node.lineId)));
+                        commands.add(am.newCommand("Delete", Integer.toString(node.outgoingLineId)));
+                        commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
+//                        commands.add(am.newCommand("Delete", Integer.toString(node.outgoingLineId)));
 
                         String parentId = Integer.toString(node.getParent().graphicId);
                         String childId = Integer.toString(node.getRight().graphicId);
@@ -334,10 +339,16 @@ public class BST extends Tree {
 //                    this.cmd("SetText", 0, "Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");
                     if (node.getParent() != null) {
 //                        this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
-                        commands.add(am.newCommand("Delete", Integer.toString(node.lineId)));
+                        commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
+                        commands.add(am.newCommand("Delete", Integer.toString(node.outgoingLineId)));
 //                        this.cmd("Connect", node.parent.graphicID, node.left.graphicID, BST.LINK_COLOR);
 //                        this.cmd("Step");
                         commands.add(am.newCommand("Delete", nodeId));
+
+                        String parentId = Integer.toString(node.getParent().graphicId);
+                        String childId = Integer.toString(node.getLeft().graphicId);
+//
+                        commands.add(am.newCommand("Connect", Integer.toString(id++), parentId, childId));
                         if (leftchild) {
                             node.getParent().setLeft(node.getLeft());
                         }
@@ -449,14 +460,14 @@ public class BST extends Tree {
             }
             String tmpId = Integer.toString(tmp.graphicId);
 //                        this.cmd("Delete", tmp.graphicID);
-            commands.add(am.newCommand("Delete", Integer.toString(tmp.lineId)));
+            commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
             commands.add(am.newCommand("Delete", tmpId));
 
             this.resizeTree(commands);
         }
         else {
 //                        this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
-            commands.add(am.newCommand("Delete", Integer.toString(tmp.lineId)));
+            commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
 //                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, BST.LINK_COLOR);
 
             String tmpParentId = Integer.toString(tmp.getParent().graphicId);
@@ -541,14 +552,14 @@ public class BST extends Tree {
             }
             String tmpId = Integer.toString(tmp.graphicId);
 //                        this.cmd("Delete", tmp.graphicID);
-            commands.add(am.newCommand("Delete", Integer.toString(tmp.lineId)));
+            commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
             commands.add(am.newCommand("Delete", tmpId));
 
             this.resizeTree(commands);
         }
         else {
 //                        this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
-            commands.add(am.newCommand("Delete", Integer.toString(tmp.lineId)));
+            commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
 //                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, BST.LINK_COLOR);
 
             String tmpParentId = Integer.toString(tmp.getParent().graphicId);
