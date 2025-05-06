@@ -27,8 +27,7 @@ public class Eva extends Application {
         Database.getInstance();
         new NavService(primaryStage);
 //        NavService.navigateTo(Splash);
-//        NavService.navigateTo(Academy);
-        NavService.navigateTo(Arrays);
+        NavService.navigateTo(HashTable);
         NavService.setFullScreen(false);
         primaryStage.show();
     }

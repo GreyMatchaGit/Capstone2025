@@ -18,5 +18,6 @@ public class Constant {
 
         public static final String Arrays = "array-visualizer-view.fxml";
         public static final String Stack = "stack-view.fxml";
+        public static final String HashTable = "hashtable-visualizer-view.fxml";
     }
 }
