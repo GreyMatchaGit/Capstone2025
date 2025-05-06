@@ -20,6 +20,11 @@ import java.util.*;
 public class ArraylistViewController {
 
     private double centerX, centerY;
+    private static final Color POSITIVE = Color.ORANGE;
+    private static final Color NEGATIVE = Color.RED;
+    private static final Color SEARCH = Color.GREENYELLOW;
+    private static final Color DEFAULT = Color.BLACK;
+    private static final Color DEFAULTR = Color.WHITE;
 
     public AnchorPane apVisualizer;
     public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
@@ -27,12 +32,16 @@ public class ArraylistViewController {
 
     private List<Integer> arrayList;
     private List<StackPane> stackPanes;
+    private List<Rectangle> rectangles;
+    private List<Label> labels;
     private List<VBox> vBoxes;
     private int size, capacity;
 
     public void initialize() {
         arrayList = new ArrayList<>();
         stackPanes = new ArrayList<>();
+        rectangles = new ArrayList<>();
+        labels = new ArrayList<>();
         vBoxes = new ArrayList<>();
         size=0;
         capacity=0;
@@ -50,9 +59,7 @@ public class ArraylistViewController {
 
         // Create initial nodes, capacity = 5
         Platform.runLater(() -> {
-            for(int i=1; i<=5; ++i) {
-                createBox("");
-            }
+            updateList(5);
         });
     }
 
@@ -73,7 +80,7 @@ public class ArraylistViewController {
     }
 
     private int getNum() {
-        String prompt = tfPrompt.getText();
+        String prompt = tfPrompt.getText().trim();
         int num = Integer.MIN_VALUE;
         try {
             num = Integer.parseInt(prompt);
@@ -109,8 +116,31 @@ public class ArraylistViewController {
     }
 
     private void updateList(int n) {
-        for(int i=1; i<=n; ++i) {
-            createBox("");
+        for(int i=0; i<n; ++i) {
+            double currentX = (centerX) + capacity*30;
+            double currentY = centerY-100;
+            VBox vBox = createBoxes(capacity,"", currentX, currentY, false);
+            FadeTransition ft = fadeIn(vBox);
+            TranslateTransition tt = slideY(vBox, 100);
+            ft.play();
+            ft.setOnFinished(e -> tt.play());
+        }
+
+        System.out.println("ÄrrayList cleared " +
+                arrayList.size() + " " +
+                rectangles.size() + " " +
+                labels.size() + " " +
+                vBoxes.size() + " Capacity:" + capacity);
+        for(VBox vb : vBoxes) {
+            for(Node b : vb.getChildren()) {
+                if(b instanceof StackPane) {
+                    for(Node m: ((StackPane) b).getChildren()) {
+                        if(m instanceof Label) {
+                            System.out.println(((Label) m).getText());
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -124,21 +154,14 @@ public class ArraylistViewController {
             updateList(additional);
         }
 
-        StackPane sp = stackPanes.get(size);
-        Rectangle r = null;
-        Label l = null;
-        for (Node n : sp.getChildren()) {
-            if (n instanceof Label) {
-                l = (Label)n;
-                ((Label) n).setText(Integer.toString(num));
-            } else if(n instanceof Rectangle) {
-                r = (Rectangle) n;
-            }
-
-        }
-        assert r!=null && l!=null;
-        highlightNode(r, l);
-        size++;
+        Label l = labels.get(size);
+        Rectangle r = rectangles.get(size);
+        l.setText(Integer.toString(num));
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, POSITIVE);
+        FillTransition reset = fillRectangle(0.3, r, POSITIVE, DEFAULTR);
+        SequentialTransition st = new SequentialTransition(highlight, reset);
+        st.play();
+        ++size;
     }
 
     private void addAtElement() {
@@ -149,72 +172,84 @@ public class ArraylistViewController {
         if(num == Integer.MIN_VALUE || pos == -1) return;
 
         if(size == capacity) {
-            // resize updateList()
             int additional = (int) Math.ceil(capacity * 0.5);
             updateList(additional);
         }
 
-        Rectangle r = null;
-        Label l = null;
-        if(pos == size+1) {
-            arrayList.add(num);
-            StackPane sp = stackPanes.get(pos-1);
-            for (Node n : sp.getChildren()) {
-                if (n instanceof Label) {
-                    ((Label) n).setText(Integer.toString(num));
-                    l = (Label) n;
-                } else if(n instanceof Rectangle) {
-                    r = (Rectangle)n;
-                }
-            }
-        } else {
-            arrayList.add(pos-1, num);
-            for(int i = pos-1; i < stackPanes.size() && i < arrayList.size(); ++i) {
-                for (Node n : stackPanes.get(i).getChildren()) {
-                    if (n instanceof Label) {
-                        ((Label) n).setText(Integer.toString(arrayList.get(i)));
-                        if(i == pos-1) l = (Label) n;
-                    } else if(n instanceof Rectangle) {
-                        if(i == pos-1) r = (Rectangle)n;
+        int index = pos-1;
+        arrayList.add(index, num);
+        System.out.println(index);
+        VBox origBox = vBoxes.get(index);
+        double currentX = origBox.getLayoutX();
+        // Spawn box
+        VBox vBox = createBoxes(index, String.valueOf(num), currentX-55, centerY-100, true);
+        Rectangle r = rectangles.get(index);
+        FadeTransition ft = fadeIn(vBox);
+        TranslateTransition tt = slideY(vBox, 100);
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, POSITIVE);
+        FillTransition reset = fillRectangle(0.3, r, POSITIVE, DEFAULTR);
+        SequentialTransition st = new SequentialTransition(highlight, reset);
+        ft.play();
+        ft.setOnFinished(e -> tt.play());
+        tt.setOnFinished(e -> st.play());
+        // Destroy last box
+        VBox lastbox = vBoxes.get(capacity);
+        shiftX(index, capacity, 55);
+        updateIndexes();
+        vBoxes.remove(capacity);
+        labels.remove(capacity);
+        rectangles.remove(capacity);
+        apVisualizer.getChildren().remove(lastbox);
+        ++size;
+
+        System.out.println("ÄrrayList cleared " +
+                arrayList.size() + " " +
+                rectangles.size() + " " +
+                labels.size() + " " +
+                vBoxes.size() + " Capacity:" + capacity);
+        for(VBox vb : vBoxes) {
+            for(Node n : vb.getChildren()) {
+                if(n instanceof StackPane) {
+                    for(Node m: ((StackPane) n).getChildren()) {
+                        if(m instanceof Label) {
+                            System.out.println(((Label) m).getText());
+                        }
                     }
                 }
             }
         }
-        assert r!=null && l!=null;
-        highlightNode(r, l);
-        ++size;
     }
 
     private void removeElement() {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
 
-        if(arrayList.contains(num)) {
-            int index = arrayList.indexOf(num);
-            arrayList.remove(index);
-            Rectangle r = null;
-            Label l = null;
-            for(int i = index; i < stackPanes.size() || i < arrayList.size(); ++i) {
-                for (Node n : stackPanes.get(i).getChildren()) {
-                    if (n instanceof Label) {
-                        String label = i < arrayList.size() ? Integer.toString(arrayList.get(i)) : "";
-                        ((Label) n).setText(label);
-                        l = (Label) n;
-                    } else if(n instanceof Rectangle) {
-                        r = (Rectangle) n;
-                    }
-                }
-                if(i == index) {
-                    highlightNode(r, l);
-                    VBox vbox = (VBox) stackPanes.get(i).getParent();
-                    phantomDelete(vbox.getLayoutX(), vbox.getLayoutY(), Integer.toString(num), i);
-                }
-            }
-
-            --size;
-        } else {
-            System.err.println("Number is non-existent");
-        }
+//        if(arrayList.contains(num)) {
+//            int index = arrayList.indexOf(num);
+//            arrayList.remove(index);
+//            Rectangle r = null;
+//            Label l = null;
+//            for(int i = index; i < stackPanes.size() || i < arrayList.size(); ++i) {
+//                for (Node n : stackPanes.get(i).getChildren()) {
+//                    if (n instanceof Label) {
+//                        String label = i < arrayList.size() ? Integer.toString(arrayList.get(i)) : "";
+//                        ((Label) n).setText(label);
+//                        l = (Label) n;
+//                    } else if(n instanceof Rectangle) {
+//                        r = (Rectangle) n;
+//                    }
+//                }
+//                if(i == index) {
+//                    highlightNode(r, l, DEFAULT, NEGATIVE);
+//                    VBox vbox = (VBox) stackPanes.get(i).getParent();
+//                    phantomDelete(vbox.getLayoutX(), vbox.getLayoutY(), Integer.toString(num), i);
+//                }
+//            }
+//
+//            --size;
+//        } else {
+//            System.err.println("Number is non-existent");
+//        }
     }
 
     private void removeAtElement() {
@@ -237,143 +272,106 @@ public class ArraylistViewController {
         --size;
     }
 
-    private void searchElement() {
+    private boolean searchElement() {
         int num = getNum();
-        if(num == Integer.MIN_VALUE) return;
+        if(num == Integer.MIN_VALUE) return false;
 
-        if(arrayList.contains(num)) {
-            int index = arrayList.indexOf(num);
-            StackPane sp = stackPanes.get(index);
-            Rectangle r = null;
-            Label l = null;
-            for (Node n : sp.getChildren()) {
-                if (n instanceof Rectangle) {
-                    r = (Rectangle) n;
-                } else {
-                    l = (Label) n;
-                }
+        boolean isExisting = false;
+        VBox currentVBox = null;
+        Rectangle r = null;
+        Label l;
+        int index;
+        SequentialTransition traversal = new SequentialTransition();
+        for (index = 0; index < size; index++) {
+            currentVBox = vBoxes.get(index);
+            r = rectangles.get(index);
+            l = labels.get(index);
+
+            FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+            FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+            SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+            traversal.getChildren().add(nodeTransition);
+
+            if (arrayList.get(index) == num) {
+                isExisting = true;
+                break;
             }
-
-            highlightNode(r, l);
-
-        } else {
-            System.err.println("Number not found!");
         }
+
+        // After traversal, do the slideY animation
+        if (isExisting) {
+            VBox finalCurrentVBox = currentVBox;
+            Rectangle finalRectangle = r;
+            traversal.setOnFinished(e -> {
+                TranslateTransition tFirst = slideY(finalCurrentVBox, -100);
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+                FillTransition highlight = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
+                FillTransition reset = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
+                TranslateTransition tLast = slideY(finalCurrentVBox, 100);
+                SequentialTransition fullSequence = new SequentialTransition(
+                        tFirst,
+                        pause,
+                        highlight,
+                        reset,
+                        tLast
+                );
+                fullSequence.play();
+            });
+        } else {
+            traversal.setOnFinished(e-> {
+                for (int i = 0; i < size; i++) {
+                    Rectangle rr = rectangles.get(i);
+                    Label ll = labels.get(i);
+
+                    FillTransition highlight = fillRectangle(0.3, rr, DEFAULTR, NEGATIVE);
+                    FillTransition reset = fillRectangle(0.3, rr, NEGATIVE, DEFAULTR);
+                    SequentialTransition st = new SequentialTransition(highlight, reset);
+                    st.play();
+                }
+            });
+        }
+        traversal.play();
+
+        return isExisting;
     }
 
     private void onClearOperation() {
-        tfPrompt.setText("");
-        arrayList.clear();
+        if(size != 0) {
+            tfPrompt.setText("");
+            arrayList.clear();
 
-        // Highlight Everything
-        for(StackPane sp : stackPanes) {
-            Rectangle r = null;
-            Label l = null;
-            for(Node n : sp.getChildren()) {
-                if(n instanceof Label) {
-                    l = (Label) n;
-                    l.setText("");
-                } else if(n instanceof Rectangle) {
-                    r = (Rectangle) n;
-                }
+            // Highlight Everything
+            for (int i = 0; i < vBoxes.size(); ++i) {
+                Rectangle r = rectangles.get(i);
+                Label l = labels.get(i);
+                l.setText("");
+                FillTransition highlight = fillRectangle(0.6, r, DEFAULTR, NEGATIVE);
+                Timeline tl = highlightNode(r,l,NEGATIVE,NEGATIVE);
+                ParallelTransition pt = new ParallelTransition(highlight, tl);
+                pt.play();
             }
-            highlightNode(r, l);
-        }
 
+            // Destroy All Boxes
+            rectangles.clear();
+            labels.clear();
+            for (int i = capacity - 1; i >= 0; --i, --capacity) {
+                VBox vb = vBoxes.get(i);
+                destroyBox(vb);
+                vBoxes.remove(i);
+                System.out.println(i);
+            }
 
-        size = 0;
-        int removed=0;
-        for(int i=capacity-1; i>=5; --i, --capacity) {
-            stackPanes.remove(i);
-            VBox vb = vBoxes.get(i);
-            destroyBox(vb);
-            vBoxes.remove(i);
-            removed++;
+            updateList(5);
+            size = 0;
+            System.out.println("ÄrrayList cleared " +
+                    arrayList.size() + " " +
+                    rectangles.size() + " " +
+                    labels.size() + " " +
+                    vBoxes.size());
         }
-        shiftX(25 * removed);
     }
-
 
     // Animation utils
-    private void createBox(String num) {
-        Rectangle rect = new Rectangle(50, 50);
-        rect.setFill(Color.WHITE);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(2);
-        Label value = new Label(num);
-        value.setStyle("-fx-font-weight: bold;");
-        StackPane sp = new StackPane(rect, value);
-        Label index = new Label(Integer.toString(capacity));
-        index.setStyle("-fx-font-weight: bold;");
-        VBox vbox = new VBox(2);
-        vbox.getChildren().addAll(sp, index);
-        vbox.setStyle("-fx-alignment: center;");
-        vbox.setLayoutX((centerX) + capacity*30);
-        vbox.setLayoutY(centerY-100);
-
-        apVisualizer.getChildren().add(vbox);
-        stackPanes.add(sp);
-        vBoxes.add(vbox);
-
-        shiftX(-25);
-        capacity++;
-
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), vbox);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.setCycleCount(1);
-
-        TranslateTransition slideDown = new TranslateTransition(Duration.seconds(1), vbox);
-        slideDown.setByY(100); // Move down by 100 units
-        slideDown.setCycleCount(1);
-
-        fadeIn.setOnFinished(event -> slideDown.play());
-        fadeIn.play();
-    }
-
-    private void highlightNode(Rectangle r, Label l) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(r.strokeProperty(), Color.BLACK),
-                        new KeyValue(l.textFillProperty(), Color.BLACK)
-                ),
-                new KeyFrame(Duration.seconds(1),
-                        new KeyValue(r.strokeProperty(), Color.ORANGE),
-                        new KeyValue(l.textFillProperty(), Color.ORANGE)
-                ),
-                new KeyFrame(Duration.seconds(1.25),
-                        new KeyValue(r.strokeProperty(), Color.BLACK),
-                        new KeyValue(l.textFillProperty(), Color.BLACK)
-                )
-        );
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        timeline.play();
-    }
-
-    private void destroyBox(VBox vbox) {
-
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), vbox);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setCycleCount(1);
-
-        TranslateTransition slideUp = new TranslateTransition(Duration.seconds(1), vbox);
-        slideUp.setByY(-100);
-        slideUp.setCycleCount(1);
-
-        slideUp.setOnFinished(event -> fadeOut.play());
-        slideUp.play();
-
-        fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
-    }
-
-    private void shiftX(int val) {
-        for(VBox vb : vBoxes) {
-            vb.setLayoutX(vb.getLayoutX() + val);
-        }
-    }
-
     private void phantomDelete(double x, double y, String num, int indexing) {
         Rectangle rect = new Rectangle(50, 50);
         rect.setFill(Color.WHITE);
@@ -391,7 +389,127 @@ public class ArraylistViewController {
         vbox.setLayoutY(y);
 
         apVisualizer.getChildren().add(vbox);
-        highlightNode(rect, value);
+//        highlightNode(rect, value, NEGATIVE);
         destroyBox(vbox);
+    }
+
+    // Better Utilities
+    private VBox createBoxes(int pos, String num, double x, double y, boolean isTemp) {
+        Rectangle rect = new Rectangle(50, 50);
+        rect.setFill(Color.WHITE);
+        rect.setStroke(Color.BLACK);
+        rect.setStrokeWidth(2);
+        Label value = new Label(num);
+        value.setStyle("-fx-font-weight: bold;");
+        StackPane sp = new StackPane(rect, value);
+        Label index = new Label(Integer.toString(capacity));
+        index.setStyle("-fx-font-weight: bold;");
+        VBox vbox = new VBox(2);
+        vbox.getChildren().addAll(sp, index);
+        vbox.setStyle("-fx-alignment: center;");
+        vbox.setLayoutX(x);
+        vbox.setLayoutY(y);
+
+        apVisualizer.getChildren().add(vbox);
+        rectangles.add(pos, rect);
+        labels.add(pos, value);
+        vBoxes.add(pos, vbox);
+        if(!isTemp) {
+            shiftX(0, capacity, -25);
+            capacity++;
+        }
+
+        return vbox;
+    }
+
+    private void updateIndexes() {
+        for(int i=0; i<capacity; ++i) {
+            VBox vb = vBoxes.get(i);
+            for(Node n : vb.getChildren()) {
+                if(n instanceof Label) {
+                    ((Label) n).setText(String.valueOf(i));
+                }
+            }
+        }
+    }
+
+
+    // Better Animations
+    private FadeTransition fadeIn(VBox vBox) {
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), vBox);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.setCycleCount(1);
+
+        return fadeIn;
+    }
+
+    private FadeTransition fadeOut(VBox vBox) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), vBox);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setCycleCount(1);
+
+        return fadeOut;
+    }
+
+    private TranslateTransition slideY(VBox vBox, double y) {
+        TranslateTransition slide = new TranslateTransition(Duration.seconds(0.75), vBox);
+        slide.setByY(y);
+        slide.setCycleCount(1);
+
+        return slide;
+    }
+
+    private TranslateTransition slideX(VBox vBox, double x) {
+        TranslateTransition slide = new TranslateTransition(Duration.seconds(0.75), vBox);
+        slide.setByX(x);
+        slide.setCycleCount(1);
+
+        return slide;
+    }
+
+    private Timeline highlightNode(Rectangle r, Label l, Color from, Color to) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(r.strokeProperty(), from),
+                        new KeyValue(l.textFillProperty(), from)
+                ),
+                new KeyFrame(Duration.seconds(0.3),
+                        new KeyValue(r.strokeProperty(), to),
+                        new KeyValue(l.textFillProperty(), to)
+                ),
+                new KeyFrame(Duration.seconds(0.6),
+                        new KeyValue(r.strokeProperty(), from),
+                        new KeyValue(l.textFillProperty(), from)
+                )
+        );
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+
+        return timeline;
+    }
+
+    private FillTransition fillRectangle(double duration, Rectangle r, Color from, Color to) {
+        FillTransition fill = new FillTransition(Duration.seconds(duration), r);
+        fill.setFromValue(from);
+        fill.setToValue(to);
+
+        return fill;
+    }
+
+    private void destroyBox(VBox vbox) {
+        FadeTransition fadeOut = fadeOut(vbox);
+        TranslateTransition slideUp = slideY(vbox, -100);
+        slideUp.setOnFinished(event -> fadeOut.play());
+        slideUp.play();
+        fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
+    }
+
+    private void shiftX(int start, int end ,int val) {
+        for(int i=start; i<end; ++i) {
+            VBox vb = vBoxes.get(i);
+            vb.setLayoutX(vb.getLayoutX() + val);
+        }
     }
 }
