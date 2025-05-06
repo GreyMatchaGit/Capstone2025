@@ -36,6 +36,7 @@ public class MainController implements Initializable {
 
     public void setContentDynamic() {
         primaryStage.setOnShown(event -> {
+            // Get the actual size after rendering
             baseWidth = primaryStage.getWidth();
             baseHeight = primaryStage.getHeight();
 
@@ -74,6 +75,7 @@ public class MainController implements Initializable {
             primaryStage.heightProperty().addListener(resizeListener);
         });
     }
+
 
 
     public void setPage(Node node) {
