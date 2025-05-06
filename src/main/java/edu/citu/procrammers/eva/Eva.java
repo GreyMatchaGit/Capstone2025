@@ -27,7 +27,7 @@ public class Eva extends Application {
         Database.getInstance();
         new NavService(primaryStage);
         NavService.navigateTo(Splash);
-//        NavService.navigateTo(Academy);
+//        NavService.navigateTo(ADT);
         NavService.setFullScreen(true);
         primaryStage.show();
     }
