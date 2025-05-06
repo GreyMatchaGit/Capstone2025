@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.utils;
 
+import edu.citu.procrammers.eva.data.AudioSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -13,14 +14,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.io.*;
+
 public class SoundManager {
     private static MediaPlayer musicPlayer;
-    private static double musicVolume = 1;
+    public static double musicVolume = 1;
 
     private static final Map<String, Media> sfxCache = new HashMap<>();
     private static final List<MediaPlayer> activeSfxPlayers = new ArrayList<>();
-    private static double sfxVolume = 1;
+    public static double sfxVolume = 1;
     private static final int MAX_CONCURRENT_SFX = 8;
+
+    private static final String SAVE_PATH = "config/audio_settings.ser";
+
+    public static void saveAudioSettings(double musicVol, double sfxVol) {
+        try {
+            File configDir = new File("config");
+            if (!configDir.exists()) {
+                configDir.mkdirs();
+            }
+
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH))) {
+                AudioSettings settings = new AudioSettings(musicVol, sfxVol);
+                oos.writeObject(settings);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Failed to save audio settings: " + e.getMessage());
+        }
+    }
+
+    public static AudioSettings loadAudioSettings() {
+        File file = new File(SAVE_PATH);
+        if (!file.exists()) return new AudioSettings(1.0, 1.0);
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (AudioSettings) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Failed to load audio settings: " + e.getMessage());
+            return new AudioSettings(1.0, 1.0);
+        }
+    }
+
+    public static MediaPlayer createPreloadedPlayer(String soundFile, boolean loop) {
+        try {
+            Media media = getSoundFromCache(soundFile);
+            if (media == null) return null;
+
+            MediaPlayer player = new MediaPlayer(media);
+            player.setVolume(musicVolume);
+            if (loop) {
+                player.setCycleCount(MediaPlayer.INDEFINITE);
+            }
+            return player;
+
+        } catch (Exception e) {
+            System.err.println("Error creating preloaded MediaPlayer: " + e.getMessage());
+            return null;
+        }
+    }
 
     public static void playBackgroundMusic(String musicFile, Boolean loop) {
         try {
