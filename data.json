@@ -1,1 +1,6 @@
-{}
+{
+  "previousQueue": "[4, 2, 1, 3, 5]",
+  "size": 6,
+  "elements": "[4, 2, 1, 3, 5, 1]",
+  "type": "deque"
+}

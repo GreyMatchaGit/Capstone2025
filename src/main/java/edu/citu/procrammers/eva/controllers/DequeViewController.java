@@ -28,7 +28,7 @@ import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
-public class QueueViewController {
+public class DequeViewController {
 
     private double centerX, centerY;
     private static final Color POSITIVE = Color.ORANGE;
@@ -39,17 +39,18 @@ public class QueueViewController {
 
 
     @FXML private AnchorPane apVisualizer, apChat;
-    @FXML private Button btnEnqueue, btnDequeue, btnFront, btnClear;
+    @FXML private Button btnAddFirst, btnAddLast, btnRemoveFirst, btnRemoveLast,btnPeekFirst,btnPeekLast,btnClear;
     @FXML private TextField tfPrompt;
     @FXML private ImageView imgBackBtn, imgChatbotBtn;
 
-    private LinkedList<Integer> queue;
+    private LinkedList<Integer> deque;
     private List<Rectangle> rectangles;
     private List<Label> labels;
     private List<VBox> vBoxes;
     private int size;
 
     private Node frontMarker;
+    private Node backMarker;
 
     public JSONObject dataJSON;
 
@@ -60,7 +61,7 @@ public class QueueViewController {
 
         dataJSON = new JSONObject();
 
-        queue = new LinkedList<>();
+        deque = new LinkedList<>();
         rectangles = new ArrayList<>();
         labels = new ArrayList<>();
         vBoxes = new ArrayList<>();
@@ -74,15 +75,24 @@ public class QueueViewController {
                     this.centerX = centerX;
                     this.centerY = centerY;
 
-                    Polygon triangle = new Polygon();
-                    triangle.getPoints().addAll(0.0, 0.0, 20.0, 10.0, 0.0, 20.0); // right pointing
-                    triangle.setFill(Color.RED);
-                    triangle.setLayoutX(Value.FRONT_BOUNDARY_X - 25);
-                    triangle.setLayoutY(centerY + 10);
-                    triangle.setVisible(false);
+                    Polygon triangle1 = new Polygon();
+                    triangle1.getPoints().addAll(0.0, 0.0, 20.0, 10.0, 0.0, 20.0); // right pointing
+                    triangle1.setFill(Color.RED);
+                    triangle1.setLayoutX(Value.FRONT_BOUNDARY_X - 100);
+                    triangle1.setLayoutY(centerY + 10);
+                    triangle1.setVisible(false);
 
-                    apVisualizer.getChildren().add(triangle);
-                    frontMarker = triangle;
+                    Polygon triangle2 = new Polygon();
+                    triangle2.getPoints().addAll(20.0, 0.0, 0.0, 10.0, 20.0, 20.0); // left pointing
+                    triangle2.setFill(Color.ORANGE);
+                    triangle2.setLayoutX(Value.FRONT_BOUNDARY_X + 100);
+                    triangle2.setLayoutY(centerY + 10);
+                    triangle2.setVisible(false);
+
+                    apVisualizer.getChildren().add(triangle1);
+                    apVisualizer.getChildren().add(triangle2);
+                    frontMarker = triangle1;
+                    backMarker = triangle2;
                 });
             }
         });
@@ -95,25 +105,31 @@ public class QueueViewController {
     }
 
     private void writeDataJSON() {
-        dataJSON.put("type", "queue");
-        dataJSON.put("size", queue.size());
-        dataJSON.put("elements", queue.toString());
+        dataJSON.put("type", "deque");
+        dataJSON.put("size", deque.size());
+        dataJSON.put("elements", deque.toString());
         ChatService.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON(){
-        dataJSON.put("previousQueue", queue.toString());
+        dataJSON.put("previousQueue", deque.toString());
         ChatService.fileWriter(dataJSON, DATA_PATH);
     }
 
 
     public void onButtonClick(ActionEvent event) {
-        if(event.getSource() == btnEnqueue) {
-            enqueue();
-        } else if(event.getSource() == btnDequeue) {
-            dequeue();
-        } else if(event.getSource() == btnFront) {
-            front();
+        if(event.getSource() == btnAddFirst) {
+            addFirst();
+        } else if(event.getSource() == btnAddLast) {
+            addLast();
+        } else if(event.getSource() == btnRemoveFirst) {
+            removeFirst();
+        } else if(event.getSource() == btnRemoveLast) {
+            removeLast();
+        } else if(event.getSource() == btnPeekFirst) {
+            peekFirst();
+        } else if(event.getSource() == btnPeekLast) {
+            peekLast();
         } else if(event.getSource() == btnClear) {
             onClearOperation();
         }
@@ -132,51 +148,43 @@ public class QueueViewController {
         return num;
     }
 
-    private void updateList() {
-        if(apVisualizer.getChildren().getFirst() == frontMarker) { frontMarker.setVisible(true); }
-        double currentX = (Value.FRONT_BOUNDARY_X + vBoxes.size() * 55);
+    private void updateList(int n, String direction) {
+        frontMarker.setVisible(true);
+        backMarker.setVisible(true);
+
+        int pos = direction.equals("front") ? 0 : vBoxes.size();
+        double currentX = Value.FRONT_BOUNDARY_X + pos * 55;
         double currentY = centerY;
-        System.out.println(vBoxes.size()+ " " +currentX);
-        VBox vBox = createBoxes(vBoxes.size(),"", currentX, currentY, false);
+
+        VBox vBox = createBoxes(pos,"", currentX, currentY);
         FadeTransition ft = fadeIn(vBox);
-        vBox.setTranslateX(100);
-        TranslateTransition tt = slideX(vBox, -100);
+        TranslateTransition tt;
+        if(direction.equals("front")) {
+            vBox.setTranslateX(-50);
+            tt = slideX(vBox, 50);
+        } else {
+            vBox.setTranslateX(50);
+            tt = slideX(vBox, -50);
+        }
+
         ft.play();
         ft.setOnFinished(e -> tt.play());
-
-        System.out.println("Queue cleared " +
-                queue.size() + " " +
-                rectangles.size() + " " +
-                labels.size() + " " +
-                vBoxes.size());
-
-        for(VBox vb : vBoxes) {
-            for(Node b : vb.getChildren()) {
-                if(b instanceof StackPane) {
-                    for(Node m: ((StackPane) b).getChildren()) {
-                        if(m instanceof Label) {
-                            System.out.println(((Label) m).getText());
-                        }
-                    }
-                }
-            }
-        }
     }
 
-    private void enqueue() {
+    private void addFirst() {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
 
         if(size != 0){
             writePreviousDataJSON();
         }
-        queue.addLast(num);
+        deque.addFirst(num);
         writeDataJSON();
 
-        updateList();
+        updateList(0, "front");
 
-        Label l = labels.get(size);
-        Rectangle r = rectangles.get(size);
+        Label l = labels.getFirst();
+        Rectangle r = rectangles.getFirst();
 
         l.setText(Integer.toString(num));
 
@@ -188,8 +196,33 @@ public class QueueViewController {
         ++size;
     }
 
-    private void dequeue() {
-        int num = queue.getFirst();
+    private void addLast() {
+        int num = getNum();
+        if(num == Integer.MIN_VALUE) return;
+
+        if(size != 0){
+            writePreviousDataJSON();
+        }
+        deque.addLast(num);
+        writeDataJSON();
+
+        updateList(1, "back");
+
+        Label l = labels.getLast();
+        Rectangle r = rectangles.getLast();
+
+        l.setText(Integer.toString(num));
+
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, POSITIVE);
+        FillTransition reset = fillRectangle(0.3, r, POSITIVE, DEFAULTR);
+        SequentialTransition st = new SequentialTransition(highlight, reset);
+        st.play();
+
+        ++size;
+    }
+
+    private void removeFirst() {
+        int num = deque.getFirst();
         if(num == Integer.MIN_VALUE) return;
 
         if(size == 0) return;
@@ -205,7 +238,7 @@ public class QueueViewController {
         nodeTransition.play();
 
         traversal.setOnFinished(e -> {
-            TranslateTransition slideOut = slideX(currentVBox, -100);
+            TranslateTransition slideOut = slideX(currentVBox, -55);
             FadeTransition fade = fadeOut(currentVBox);
             slideOut.setOnFinished(event -> fade.play());
             fade.setOnFinished(event -> {
@@ -214,7 +247,7 @@ public class QueueViewController {
                 vBoxes.removeFirst();
                 rectangles.removeFirst();
                 labels.removeFirst();
-                queue.removeFirst();
+                deque.removeFirst();
                 writeDataJSON();
 
                 for (int i = 0; i < vBoxes.size(); i++) {
@@ -244,9 +277,68 @@ public class QueueViewController {
         traversal.play();
     }
 
+    private void removeLast() {
+        int num = deque.getLast();
+        if(num == Integer.MIN_VALUE) return;
 
-    private boolean front() {
-        int num = queue.getFirst();
+        if(size == 0) return;
+
+        VBox currentVBox = vBoxes.getLast();
+        Rectangle r = rectangles.getLast();
+        Label l = labels.getLast();
+
+        SequentialTransition traversal = new SequentialTransition();
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+        FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+        SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+        nodeTransition.play();
+
+        traversal.setOnFinished(e -> {
+            TranslateTransition slideOut = slideX(currentVBox, 55);
+            FadeTransition fade = fadeOut(currentVBox);
+            slideOut.setOnFinished(event -> fade.play());
+            fade.setOnFinished(event -> {
+                writePreviousDataJSON();
+                apVisualizer.getChildren().remove(currentVBox);
+                vBoxes.removeLast();
+                rectangles.removeLast();
+                labels.removeLast();
+                deque.removeLast();
+                writeDataJSON();
+
+                for (int i = 0; i < vBoxes.size(); i++) {
+                    VBox vb = vBoxes.get(i);
+
+                    double targetX = Value.FRONT_BOUNDARY_X  + i * 55;
+
+                    KeyValue kv = new KeyValue(vb.layoutXProperty(), targetX, Interpolator.EASE_BOTH);
+                    KeyFrame kf = new KeyFrame(Duration.seconds(0.75), kv);
+                    Timeline timeline = new Timeline(kf);
+                    timeline.play();
+
+                    if (vb.getChildren().size() >= 2) {
+                        Node node = vb.getChildren().get(1);
+                        if (node instanceof Label) {
+                            ((Label) node).setText(Integer.toString(i));
+                        }
+                    }
+                }
+
+                --size;
+                if(size == 0){
+                    frontMarker.setVisible(false);
+                    backMarker.setVisible(false);
+                }
+            });
+            slideOut.play();
+        });
+
+        traversal.play();
+    }
+
+
+    private boolean peekFirst() {
+        int num = deque.getFirst();
         if(num == Integer.MIN_VALUE) return false;
         if(size == 0) return false;
 
@@ -283,11 +375,49 @@ public class QueueViewController {
         return true;
     }
 
+    private boolean peekLast() {
+        int num = deque.getLast();
+        if(num == Integer.MIN_VALUE) return false;
+        if(size == 0) return false;
+
+        VBox currentVBox = vBoxes.getLast();
+        Rectangle r = rectangles.getLast();
+        Label l = labels.getLast();
+        SequentialTransition traversal = new SequentialTransition();
+
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+        FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+        SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+        traversal.getChildren().add(nodeTransition);
+
+        // After traversal, do the slideY animation
+        VBox finalCurrentVBox = currentVBox;
+        Rectangle finalRectangle = r;
+        traversal.setOnFinished(e -> {
+            TranslateTransition tFirst = slideY(finalCurrentVBox, -100);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+            FillTransition highlightSlide = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
+            FillTransition resetSlide = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
+            TranslateTransition tLast = slideY(finalCurrentVBox, 100);
+            SequentialTransition fullSequence = new SequentialTransition(
+                    tFirst,
+                    pause,
+                    highlightSlide,
+                    resetSlide,
+                    tLast
+            );
+            fullSequence.play();
+        });
+
+        traversal.play();
+        return true;
+    }
+
     private void onClearOperation() {
         if(size != 0) {
             tfPrompt.setText("");
             writePreviousDataJSON();
-            queue.clear();
+            deque.clear();
             writeDataJSON();
             // Highlight Everything
             for (int i = 0; i < vBoxes.size(); ++i) {
@@ -313,7 +443,7 @@ public class QueueViewController {
             size = 0;
             frontMarker.setVisible(false);
             System.out.println("Queue cleared " +
-                    queue.size() + " " +
+                    deque.size() + " " +
                     rectangles.size() + " " +
                     labels.size() + " " +
                     vBoxes.size());
@@ -321,7 +451,7 @@ public class QueueViewController {
     }
 
     // Better Utilities
-    private VBox createBoxes(int pos, String num, double x, double y, boolean isTemp) {
+    private VBox createBoxes(int pos, String num, double x, double y) {
         Rectangle rect = new Rectangle(50, 50);
         rect.setFill(Color.WHITE);
         rect.setStroke(Color.BLACK);
@@ -343,6 +473,7 @@ public class QueueViewController {
         vbox.setLayoutY(y);
 
         apVisualizer.getChildren().add(vbox);
+
         rectangles.add(pos, rect);
         labels.add(pos, value);
         vBoxes.add(pos, vbox);

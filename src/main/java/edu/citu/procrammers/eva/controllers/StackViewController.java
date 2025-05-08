@@ -77,7 +77,7 @@ public class StackViewController {
             centerY = apVisualizer.getHeight() / 2;
             pointY = apVisualizer.getHeight() * 0.9;
         });
-
+        ChatService.updateData(new JSONObject());
         imgChatbotBtn.setOnMouseClicked(e -> { ChatService.loadChatbot(chatBotController, apChat); });
     }
 
