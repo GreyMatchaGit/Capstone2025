@@ -108,6 +108,7 @@ public class ArrayNode {
 
     public int addToBucket(int number) {
         ArrayNode newNode = new ArrayNode(bucketContainer);
+        newNode.setNumber(number);
         bucket.add(newNode);
         return bucket.size();
     }

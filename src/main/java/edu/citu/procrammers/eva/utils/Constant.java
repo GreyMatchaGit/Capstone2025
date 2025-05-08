@@ -35,5 +35,6 @@ public class Constant {
     public static class HashTable {
         public static final int EMPTY = Integer.MIN_VALUE;
         public static final int SENTINEL = EMPTY + 1;
+        public static final int FINISHED = SENTINEL + 1;
     }
 }

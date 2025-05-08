@@ -1,7 +1,9 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.models.strategy.hashtable.CollisionStrategy;
 import edu.citu.procrammers.eva.models.strategy.hashtable.CompressionStrategy;
 import edu.citu.procrammers.eva.models.strategy.hashtable.MadStrategy;
+import edu.citu.procrammers.eva.models.strategy.hashtable.SeparateChainingStrategy;
 import edu.citu.procrammers.eva.utils.ArrayNode;
 import edu.citu.procrammers.eva.utils.Constant;
 import edu.citu.procrammers.eva.utils.NavService;
@@ -10,6 +12,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,8 +28,10 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.*;
 
+import static edu.citu.procrammers.eva.controllers.HashTableController.CollisionMethod.SEPARATE_CHAINING;
 import static edu.citu.procrammers.eva.controllers.HashTableController.errorHandling.LOGGER_PREFIX;
 import static edu.citu.procrammers.eva.utils.Constant.HashTable.EMPTY;
+import static edu.citu.procrammers.eva.utils.Constant.HashTable.FINISHED;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
@@ -35,8 +41,14 @@ public class HashTableController implements Initializable {
         public static String LOGGER_PREFIX = "[HashTableController]";
     }
 
-    public static class CompressionFunction {
+    public static class CompressionMethod {
         public static String MAD = "MAD";
+    }
+
+    public static class CollisionMethod {
+        public static final String SEPARATE_CHAINING = "Separate Chaining";
+        public static final String LINEAR_PROBING = "Linear Probing";
+        public static final String QUADRATIC_PROBING = "Quadratic Probing";
     }
 
     @FXML public HBox visualizer;
@@ -97,7 +109,25 @@ public class HashTableController implements Initializable {
     }
 
     private void handleCollision(int index, int value) {
+        CollisionStrategy collision = null;
 
+        switch (cbCollision.getValue()) {
+            case SEPARATE_CHAINING:
+                collision = new SeparateChainingStrategy(arrayNodes, value);
+                break;
+            default:
+                System.out.println(LOGGER_PREFIX + " Choose a valid collision handling method. INVALID: " + cbCollision.toString());
+                return;
+        }
+
+        handleCollisionHelper(index, value, collision);
+    }
+
+    private void handleCollisionHelper(int index, int value, CollisionStrategy strategy) {
+        if (index == FINISHED)
+            return;
+
+        handleCollisionHelper(strategy.handleCollision(index), value, strategy);
     }
 
     private int getHashCode(int value)  {
@@ -200,6 +230,12 @@ public class HashTableController implements Initializable {
     private void setUI() {
         setupGlow(imgBackBtn);
         visualizer.setSpacing(10.0);
+
+        ArrayList<String> collisionMethods = new ArrayList<>();
+        collisionMethods.add(CollisionMethod.LINEAR_PROBING);
+        collisionMethods.add(CollisionMethod.QUADRATIC_PROBING);
+        collisionMethods.add(SEPARATE_CHAINING);
+        cbCollision.setItems(FXCollections.observableList(collisionMethods));
     }
 
     @FXML
