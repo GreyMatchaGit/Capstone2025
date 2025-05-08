@@ -1,9 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
-import edu.citu.procrammers.eva.models.strategy.hashtable.CollisionStrategy;
-import edu.citu.procrammers.eva.models.strategy.hashtable.CompressionStrategy;
-import edu.citu.procrammers.eva.models.strategy.hashtable.MadStrategy;
-import edu.citu.procrammers.eva.models.strategy.hashtable.SeparateChainingStrategy;
+import edu.citu.procrammers.eva.models.strategy.hashtable.*;
 import edu.citu.procrammers.eva.utils.ArrayNode;
 import edu.citu.procrammers.eva.utils.Constant;
 import edu.citu.procrammers.eva.utils.NavService;
@@ -28,7 +25,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.*;
 
-import static edu.citu.procrammers.eva.controllers.HashTableController.CollisionMethod.SEPARATE_CHAINING;
+import static edu.citu.procrammers.eva.controllers.HashTableController.CollisionMethod.*;
 import static edu.citu.procrammers.eva.controllers.HashTableController.errorHandling.LOGGER_PREFIX;
 import static edu.citu.procrammers.eva.utils.Constant.HashTable.EMPTY;
 import static edu.citu.procrammers.eva.utils.Constant.HashTable.FINISHED;
@@ -115,8 +112,16 @@ public class HashTableController implements Initializable {
             case SEPARATE_CHAINING:
                 collision = new SeparateChainingStrategy(arrayNodes, value);
                 break;
+            case LINEAR_PROBING:
+                collision = new LinearProbingStrategy(arrayNodes, value);
+                break;
+            case QUADRATIC_PROBING:
+                collision = new QuadraticProbingStrategy(arrayNodes, value);
+                break;
             default:
-                System.out.println(LOGGER_PREFIX + " Choose a valid collision handling method. INVALID: " + cbCollision.toString());
+                System.out.println(LOGGER_PREFIX +
+                        " Choose a valid collision handling method. INVALID: " +
+                        cbCollision.toString());
                 return;
         }
 
