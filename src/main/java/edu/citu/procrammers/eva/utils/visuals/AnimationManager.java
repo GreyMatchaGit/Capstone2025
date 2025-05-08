@@ -104,21 +104,31 @@ public class AnimationManager {
 //        history.push(commands.get(currentIndex));
 //        commands.get(currentIndex).execute(() -> {});
 //        currentIndex++;
-        Command command = commands.get(currentIndex);
-        while ( !(command instanceof  StopCommand) && currentIndex >= commands.size() - 1) {
+        System.out.println("Stepping...");
+        Command command = null;
+        while (currentIndex < commands.size()) {
+            command = commands.get(currentIndex);
             System.out.println("Executing: " + command);
             command.execute(() -> {});
             currentIndex++;
-            command = commands.get(currentIndex);
+            if (command instanceof StopCommand) {
+                break;
+            }
+            history.push(command);
         }
-        currentIndex++;
     }
 
     public void undo() {
         if (!history.isEmpty()) {
-            System.out.println("Undo Command: ");
-            history.pop().undo(() -> {});
+            if (!(history.peek() instanceof StopCommand)) {
+                System.out.println("Undo Command: ");
+                history.pop().undo(this::undo);
+                currentIndex--;
+            }
             currentIndex--;
+        }
+        else {
+            System.out.println("No previous commands...");
         }
     }
 
@@ -130,17 +140,16 @@ public class AnimationManager {
             currentIndex = 0;
             return;
         }
-        Command command = commands.get(currentIndex);
-        history.push(command);
-        System.out.println("Executing Command: " + command);
+//        Command command = commands.get(currentIndex);
+//        history.push(command);
+//        System.out.println("Executing Command: " + command);
+        history.push(new StopCommand());
 
         if (isContinuous) {
-            command.execute(() -> {
-                currentIndex++;
-                PauseTransition pause = new PauseTransition(Duration.seconds(speed));
-                pause.setOnFinished(e -> play());
-                pause.play();
-            });
+            step();
+            PauseTransition pause = new PauseTransition(Duration.seconds(speed));
+            pause.setOnFinished(e -> play());
+            pause.play();
         }
         else {
             step();

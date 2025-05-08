@@ -52,7 +52,7 @@ public class SetHighlightCommand extends Command {
             System.out.println("turning off");
             circle.setStroke(Color.GREEN);
             circle.setFill(Color.WHITE);
-            circle.setStrokeWidth(3); // Optional: make stroke more visible
+//            circle.setStrokeWidth(3); // Optional: make stroke more visible
 //            circle.setStyle("-fx-stroke: green; -fx-background-color: white");
 //            circle.setStyle("-fx-stroke: green");
 //            circle.setFill(Paint.valueOf("3366cc"));

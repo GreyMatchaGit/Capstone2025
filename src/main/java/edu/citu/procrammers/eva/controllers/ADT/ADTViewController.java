@@ -140,6 +140,7 @@ public class ADTViewController {
 
     @FXML private void toggleContinuous() {
         animationManager.isContinuous = !animationManager.isContinuous;
+        System.out.println("isContinuous = " + animationManager.isContinuous);
     }
 
     @FXML
