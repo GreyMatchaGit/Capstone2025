@@ -118,22 +118,28 @@ public class AnimationManager {
         }
     }
 
-    public void undo() {
+    public void undo(Runnable callback) {
         if (!history.isEmpty()) {
             if (!(history.peek() instanceof StopCommand)) {
                 System.out.println("Undo Command: ");
-                history.pop().undo(this::undo);
+                history.pop().undo(() -> {
+                    PauseTransition pause = new PauseTransition(Duration.seconds(speed));
+                    pause.setOnFinished(e -> undo(callback));
+                    pause.play();
+                });
                 currentIndex--;
             }
             currentIndex--;
         }
         else {
+            callback.run();
             System.out.println("No previous commands...");
         }
     }
 
-    public void play() {
+    public void play(Runnable callback) {
         if (currentIndex >= commands.size()) {
+            callback.run();
             System.out.println("No more commands to play");
             history = new Stack<>();
             commands.clear();
@@ -148,7 +154,7 @@ public class AnimationManager {
         if (isContinuous) {
             step();
             PauseTransition pause = new PauseTransition(Duration.seconds(speed));
-            pause.setOnFinished(e -> play());
+            pause.setOnFinished(e -> play(callback));
             pause.play();
         }
         else {

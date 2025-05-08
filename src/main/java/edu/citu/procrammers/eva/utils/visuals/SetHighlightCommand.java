@@ -16,16 +16,16 @@ public class SetHighlightCommand extends Command {
     public void execute(Runnable onFinished) {
         if (isOn == 1) {
             System.out.println("turning on");
-
-            circle.setStroke(Color.GREEN);
-            circle.setFill(Color.WHITE);
+            circle.setStroke(Color.valueOf("#a7c957"));
+            circle.setStrokeWidth(5); // Optional: make stroke more visible
 //            circle.setStrokeWidth(3); // Optional: make stroke more visible
 //            circle.setFill(Paint.valueOf("PINK"));
 //            circle.setStyle("-fx-stroke: green; -fx-background-color: white");
         }
         else {
             System.out.println("turning off");
-            circle.setStroke(Color.BLACK);
+            circle.setStroke(Color.valueOf("#E9DBD5"));
+            circle.setStrokeWidth(3); // Optional: make stroke more visible
 //            circle.setFill(Color.WHITE);
 //            circle.setStrokeWidth(2); // Optional: make stroke more visible
 //            circle.setStyle("-fx-stroke: black; -fx-background-color: white");
@@ -38,10 +38,12 @@ public class SetHighlightCommand extends Command {
     @Override public void undo(Runnable onFinished) {
         if (isOn == 0) {
             System.out.println("turning on");
-            circle.setStroke(Color.BLACK);
-//            circle.setFill(Color.WHITE);
-//            circle.setStrokeWidth(2); // Optional: make stroke more visible
+            circle.setStroke(Color.valueOf("#E9DBD5"));
+            circle.setStrokeWidth(5); // Optional: make stroke more visible
             // Set to highlighted (green stroke, white fill)
+
+//            circle.setStroke(Paint.valueOf("#E9DBD5"));
+//            circle.setFill(Paint.valueOf("#4E2D2D"));
 
 
 //            circle.setStyle("-fx-stroke: black; -fx-background-color: white");
@@ -50,8 +52,8 @@ public class SetHighlightCommand extends Command {
         }
         else {
             System.out.println("turning off");
-            circle.setStroke(Color.GREEN);
-            circle.setFill(Color.WHITE);
+            circle.setStroke(Color.valueOf("#a7c957"));
+            circle.setStrokeWidth(3); // Optional: make stroke more visible
 //            circle.setStrokeWidth(3); // Optional: make stroke more visible
 //            circle.setStyle("-fx-stroke: green; -fx-background-color: white");
 //            circle.setStyle("-fx-stroke: green");

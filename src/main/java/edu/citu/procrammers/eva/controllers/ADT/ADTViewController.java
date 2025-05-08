@@ -80,6 +80,39 @@ public class ADTViewController {
         tfDelete.clear();
     }
 
+    private void disableUI() {
+        tfInput.setDisable(true);
+        tfDelete.setDisable(true);
+
+        btnInsert.setDisable(true);
+        btnDelete.setDisable(true);
+
+        btnBackward.setDisable(true);
+        btnPlay.setDisable(true);
+        btnForward.setDisable(true);
+
+        tglIsContinuous.setDisable(true);
+        tglSeratoMode.setDisable(true);
+
+        sliderSpeed.setDisable(true);
+    }
+
+    private void enableUI() {
+        tfInput.setDisable(false);
+        tfDelete.setDisable(false);
+
+        btnInsert.setDisable(false);
+        btnDelete.setDisable(false);
+
+        btnBackward.setDisable(false);
+        btnPlay.setDisable(false);
+        btnForward.setDisable(false);
+
+        tglIsContinuous.setDisable(false);
+        tglSeratoMode.setDisable(false);
+
+        sliderSpeed.setDisable(false);
+    }
 
     private void initializeSlider () {
         sliderSpeed.setShowTickLabels(true);
@@ -106,36 +139,41 @@ public class ADTViewController {
     }
 
     @FXML private void onDeleteButtonClicked() {
+        disableUI();
         int key = Integer.parseInt(tfDelete.getText());
         clearFields();
         animationManager.commands = BST.deleteElement(key);
-        animationManager.play();
+        animationManager.play(this::enableUI);
     }
 
 
     @FXML
     private void onButtonInsertClicked() {
+        disableUI();
         System.out.println("playing speed: " + animationManager.speed + " seconds ");
         int key = Integer.parseInt(tfInput.textProperty().getValue());
         clearFields();
 
         animationManager.commands = BST.insertElement(key);
-        animationManager.play();
+        animationManager.play(this::enableUI);
 //        Node newNode = BST.insertElement(key);
 //        addNewNodeUI(newNode);
     }
 
     @FXML private void onButtonBackwardClicked() {
-        animationManager.undo();
+        disableUI();
+        animationManager.undo(this::enableUI);
     }
 
     @FXML private void onButtonPlayClicked() {
+        disableUI();
         toggleContinuous();
-        animationManager.play();
+        animationManager.play(this::enableUI);
     }
 
     @FXML private void onButtonForwardClick() {
-        animationManager.play();
+        disableUI();
+        animationManager.play(this::enableUI);
     }
 
     @FXML private void toggleContinuous() {

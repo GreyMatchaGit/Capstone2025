@@ -20,6 +20,7 @@ public class DeleteCommand extends Command {
     public void execute(Runnable onFinished) {
         System.out.println("Deleting graphic: " + graphicId);
         canvas.getChildren().remove(graphicMap.get(graphicId));
+
         onFinished.run();
     }
 

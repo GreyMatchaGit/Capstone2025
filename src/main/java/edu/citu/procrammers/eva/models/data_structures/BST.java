@@ -301,14 +301,11 @@ public class BST extends Tree {
                     commands.add(am.newCommand("Delete", nodeId));
                     if (leftchild && node.getParent() != null) {
                         node.getParent().setLeft(null);
-                        System.out.println("Bang");
                     }
                     else if (node.getParent() != null) {
-                        System.out.println("right");
                         node.getParent().setRight(null);
                     }
                     else {
-                        System.out.println("null root");
                         root = null;
                     }
                     this.resizeTree(commands);
@@ -428,12 +425,10 @@ public class BST extends Tree {
         Node tmp = node.getLeft();
 //                    String highlightID = Integer.toString(id++);
 //                    this.cmd("Move", this.highlightID, tmp.x, tmp.y);
-
-        String tmpX = Double.toString(tmp.x.get());
-        String tmpY = Double.toString(tmp.y.get());
 //                    commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
 //                    this.cmd("Step");
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         while (tmp.getRight() != null)
         {
@@ -442,8 +437,8 @@ public class BST extends Tree {
 //                        tmpY = Double.toString(tmp.y.get());
 //                        commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
 //                        this.cmd("Step");
-            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         }
 //                    this.cmd("SetText", node.graphicID, " ");
@@ -532,6 +527,7 @@ public class BST extends Tree {
 //                    commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
 //                    this.cmd("Step");
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         while (tmp.getLeft() != null)
         {
@@ -541,6 +537,7 @@ public class BST extends Tree {
 //                        commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
 //                        this.cmd("Step");
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         }
 //                    this.cmd("SetText", node.graphicID, " ");
@@ -550,8 +547,9 @@ public class BST extends Tree {
         node.setElement(tmp.element);
         commands.add(am.newCommand("SetText", Integer.toString(id++), Integer.toString(tmp.element),
                 Double.toString(tmp.x.get()), Double.toString(tmp.y.get())));
-        commands.add(am.newCommand("Move", Integer.toString(id - 1), Double.toString(node.x.get()), Double.toString(node.y.get())));
         commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
+        commands.add(am.newCommand("Move", Integer.toString(id - 1), Double.toString(node.x.get()), Double.toString(node.y.get())));
+        commands.add(am.newCommand("Stop"));
 //                    this.cmd("Move", labelID, node.x, node.y);
 //                    this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");
 
@@ -588,6 +586,7 @@ public class BST extends Tree {
             String tmpLeftId = Integer.toString(tmp.getLeft().graphicId);
             String tmpRightId = Integer.toString(tmp.getRight().graphicId);
             commands.add(am.newCommand("Connect", tmpParentId, tmpLeftId, tmpRightId));
+            commands.add(am.newCommand("Stop"));
 //                        this.cmd("Step");
 //                        this.cmd("Delete", tmp.graphicID);
             commands.add(am.newCommand("Delete", Integer.toString(tmp.graphicId)));
