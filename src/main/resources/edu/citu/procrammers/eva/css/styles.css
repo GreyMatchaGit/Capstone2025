@@ -134,3 +134,52 @@
     -fx-translate-y: 2;
     -fx-effect: none;
 }
+
+.auth-login-button {
+    -fx-background-color: #933b3b;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-cursor: hand;
+}
+.auth-login-button:hover {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #933b3b;
+    -fx-border-color: #933b3b;
+}
+.auth-login-button:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
+}
+
+
+.auth-register-button {
+    -fx-background-color: #e3b344;
+    -fx-text-fill: #4E2D2D;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-color: #4E2D2D;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-cursor: hand;
+}
+.auth-register-button:hover {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #e6c45d;
+    -fx-border-color: #C6A43B;
+}
+.auth-register-button:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
+}

@@ -16,7 +16,7 @@ import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 public class MainMenuController {
 
     public Pane fadePane;
-    public ImageView imgLoginBtn, imgRegisterBtn, imgProjectEvaBG, imgPlayBtn, imgLogo;
+    public ImageView imgProjectEvaBG, imgPlayBtn, imgLogo;
     public TextField tfUsername, tfPassword, tfRegisterUsername, tfRegisterPassword;
     public StackPane spRegisterContainer, spLoginContainer;
 
@@ -26,7 +26,7 @@ public class MainMenuController {
     @FXML
     public void initialize() {
         SoundManager.playBackgroundMusic("music/main_menu_music.m4a", true);
-        setupGlow(imgLoginBtn, imgRegisterBtn, imgPlayBtn);
+        setupGlow(imgPlayBtn);
 
         imgProjectEvaBG.setPreserveRatio(true);
 

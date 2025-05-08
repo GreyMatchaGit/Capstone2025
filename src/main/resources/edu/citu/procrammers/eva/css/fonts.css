@@ -50,3 +50,23 @@
     -fx-background-color: transparent;
     -fx-control-inner-background: transparent;
 }
+
+.password-field {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-padding: 6 10;
+    -fx-highlight-fill: #CBB1A6;
+    -fx-highlight-text-fill: #4E2D2D;
+    -fx-caret-color: #CBB1A6;
+}
+.password-field:focused {
+    -fx-border-color: #CBB1A6;
+    -fx-effect: dropshadow(gaussian, #CBB1A6, 4, 0.4, 0, 0);
+}
