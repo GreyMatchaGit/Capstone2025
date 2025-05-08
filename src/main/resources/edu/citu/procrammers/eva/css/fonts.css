@@ -8,6 +8,11 @@
     src: url('../fonts/PixelifySans-Bold.ttf');
 }
 
+.text {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 17;
+}
+
 .bold-text {
     -fx-font-family: 'Pixelify Sans';
     -fx-font-weight: bold;
