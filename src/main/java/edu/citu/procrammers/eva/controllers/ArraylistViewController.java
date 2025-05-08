@@ -21,18 +21,13 @@ import javafx.util.Pair;
 import java.net.URL;
 import java.util.*;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static java.lang.Math.ceil;
 
 public class ArraylistViewController implements Initializable {
 
     private double centerX, centerY;
-    private static final Color POSITIVE = Color.ORANGE;
-    private static final Color NEGATIVE = Color.RED;
-    private static final Color SEARCH = Color.GREENYELLOW;
-    private static final Color DEFAULT = Color.BLACK;
-    private static final Color DEFAULTR = Color.WHITE;
 
     public AnchorPane apVisualizer;
     public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
@@ -59,8 +54,8 @@ public class ArraylistViewController implements Initializable {
         apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 Platform.runLater(() -> {
-                    double centerX = apVisualizer.getWidth() / 2;
-                    double centerY = apVisualizer.getHeight() / 2;
+                    double centerX = (apVisualizer.getWidth() / 2) - 25;
+                    double centerY = (apVisualizer.getHeight() / 2);
                     this.centerX = centerX;
                     this.centerY = centerY;
                 });
@@ -78,7 +73,7 @@ public class ArraylistViewController implements Initializable {
 
         // Create initial nodes, capacity = 5
         Platform.runLater(() -> {
-            dynamicAddResizeList(5);
+            dynamicAddResizeList(1);
         });
     }
 
@@ -138,11 +133,13 @@ public class ArraylistViewController implements Initializable {
 
     private void dynamicAddResizeList(int n) {
         for(int i=0; i<n; ++i) {
-            double currentX = (centerX) + capacity*30;
-            double currentY = centerY-100;
+            double totalWidth = (capacity + 1) * 50 + capacity * 5;
+            double startX = centerX - totalWidth / 2;
+            double currentX = startX + (capacity+1) *55;
+            double currentY = centerY-50;
             VBox vBox = createBoxes(capacity,"", currentX, currentY, false);
             FadeTransition ft = fadeIn(vBox);
-            TranslateTransition tt = slideY(vBox, 100);
+            TranslateTransition tt = slideY(vBox, 50);
             ft.play();
             ft.setOnFinished(e -> tt.play());
         }
@@ -256,7 +253,6 @@ public class ArraylistViewController implements Initializable {
             }
         }
 
-        // I had a stroke here
         if (isExisting) {
             VBox finalVBox = currentNode.getVBox();
             Rectangle finalRectangle = currentNode.getRectangle();
@@ -355,9 +351,9 @@ public class ArraylistViewController implements Initializable {
         }
     }
 
-    private boolean searchElement() {
+    private void searchElement() {
         int num = getNum();
-        if(num == Integer.MIN_VALUE) return false;
+        if(num == Integer.MIN_VALUE) return;
 
         boolean isExisting = false;
         ArrayNode currentNode = null;
@@ -414,7 +410,6 @@ public class ArraylistViewController implements Initializable {
         traversal.play();
         System.out.println(size);
 
-        return isExisting;
     }
 
     private void onClearOperation() {
@@ -449,7 +444,18 @@ public class ArraylistViewController implements Initializable {
         VBox vbox = arrayNode.getVBox();
 
         if(!isTemp) {
-            shiftX(0, capacity, -25);
+            double newTotalWidth = 50 * (capacity+1) + capacity * 5;
+            double oldTotalWidth = 50 * (capacity) + (capacity-1) * 5;
+            double delta = -(newTotalWidth - oldTotalWidth) / 2;
+
+            System.out.println("Capacity: " + capacity +
+                    "\nNew: " + newTotalWidth +
+                    "\nOld: " + oldTotalWidth);
+            for(ArrayNode an : arrayNodes) {
+                System.out.println(an.getX());
+            }
+
+            shiftX(0, capacity, delta);
             capacity++;
         }
 
@@ -462,7 +468,6 @@ public class ArraylistViewController implements Initializable {
             arrayNode.setIndex(String.valueOf(i));
         }
     }
-
 
     // Better Animations
     private FadeTransition fadeIn(VBox vBox) {
@@ -536,23 +541,12 @@ public class ArraylistViewController implements Initializable {
         return new SequentialTransition(slideUp, fadeOut);
     }
 
-    private void shiftX(int start, int end ,int val) {
-                for(int i=start; i<end; ++i) {
-            ArrayNode arrayNode = arrayNodes.get(i);
-            VBox vb = arrayNode.getVBox();
-            arrayNode.setX(vb.getLayoutX() + val);
-            vb.setLayoutX(vb.getLayoutX() + val);
-        }
-    }
-
-    private void shiftXes(int start, int end, int val) {
-        ParallelTransition pt = new ParallelTransition();
+    private void shiftX(int start, int end ,double val) {
         for(int i=start; i<end; ++i) {
             ArrayNode arrayNode = arrayNodes.get(i);
             VBox vb = arrayNode.getVBox();
-            arrayNode.setX(arrayNode.getX() + val);
-            TranslateTransition tt = slideX(vb, arrayNode.getX());
-            tt.play();
+            arrayNode.setX(vb.getLayoutX() + val);
+            vb.setLayoutX(arrayNode.getX());
         }
     }
 
