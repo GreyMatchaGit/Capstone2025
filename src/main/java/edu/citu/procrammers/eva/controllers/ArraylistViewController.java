@@ -89,11 +89,16 @@ public class ArraylistViewController {
             }
         });
 
-        imgChatbotBtn.setOnMouseClicked(e -> { ChatService.loadChatbot(chatBotController, apChat); });
+        ChatService.updateData(new JSONObject());
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            ChatService.loadChatbot(chatBotController, apChat);
+        });
     }
 
     private void writeDataJSON() {
-        dataJSON.put("array", arrayList.toString());
+        dataJSON.put("type", "arraylist");
+        dataJSON.put("elements", arrayList.toString());
         ChatService.updateData(dataJSON);
     }
 

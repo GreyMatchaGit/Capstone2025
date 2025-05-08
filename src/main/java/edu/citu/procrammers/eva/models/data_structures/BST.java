@@ -1,10 +1,15 @@
 package edu.citu.procrammers.eva.models.data_structures;
 
+import edu.citu.procrammers.eva.controllers.ChatBotController;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.visuals.*;
 import javafx.scene.layout.AnchorPane;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
 
 public class BST extends Tree {
     public final double w;
@@ -28,9 +33,12 @@ public class BST extends Tree {
     public boolean isStandard;
 
     private int id;
+
+    public JSONObject dataJSON;
     public BST(AnimationManager animationManager, double width, double height, AnchorPane canvas) {
         super(animationManager, width, height);
         this.canvas = canvas;
+        dataJSON = new JSONObject();
         root = null;
         size = 0;
         w = width;
@@ -52,6 +60,33 @@ public class BST extends Tree {
         isStandard = false;
     }
 
+    private void writeDataJSON() {
+        dataJSON.put("type", "binary_tree");
+        dataJSON.put("root", buildTreeJSON(root));
+        ChatService.updateData(dataJSON);
+    }
+
+    private void writePreviousDataJSON(){
+        dataJSON.put("previousTree", buildTreeJSON(root));
+        ChatService.fileWriter(dataJSON, DATA_PATH);
+    }
+
+
+    private JSONObject buildTreeJSON(Node n) {
+        if(n == null) return null;
+
+        JSONObject obj = new JSONObject();
+
+        obj.put("element", n.getElement());
+
+        JSONObject left = buildTreeJSON(n.getLeft());
+        JSONObject right = buildTreeJSON(n.getRight());
+
+        if(left != null) obj.put("left", left);
+        if(right != null) obj.put("right", right);
+
+        return obj;
+    }
 
     public void addLeft(Node parent, Node child) {
         parent.setLeft(child);
@@ -71,53 +106,12 @@ public class BST extends Tree {
         String x = Double.toString(startingX);
         String y = Double.toString(STARTING_Y);
 
-    public void writeIntoJson(){
-        tree.put("root", buildTreeJson(root));
-
-        JSONObject prompt = readJSON("prompt.json");
-        if(prompt == null) return;
-
-        try (FileWriter file = new FileWriter("tree.json")) {
-            file.write(tree.toString(2));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write tree.json", e);
-        }
-
-        prompt.getJSONArray("messages")
-                .getJSONObject(1)
-                .put("content", tree.toString(2));
-
-
-        try (FileWriter file = new FileWriter("prompt.json")) {
-            file.write(prompt.toString(2));
-        } catch (IOException e) {
-            System.out.println("Failed to write prompt.json");
-        }
-    }
-
-    private JSONObject buildTreeJson(Node n) {
-        if(n == null) return null;
-
-        JSONObject obj = new JSONObject();
-
-        obj.put("element", n.getElement());
-
-        JSONObject left = buildTreeJson(n.getLeft());
-        JSONObject right = buildTreeJson(n.getRight());
-
-        if(left != null) obj.put("left", left);
-        if(right != null) obj.put("right", right);
-
-        return obj;
-    }
-
-
-    public Node insertElement(int insertedValue) {
         if (root == null) {
             root = new Node(insertedValue, id++, startingX, STARTING_Y);
             graphicId = Integer.toString(root.graphicId);
             System.out.println("Command Creation: id = " + graphicId);
             commands.add(am.newCommand("CreateCircle", insertee, graphicId, x, y));
+            writeDataJSON();
         }
         else {
             Node insertElem = new Node(insertedValue, id++, 100, 100);
@@ -172,6 +166,7 @@ public class BST extends Tree {
         {
             if (parent.getLeft() == null)
             {
+                writePreviousDataJSON();
 //                this.cmd("SetText", 0,"Found null tree, inserting element");
 //
 //                this.cmd("SetHighlight", elem.graphicID, 0);
@@ -184,6 +179,7 @@ public class BST extends Tree {
 
 
                 commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
+                writeDataJSON();
 //                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
             }
             else
@@ -198,6 +194,7 @@ public class BST extends Tree {
         else
         {
             if (parent.getRight() == null) {
+                writePreviousDataJSON();
 //                this.cmd("SetText",  0, "Found null tree, inserting element");
 //                this.cmd("SetHighlight", elem.graphicID, 0);
                 parent.setRight(elem);
@@ -211,6 +208,7 @@ public class BST extends Tree {
                 elem.incomingLineId = id;
                 String lineId = Integer.toString(id++);
                 commands.add(am.newCommand("Connect", lineId, parentId, childId));
+                writeDataJSON();
 
                 System.out.printf("Node %d at (%.2f, %.2f)\n", elem.element, elem.x.get(), elem.y.get());
 //                elem.y = parent.y + HEIGHT_DELTA;
@@ -326,6 +324,7 @@ public class BST extends Tree {
             commands.add(am.newCommand("SetHighlight", nodeId, Integer.toString(0)));
 
             if (keyToDelete == node.getElement()) {
+                writePreviousDataJSON();
                 if (node.getLeft() == null && node.getRight() == null) {
 //                    this.cmd("SetText", 0, "Node to delete is a leaf.  Delete it.");
 //                    this.cmd("Delete", tree.graphicID);
@@ -344,6 +343,7 @@ public class BST extends Tree {
                         System.out.println("null root");
                         root = null;
                     }
+                    writeDataJSON();
                     this.resizeTree(commands);
 //                    this.cmd("Step");
                 }
@@ -375,6 +375,7 @@ public class BST extends Tree {
                         root = node.getRight();
                         root.setParent(null);
                     }
+                    writeDataJSON();
                     this.resizeTree(commands);
                 }
                 else if (node.getRight() == null) {
@@ -404,6 +405,7 @@ public class BST extends Tree {
                         root = node.getLeft();
                         root.setParent(null);
                     }
+                    writeDataJSON();
                     this.resizeTree(commands);
                 }
                 else  {
@@ -414,7 +416,7 @@ public class BST extends Tree {
                         seratoMode(node, commands);
                     }
                 }
-            }
+            }//
             else if (keyToDelete < node.getElement()) {
                 if (node.getLeft() != null) {
 //                    this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, node.x, node.y);
@@ -443,6 +445,7 @@ public class BST extends Tree {
 
 
     private void standardMode(Node node, List<Command> commands) {
+        writePreviousDataJSON();
         String nodeId = Integer.toString(node.graphicId);
         // tree.left != null && tree.right != null{
 //                    this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");
@@ -506,6 +509,7 @@ public class BST extends Tree {
             commands.add(am.newCommand("Delete", tmpId));
 
             this.resizeTree(commands);
+            writeDataJSON();
         }
         else {
 //                        this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
@@ -535,6 +539,7 @@ public class BST extends Tree {
     }
 
     private void seratoMode(Node node, List<Command> commands) {
+        writePreviousDataJSON();
         String nodeId = Integer.toString(node.graphicId);
         // tree.left != null && tree.right != null{
 //                    this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");
@@ -598,6 +603,7 @@ public class BST extends Tree {
             commands.add(am.newCommand("Delete", tmpId));
 
             this.resizeTree(commands);
+            writeDataJSON();
         }
         else {
 //                        this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
@@ -623,6 +629,7 @@ public class BST extends Tree {
 //                            tmp.left.parent = node;
             }
             this.resizeTree(commands);
+            writeDataJSON();
         }
     }
 

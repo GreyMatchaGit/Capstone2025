@@ -7,7 +7,7 @@ public class Constant {
         public static final String ErrorScreen = "error-view.fxml";
 
         public static final String Splash = "splash-view.fxml";
-        public static final String ADT = "ADT_visuals/ADT-view.fxml";
+        public static final String ADT = "ADT-view.fxml";
         public static final String Main = "main-view.fxml";
 
         public static final String Selection = "selection-view.fxml";
@@ -17,7 +17,7 @@ public class Constant {
         public static final String Academy = "academy-view.fxml";
         public static final String Conquest = "conquest-view.fxml";
 
-        public static final String Arrays = "arraylist-view.fxml";
+        public static final String Arrays = "array-visualizer-view.fxml";
         public static final String Stack = "stack-view.fxml";
 
         public static final String Chatbot = "chatbot-view.fxml";

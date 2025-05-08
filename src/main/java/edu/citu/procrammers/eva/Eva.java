@@ -9,6 +9,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.Queue;
+
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class Eva extends Application {

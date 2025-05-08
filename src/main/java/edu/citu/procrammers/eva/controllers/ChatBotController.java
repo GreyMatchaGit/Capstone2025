@@ -1,7 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.utils.ChatService;
-import edu.citu.procrammers.eva.utils.NavService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,17 +8,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
@@ -45,7 +40,6 @@ public class ChatBotController {
 
 
     public void initialize() {
-        ChatService.updateData(new JSONObject());
         btnSubmit.setOnAction(e -> handleChatSubmit());
         btnClose.setOnAction(e -> {
             onCloseButtonClicked();

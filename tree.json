@@ -1,8 +1,0 @@
-{"root": {
-  "left": {"element": 12},
-  "right": {
-    "left": {"element": 56},
-    "element": 67
-  },
-  "element": 55
-}}

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -37,5 +40,18 @@
             </HBox>
         </items>
       </ToolBar>
+       <AnchorPane fx:id="apVisualizer" layoutX="1300.0" layoutY="105.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="512.0">
+           <children>
+               <AnchorPane fx:id="apChat" layoutX="-4.0" prefHeight="645.0" prefWidth="519.0" />
+               <ImageView fx:id="imgChatbotBtn" fitHeight="63.0" fitWidth="63.0" layoutX="449.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@media/img_profile_btn.png" />
+                   </image>
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </ImageView>
+           </children>
+       </AnchorPane>
    </children>
 </AnchorPane>
