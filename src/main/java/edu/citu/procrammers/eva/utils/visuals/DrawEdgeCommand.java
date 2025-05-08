@@ -3,6 +3,7 @@ package edu.citu.procrammers.eva.utils.visuals;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.util.HashMap;
@@ -33,8 +34,10 @@ public class DrawEdgeCommand extends Command {
             line = (Line) graphicMap.get(id);
         }
         else {
-            System.out.println("creating new ling");
+            System.out.println("creating new link");
             line = new Line(startId, endId, startId, endId);
+            line.setStrokeWidth(2);
+            line.setStroke(Color.valueOf("#E9DBD5"));
         }
 
 
@@ -62,13 +65,6 @@ public class DrawEdgeCommand extends Command {
                 v2.layoutYProperty(), v2.boundsInParentProperty()
         ));
 
-
-
-//        line.startXProperty().bind(v1.layoutXProperty());
-//        line.startYProperty().bind(v1.layoutYProperty());
-//
-//        line.endXProperty().bind(v2.layoutXProperty());
-//        line.endYProperty().bind(v2.layoutYProperty());
 
         graphicMap.put(id, line);
         onFinish.run();

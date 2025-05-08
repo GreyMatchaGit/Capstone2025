@@ -13,10 +13,9 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -32,6 +31,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.EventListener;
+import java.util.function.UnaryOperator;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 
@@ -66,6 +66,16 @@ public class ADTViewController {
     }
 
     private void initializeKeyboardListener() {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("-?\\d*")) {
+                return change; // Allow change
+            }
+            return null; // Reject change
+        };
+        tfInput.setTextFormatter(new TextFormatter<>(filter));
+        tfDelete.setTextFormatter(new TextFormatter<>(filter));
+
         tfInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 onButtonInsertClicked();
