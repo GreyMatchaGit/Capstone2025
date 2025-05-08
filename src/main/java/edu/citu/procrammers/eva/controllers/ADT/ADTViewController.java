@@ -56,7 +56,9 @@ public class ADTViewController {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
             BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
+            System.out.println("BST isStandard = " + BST.isStandard);
         });
+
     }
 
     private void initializeKeyboardListener() {
@@ -140,98 +142,10 @@ public class ADTViewController {
         animationManager.isContinuous = !animationManager.isContinuous;
     }
 
-    private void addNewNodeUI(Node node) {
-        try {
-            FXMLLoader loader = new FXMLLoader(Eva.class.getResource("ADT_visuals/node-view.fxml"));
-            javafx.scene.Node nodeView = loader.load();
-            NodeController nodeController = loader.getController();
-
-            String strNodeElem = Integer.toString(node.getElement());
-            nodeController.setText(strNodeElem);
-
-            System.out.println(node.getElement() + " added");
-            StackPane stackPane = (StackPane) nodeView;
-            Circle circle  = (Circle)(stackPane.getChildren().getFirst());
-            circle.setRadius(20);
-
-            apMain.getChildren().add(nodeView);
-            nodeView.setLayoutX(node.x.getValue() - circle.getRadius());
-            nodeView.setLayoutY(node.y.getValue() - circle.getRadius());
-
-            node.x.addListener((observable, oldValue, newValue) -> {
-                Timeline timeline = new Timeline();
-                KeyValue kv = new KeyValue(nodeView.layoutXProperty(), newValue.doubleValue() - circle.getRadius());
-                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
-                timeline.getKeyFrames().add(kf);
-                timeline.play();
-            });
-
-            node.y.addListener((observable, oldValue, newValue) -> {
-                Timeline timeline = new Timeline();
-                KeyValue kv = new KeyValue(nodeView.layoutYProperty(), newValue.doubleValue());
-                KeyFrame kf = new KeyFrame(Duration.millis(300), kv); // 300ms animation
-                timeline.getKeyFrames().add(kf);
-                timeline.play();
-            });
-
-            if (BST.getRoot() != node) {
-                Line line = new Line();
-
-                // Bind the startX and startY to the parent's position
-                line.setStartX(node.getParent().x.get());
-                node.getParent().x.addListener((obs, oldX, newX) -> {
-                    Timeline timeline = new Timeline();
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
-                            new KeyValue(line.startXProperty(), newX.doubleValue())));
-                    timeline.play();
-                });
-                line.setStartY(node.getParent().y.get());
-                node.getParent().y.addListener((obs, oldX, newX) -> {
-                    Timeline timeline = new Timeline();
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
-                            new KeyValue(line.startYProperty(), newX.doubleValue())));
-                    timeline.play();
-                });
-
-                // Initialize endX and endY
-                line.setEndX(node.x.get());
-                line.setEndY(node.y.get());
-
-                node.getParent().x.addListener((obs, oldX, newX) -> {
-                    Timeline timeline = new Timeline();
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
-                            new KeyValue(line.startXProperty(), newX.doubleValue())));
-                    timeline.play();
-                });
-
-
-                node.x.addListener((obs, oldX, newX) -> {
-                    Timeline timeline = new Timeline();
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                            new KeyValue(line.endXProperty(), newX.doubleValue())));
-                    timeline.play();
-                });
-
-                // Animate endY when node.y changes
-                node.y.addListener((obs, oldY, newY) -> {
-                    Timeline timeline = new Timeline();
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(300),
-                            new KeyValue(line.endYProperty(), newY.doubleValue())));
-                    timeline.play();
-                });
-                apMain.getChildren().add(line);
-                line.toBack();
-            }
-
-            System.out.printf("Node %d at (%.2f, %.2f)\n", node.getElement(), node.x.get(), node.y.get());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @FXML
     private void changeSuccessorMode() {
-        BST.isStandard = tglSeratoMode.isSelected();
+        BST.isStandard = !tglSeratoMode.isSelected();
+        System.out.println("isStandard Mode = " + BST.isStandard);
     }
 
     private void initializeStyles() {

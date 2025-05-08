@@ -49,7 +49,7 @@ public class BST extends Tree {
         STARTING_Y = 80;
 
         id = 0;
-        isStandard = false;
+        isStandard = true;
     }
 
 
@@ -366,9 +366,11 @@ public class BST extends Tree {
                 }
                 else  {
                     if (isStandard) {
+                        System.out.println("Standard mode");
                         standardMode(node, commands);
                     }
                     else {
+                        System.out.println("Serato mode");
                         seratoMode(node, commands);
                     }
                 }
