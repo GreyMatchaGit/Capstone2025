@@ -179,7 +179,20 @@ public class MainMenuController {
 
     private void handleLoginSuccessful() {
         System.out.println("Successfully logged in.");
-        NavService.navigateTo(Loading);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+        fadeOut.setFromValue(0);
+        fadeOut.setToValue(1);
+        fadeOut.setOnFinished(e -> {
+            SoundManager.fadeOutMusic();
+            NavService.navigateTo(Loading);
+
+            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            delay.setOnFinished(event -> NavService.navigateTo(Selection));
+            delay.play();
+        });
+
+        fadeOut.play();
     }
 
 
@@ -188,8 +201,8 @@ public class MainMenuController {
         String password = tfPassword.getText();
 
         Eva.currentUser = Database.getInstance().login(
-                username.trim(),
-                password.trim()
+            username.trim(),
+            password.trim()
         );
 
         if (Eva.currentUser == null) {
@@ -220,20 +233,6 @@ public class MainMenuController {
 
     public void handleLogin() {
         SoundManager.playSFX("sfx/btn_click.MP3");
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
-        fadeOut.setFromValue(0);
-        fadeOut.setToValue(1);
-        fadeOut.setOnFinished(e -> {
-            SoundManager.fadeOutMusic();
-            NavService.navigateTo(Loading);
-
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            delay.setOnFinished(event -> NavService.navigateTo(Selection));
-            delay.play();
-        });
-
-        fadeOut.play();
-
         login();
     }
 
