@@ -23,4 +23,7 @@ module edu.citu.procrammers.eva {
 
     opens edu.citu.procrammers.eva.models.data_structures to javafx.fxml;
     exports edu.citu.procrammers.eva.models.data_structures;
+
+    opens edu.citu.procrammers.eva.utils.visuals to javafx.fxml;
+    exports edu.citu.procrammers.eva.utils.visuals;
 }
