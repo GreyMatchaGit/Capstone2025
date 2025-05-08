@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class AnimationManager {
-    private AnchorPane canves;
+    private AnchorPane canvas;
     public List<Command> commands;
     private Stack<Command> history;
     public HashMap<Integer, Node> objects;
@@ -21,8 +21,8 @@ public class AnimationManager {
     public double speed;
     public boolean isContinuous;
 
-    public AnimationManager(AnchorPane canves) {
-        this.canves = canves;
+    public AnimationManager(AnchorPane canvas) {
+        this.canvas = canvas;
         commands = new ArrayList<>();
         history = new Stack<>();
         objects = new HashMap<>();
@@ -38,18 +38,20 @@ public class AnimationManager {
         }
     }
 
-    public Command newCommand(String[] args) {
+    public Command newCommand(String... args) {
         int graphicId;
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].toUpperCase();
             switch (arg) {
+                case "STOP":
+                    return new StopCommand();
                 case "CREATECIRCLE":
                     int key = Integer.parseInt(args[++i]);
                     graphicId = Integer.parseInt(args[++i]);
                     double x = Double.parseDouble(args[++i]);
                     double y = Double.parseDouble(args[++i]);
                     System.out.println("CREATENODE ID = " + graphicId);
-                    return new DrawNodeCommand(key, graphicId, x, y, canves, objects);
+                    return new DrawNodeCommand(key, graphicId, x, y, canvas, objects);
                 case "SETHIGHLIGHT":
                     graphicId = Integer.parseInt(args[++i]);
                     int isOn = Integer.parseInt(args[++i]);
@@ -72,12 +74,26 @@ public class AnimationManager {
                     int startId = Integer.parseInt(args[++i]);
                     int endId = Integer.parseInt(args[++i]);
 
-                    return new DrawEdgeCommand(lineId, startId, endId, canves, objects);
+                    return new DrawEdgeCommand(lineId, startId, endId, canvas, objects);
                 case "DELETE":
                     System.out.println("Delete Command creating...");
                     graphicId = Integer.parseInt(args[++i]);
 
-                    return new DeleteCommand(graphicId, canves, objects);
+                    return new DeleteCommand(graphicId, canvas, objects);
+
+                case "CHANGENODEELEMENTUI":
+                    graphicId = Integer.parseInt(args[++i]);
+                    String newElement = args[++i];
+
+                    return new ChangeElementCommand(newElement, objects.get(graphicId));
+
+                case "SETTEXT":
+                    graphicId = Integer.parseInt(args[++i]);
+                    String text = args[++i];
+                    double tX = Double.parseDouble(args[++i]);
+                    double tY = Double.parseDouble(args[++i]);
+
+                    return new SetTextCommand(graphicId, text, tX, tY, canvas, objects);
 
             }
         }
@@ -86,15 +102,33 @@ public class AnimationManager {
 
     private void step() {
 //        history.push(commands.get(currentIndex));
-        commands.get(currentIndex).execute(() -> {});
-        currentIndex++;
+//        commands.get(currentIndex).execute(() -> {});
+//        currentIndex++;
+        System.out.println("Stepping...");
+        Command command = null;
+        while (currentIndex < commands.size()) {
+            command = commands.get(currentIndex);
+            System.out.println("Executing: " + command);
+            command.execute(() -> {});
+            currentIndex++;
+            if (command instanceof StopCommand) {
+                break;
+            }
+            history.push(command);
+        }
     }
 
     public void undo() {
         if (!history.isEmpty()) {
-            System.out.println("Undo Command: ");
-            history.pop().undo(() -> {});
+            if (!(history.peek() instanceof StopCommand)) {
+                System.out.println("Undo Command: ");
+                history.pop().undo(this::undo);
+                currentIndex--;
+            }
             currentIndex--;
+        }
+        else {
+            System.out.println("No previous commands...");
         }
     }
 
@@ -106,17 +140,16 @@ public class AnimationManager {
             currentIndex = 0;
             return;
         }
-        Command command = commands.get(currentIndex);
-        history.push(command);
-        System.out.println("Executing Command: " + command);
+//        Command command = commands.get(currentIndex);
+//        history.push(command);
+//        System.out.println("Executing Command: " + command);
+        history.push(new StopCommand());
 
         if (isContinuous) {
-            command.execute(() -> {
-                currentIndex++;
-                PauseTransition pause = new PauseTransition(Duration.seconds(speed));
-                pause.setOnFinished(e -> play());
-                pause.play();
-            });
+            step();
+            PauseTransition pause = new PauseTransition(Duration.seconds(speed));
+            pause.setOnFinished(e -> play());
+            pause.play();
         }
         else {
             step();

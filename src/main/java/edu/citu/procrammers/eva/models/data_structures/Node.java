@@ -14,7 +14,9 @@ public class Node {
     public double leftWidth;
     public double rightWidth;
 
-    public int lineId;
+    public int outgoingLineId;
+
+    public int incomingLineId;
 
     public Node(int element) {
         x = new SimpleDoubleProperty(0);
@@ -63,5 +65,10 @@ public class Node {
 
     public void setParent(Node parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("GID: %d, Element: %d (%.2f, %.2f)", graphicId, element, x.get(), y.get());
     }
 }

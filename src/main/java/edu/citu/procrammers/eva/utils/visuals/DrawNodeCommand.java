@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -48,6 +49,7 @@ public class DrawNodeCommand extends Command {
             StackPane nodeView = (StackPane) graphicMap.get(graphicId);
             Circle circle;
             if (nodeView == null) {
+                System.out.println("Creating node");
                 FXMLLoader loader = new FXMLLoader(Eva.class.getResource("ADT_visuals/node-view.fxml"));
                 nodeView = loader.load();
 
@@ -55,10 +57,13 @@ public class DrawNodeCommand extends Command {
 
                 String strNodeElem = Integer.toString(key);
                 nodeController.setText(strNodeElem);
+                nodeController.getText().setFont(Font.font(14));
 
                 System.out.println("Node " + key + ", GraphicID: " + graphicId + " added");
                 circle  = (Circle)(nodeView.getChildren().getFirst());
-                circle.setRadius(20);
+                circle.setRadius(25);
+
+                circle.setStyle("-fx-stroke: black; -fx-fill: white;");
             }
 
             circle  = (Circle)(nodeView.getChildren().getFirst());
@@ -79,5 +84,10 @@ public class DrawNodeCommand extends Command {
 
     @Override public void undo(Runnable onUndo) {
         canvas.getChildren().remove(graphicMap.get(graphicId));
+    }
+
+    @Override
+    public String toString() {
+        return "Draw Node Command";
     }
 }

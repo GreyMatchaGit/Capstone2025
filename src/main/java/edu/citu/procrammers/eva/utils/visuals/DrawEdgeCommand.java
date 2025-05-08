@@ -78,4 +78,8 @@ public class DrawEdgeCommand extends Command {
         canvas.getChildren().remove(graphicMap.get(id));
     }
 
+    @Override
+    public String toString() {
+        return "Draw Edge Command";
+    }
 }

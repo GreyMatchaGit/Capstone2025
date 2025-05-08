@@ -32,6 +32,7 @@
                      </children>
                   </VBox>
                   <ToggleButton fx:id="tglIsContinuous" mnemonicParsing="false" onAction="#toggleContinuous" selected="true" text="Continuous" />
+                  <ToggleButton fx:id="tglSeratoMode" mnemonicParsing="false" onAction="#changeSuccessorMode" text="ToggleButton" />
                </children>
             </HBox>
         </items>

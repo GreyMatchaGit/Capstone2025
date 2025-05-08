@@ -27,4 +27,9 @@ public class DeleteCommand extends Command {
     public void undo(Runnable onUndo) {
 
     }
+
+    @Override
+    public String toString() {
+        return "Delete Command";
+    }
 }
