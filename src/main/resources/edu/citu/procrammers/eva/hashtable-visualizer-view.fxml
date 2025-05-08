@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -13,8 +14,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.HashTableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.HashTableController">
     <center>
         <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0">
             <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;">
@@ -37,9 +39,9 @@
                                             <Cursor fx:constant="HAND" />
                                         </cursor>
                                     </ImageView>
-                                    <Region prefHeight="243.0" prefWidth="328.0" />
-                                    <ComboBox fx:id="cbCompression" prefWidth="150.0" promptText="COMPRESSION FUNCTION" styleClass="pixel-button" />
-                                    <ComboBox fx:id="cbCollision" prefWidth="150.0" promptText="COLLISION HANDLING" styleClass="pixel-button" />
+                                    <Region prefHeight="243.0" prefWidth="205.0" />
+                                    <ComboBox fx:id="cbCompression" prefHeight="49.0" prefWidth="200.0" promptText="Compression" styleClass="pixel-combobox" />
+                                    <ComboBox fx:id="cbCollision" prefWidth="200.0" promptText="Collision" styleClass="pixel-combobox" />
                                     <Region prefHeight="243.0" prefWidth="17.0" />
                                     <TextField fx:id="tfPrompt" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
                                     <Region prefHeight="243.0" prefWidth="17.0" />
@@ -50,6 +52,12 @@
                                     <Region prefHeight="104.0" prefWidth="506.0" />
                                 </items>
                             </ToolBar>
+                     <AnchorPane mouseTransparent="true" prefHeight="170.0" prefWidth="1921.0">
+                        <children>
+                           <Text layoutX="447.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ddd6ca; -fx-font-size: 15;" styleClass="code-snippet-text" text="Compression function" wrappingWidth="200.47004508972168" />
+                           <Text layoutX="651.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ddd6ca; -fx-font-size: 15;" styleClass="code-snippet-text" text="Collision handling" wrappingWidth="200.47004508972168" />
+                        </children>
+                     </AnchorPane>
                         </children>
                     </StackPane>
                     <StackPane prefHeight="827.0" prefWidth="1653.0">
@@ -66,4 +74,8 @@
             </VBox>
         </AnchorPane>
     </center>
+   <stylesheets>
+      <URL value="@css/styles.css" />
+      <URL value="@css/fonts.css" />
+   </stylesheets>
 </BorderPane>
