@@ -69,3 +69,68 @@
     -fx-background-insets: 0;
     -fx-padding: 10;
 }
+.pixel-slider {
+    -fx-padding: 8;
+    -fx-background-color: transparent;
+}
+
+.pixel-slider .track {
+    -fx-background-color: #CBB1A6;
+    -fx-background-insets: 0;
+    -fx-border-color: #4E2D2D;
+    -fx-border-width: 2;
+}
+
+.pixel-slider .axis {
+    -fx-tick-label-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 14;
+}
+
+.pixel-slider .tick-mark {
+    -fx-stroke: #CBB1A6;
+}
+
+.pixel-slider .minor-tick-mark {
+    -fx-stroke: #CBB1A6;
+}
+
+.pixel-slider .thumb {
+    -fx-background-color: #4E2D2D;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-shape: "M0,0 L10,0 L10,10 L0,10 Z";
+}
+.pixel-toggle {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+    -fx-padding: 8 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+
+    -fx-content-display: text-only;
+}
+
+.pixel-toggle:selected {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #4E2D2D;
+    -fx-border-color: #4E2D2D;
+}
+
+.pixel-toggle:hover {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #4E2D2D;
+}
+
+.pixel-toggle:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
+}
