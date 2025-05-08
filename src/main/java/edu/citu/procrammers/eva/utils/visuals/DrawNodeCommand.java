@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -55,13 +56,13 @@ public class DrawNodeCommand extends Command {
 
                 String strNodeElem = Integer.toString(key);
                 nodeController.setText(strNodeElem);
+                nodeController.getText().setFont(Font.font(14));
 
                 System.out.println("Node " + key + ", GraphicID: " + graphicId + " added");
                 circle  = (Circle)(nodeView.getChildren().getFirst());
-                circle.setRadius(20);
+                circle.setRadius(25);
 
-                circle.setStyle("-fx-stroke: black; -fx-stroke-width: 2; -fx-fill: white;");
-
+                circle.setStyle("-fx-stroke: black; -fx-fill: white;");
             }
 
             circle  = (Circle)(nodeView.getChildren().getFirst());

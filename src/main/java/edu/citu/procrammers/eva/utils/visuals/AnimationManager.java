@@ -43,6 +43,8 @@ public class AnimationManager {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].toUpperCase();
             switch (arg) {
+                case "STOP":
+                    return new StopCommand();
                 case "CREATECIRCLE":
                     int key = Integer.parseInt(args[++i]);
                     graphicId = Integer.parseInt(args[++i]);
@@ -100,7 +102,15 @@ public class AnimationManager {
 
     private void step() {
 //        history.push(commands.get(currentIndex));
-        commands.get(currentIndex).execute(() -> {});
+//        commands.get(currentIndex).execute(() -> {});
+//        currentIndex++;
+        Command command = commands.get(currentIndex);
+        while ( !(command instanceof  StopCommand) && currentIndex >= commands.size() - 1) {
+            System.out.println("Executing: " + command);
+            command.execute(() -> {});
+            currentIndex++;
+            command = commands.get(currentIndex);
+        }
         currentIndex++;
     }
 

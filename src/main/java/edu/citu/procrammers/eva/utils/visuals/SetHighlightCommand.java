@@ -19,7 +19,7 @@ public class SetHighlightCommand extends Command {
 
             circle.setStroke(Color.GREEN);
             circle.setFill(Color.WHITE);
-            circle.setStrokeWidth(3); // Optional: make stroke more visible
+//            circle.setStrokeWidth(3); // Optional: make stroke more visible
 //            circle.setFill(Paint.valueOf("PINK"));
 //            circle.setStyle("-fx-stroke: green; -fx-background-color: white");
         }
@@ -27,7 +27,7 @@ public class SetHighlightCommand extends Command {
             System.out.println("turning off");
             circle.setStroke(Color.BLACK);
 //            circle.setFill(Color.WHITE);
-            circle.setStrokeWidth(2); // Optional: make stroke more visible
+//            circle.setStrokeWidth(2); // Optional: make stroke more visible
 //            circle.setStyle("-fx-stroke: black; -fx-background-color: white");
 //            circle.setStyle("");
 //            circle.setFill(Paint.valueOf("3366cc"));
@@ -40,7 +40,7 @@ public class SetHighlightCommand extends Command {
             System.out.println("turning on");
             circle.setStroke(Color.BLACK);
 //            circle.setFill(Color.WHITE);
-            circle.setStrokeWidth(2); // Optional: make stroke more visible
+//            circle.setStrokeWidth(2); // Optional: make stroke more visible
             // Set to highlighted (green stroke, white fill)
 
 
