@@ -19,6 +19,14 @@ public class UIElementUtils {
         }
     }
 
+    public static void toggleGlow(Node n) {
+        if (n.getEffect() == null) {
+            n.setEffect(new Glow(0.3));
+        } else {
+            n.setEffect(null);
+        }
+    }
+
     @SafeVarargs
     public static <E extends Node> void setupScalingAnimation(double scaleFactor, E... components) {
         for (E c : components) {

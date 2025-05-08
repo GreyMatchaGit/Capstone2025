@@ -5,6 +5,8 @@ module edu.citu.procrammers.eva {
     requires java.sql;
     requires spring.security.crypto;
     requires  mysql.connector.java;
+    requires java.desktop;
+    requires jdk.compiler;
 
 
     opens edu.citu.procrammers.eva to javafx.fxml;
@@ -15,6 +17,12 @@ module edu.citu.procrammers.eva {
     opens edu.citu.procrammers.eva.data to javafx.fxml;
     exports edu.citu.procrammers.eva.utils;
     opens edu.citu.procrammers.eva.utils to javafx.fxml;
-    exports edu.citu.procrammers.eva.models.user;
-    opens edu.citu.procrammers.eva.models.user to javafx.fxml;
+    opens edu.citu.procrammers.eva.controllers.ADT to javafx.fxml;
+    exports edu.citu.procrammers.eva.controllers.ADT;
+
+    opens edu.citu.procrammers.eva.models.data_structures to javafx.fxml;
+    exports edu.citu.procrammers.eva.models.data_structures;
+
+    opens edu.citu.procrammers.eva.utils.visuals to javafx.fxml;
+    exports edu.citu.procrammers.eva.utils.visuals;
 }

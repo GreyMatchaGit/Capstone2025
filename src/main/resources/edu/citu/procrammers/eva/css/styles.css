@@ -21,44 +21,165 @@
     -fx-background-color: rgba(255, 255, 255, 0.3);
 }
 
-#taDiscussion, #taDiscussionPreface {
-    -fx-text-fill: black;
-    -fx-font-family: "Pixelify Sans Regular";
-    -fx-font-size: 17px;
-    -fx-background-color: transparent;
-    -fx-control-inner-background: transparent;
+.pixel-button {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+    -fx-padding: 8 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-cursor: hand;
+}
+.pixel-button:hover {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #4E2D2D;
+    -fx-border-color: #4E2D2D;
+}
+.pixel-button:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
 }
 
-#txtOath {
-    -fx-text-fill: black;
-    -fx-font-family: "Pixelify Sans Bold";
-    -fx-font-size: 50px;
-    -fx-background-color: transparent;
-    -fx-control-inner-background: transparent;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
+.pixel-textfield {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-padding: 6 10;
+    -fx-highlight-fill: #CBB1A6;
+    -fx-highlight-text-fill: #4E2D2D;
+    -fx-caret-color: #CBB1A6;
+}
+.pixel-textfield:focused {
+    -fx-border-color: #CBB1A6;
+    -fx-effect: dropshadow(gaussian, #CBB1A6, 4, 0.4, 0, 0);
 }
 
-#taCodeSnippet {
-    -fx-text-fill: white;
-    -fx-font-family: "Pixelify Sans Regular";
-    -fx-font-size: 17px;
+.pixel-pane {
+    -fx-background-color: linear-gradient(to bottom, #4E2D2D, #3B1F1F);
+    -fx-background-insets: 0;
+    -fx-padding: 10;
+}
+.pixel-slider {
+    -fx-padding: 8;
     -fx-background-color: transparent;
-    -fx-control-inner-background: transparent;
 }
 
-#txtTopicNum {
-    -fx-text-fill: white;
-    -fx-font-family: "Pixelify Sans Bold";
-    -fx-font-size: 25px;
-    -fx-background-color: transparent;
-    -fx-control-inner-background: transparent;
+.pixel-slider .track {
+    -fx-background-color: #CBB1A6;
+    -fx-background-insets: 0;
+    -fx-border-color: #4E2D2D;
+    -fx-border-width: 2;
 }
 
-#txtTopicTitle {
-    -fx-text-fill: white;
-    -fx-font-family: "Pixelify Sans Bold";
-    -fx-font-size: 31px;
-    -fx-background-color: transparent;
-    -fx-control-inner-background: transparent;
+.pixel-slider .axis {
+    -fx-tick-label-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 14;
+}
+
+.pixel-slider .tick-mark {
+    -fx-stroke: #CBB1A6;
+}
+
+.pixel-slider .minor-tick-mark {
+    -fx-stroke: #CBB1A6;
+}
+
+.pixel-slider .thumb {
+    -fx-background-color: #4E2D2D;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-shape: "M0,0 L10,0 L10,10 L0,10 Z";
+}
+.pixel-toggle {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+    -fx-padding: 8 16;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+
+    -fx-content-display: text-only;
+}
+
+.pixel-toggle:selected {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #4E2D2D;
+    -fx-border-color: #4E2D2D;
+}
+
+.pixel-toggle:hover {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #4E2D2D;
+}
+
+.pixel-toggle:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
+}
+
+.auth-login-button {
+    -fx-background-color: #933b3b;
+    -fx-text-fill: #CBB1A6;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-cursor: hand;
+}
+.auth-login-button:hover {
+    -fx-background-color: #CBB1A6;
+    -fx-text-fill: #933b3b;
+    -fx-border-color: #933b3b;
+}
+.auth-login-button:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
+}
+
+
+.auth-register-button {
+    -fx-background-color: #e3b344;
+    -fx-text-fill: #4E2D2D;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-color: #4E2D2D;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.3, 1, 1);
+    -fx-cursor: hand;
+}
+.auth-register-button:hover {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #e6c45d;
+    -fx-border-color: #C6A43B;
+}
+.auth-register-button:pressed {
+    -fx-translate-y: 2;
+    -fx-effect: none;
 }
