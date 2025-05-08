@@ -38,6 +38,15 @@ public class ChatService {
         fileWriter(prompt, PROMPT_PATH);
     }
 
+    public static void updateSummary(String summary){
+        JSONObject prompt = readJSON(PROMPT_PATH);
+        if(prompt == null) return;
+
+        prompt.getJSONArray("messages")
+                .getJSONObject(3)
+                .put("content", summary);
+    }
+
     public static void fileWriter(JSONObject object,String path){
         try (FileWriter file = new FileWriter(path)) {
             file.write(object.toString(2));

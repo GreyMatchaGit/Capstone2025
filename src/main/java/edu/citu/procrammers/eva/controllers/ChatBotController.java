@@ -45,6 +45,7 @@ public class ChatBotController {
 
 
     public void initialize() {
+        ChatService.updateData(new JSONObject());
         btnSubmit.setOnAction(e -> handleChatSubmit());
         btnClose.setOnAction(e -> {
             onCloseButtonClicked();
@@ -61,7 +62,6 @@ public class ChatBotController {
             parentContainer.getChildren().clear();
         }
     }
-    //TODO centralize all autobots and roll out
 
 /*
 * When clicking the submit button we create an JSONObject instance of prompt.json
@@ -121,6 +121,16 @@ public class ChatBotController {
                         .getJSONObject(0)
                         .getJSONObject("message")
                         .getString("content");
+
+                String summary = null;
+                int index = replyText.indexOf("-Summary-");
+
+                if (index != -1) {
+                    summary = replyText.substring(index).trim();
+                    replyText = replyText.substring(0, index).trim();
+                }
+
+                ChatService.updateSummary(summary);
 
                 Label reply = new Label(replyText);
                 reply.setWrapText(true);
