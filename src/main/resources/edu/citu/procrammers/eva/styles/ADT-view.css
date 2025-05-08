@@ -22,23 +22,23 @@
     -fx-background-image: url("../icons/backward-icon.png");
 }
 
-.switch-toggle {
-    -fx-background-color: #ccc;
-    -fx-background-radius: 20;
-    -fx-padding: 0;
-    -fx-pref-width: 50;
-    -fx-pref-height: 30;
-    -fx-cursor: hand;
-    -fx-text-fill: transparent;
-    -fx-border-color: transparent;
-    -fx-alignment: center-left;
-    -fx-content-display: graphic-only;
-}
+/*.switch-toggle {*/
+/*    -fx-background-color: #ccc;*/
+/*    -fx-background-radius: 20;*/
+/*    -fx-padding: 0;*/
+/*    -fx-pref-width: 50;*/
+/*    -fx-pref-height: 30;*/
+/*    -fx-cursor: hand;*/
+/*    -fx-text-fill: transparent;*/
+/*    -fx-border-color: transparent;*/
+/*    -fx-alignment: center-left;*/
+/*    -fx-content-display: graphic-only;*/
+/*}*/
 
-.switch-toggle:selected {
-    -fx-background-color: #4cd964;
-    -fx-alignment: center-right;
-}
+/*.switch-toggle:selected {*/
+/*    -fx-background-color: #4cd964;*/
+/*    -fx-alignment: center-right;*/
+/*}*/
 
 .thumb {
     -fx-background-color: white;

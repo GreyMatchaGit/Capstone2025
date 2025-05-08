@@ -6,6 +6,7 @@ module edu.citu.procrammers.eva {
     requires spring.security.crypto;
     requires mysql.connector.java;
     requires java.desktop;
+    requires jdk.compiler;
     requires org.json;
     requires java.net.http;
 

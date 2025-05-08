@@ -6,6 +6,7 @@ import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -34,6 +36,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.EventListener;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 
 
 public class ADTViewController {
@@ -288,6 +292,11 @@ public class ADTViewController {
 //////        btnPlay.setText("Play");
 //        btnBackward.getStyleClass().addAll("button", "backward-button");
 //        btnForward.getStyleClass().addAll("button", "forward-button");
+    }
+
+    public void navigatePreviousScreen() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
+        NavService.navigateTo(Academy);
     }
 //    private void highlightNodeInView(Node node) {
 //        NodeController nodeController = nodeMap.get(node);

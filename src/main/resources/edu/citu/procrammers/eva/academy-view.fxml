@@ -3,14 +3,18 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -18,7 +22,6 @@
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
             <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_loading_screen_bg.png" />
@@ -37,15 +40,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="imgLessonsBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1498.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@media/img_bookmark_lessons.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
-            <ImageView fx:id="imgTutorBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1511.0" layoutY="453.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgTutorBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1465.0" layoutY="302.0" onMouseClicked="#toggleChatbotPane" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_bookmark_tutor.png" />
                </image>
@@ -187,6 +182,41 @@
                      </children></AnchorPane>
                </children>
             </AnchorPane>
+            <StackPane fx:id="spChatbot" prefHeight="1080.0" prefWidth="1920.0" visible="false">
+               <children>
+                  <AnchorPane opacity="0.51" prefHeight="421.0" prefWidth="1920.0" style="-fx-background-color: black;" />
+                  <StackPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="820.0" fitWidth="623.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_chat_bg.png" />
+                           </image>
+                        </ImageView>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane hbarPolicy="NEVER" layoutX="764.0" layoutY="284.0" prefHeight="460.0" prefWidth="390.0">
+                                 <content>
+                                    <VBox prefHeight="453.0" prefWidth="384.0" />
+                                 </content>
+                              </ScrollPane>
+                              <ImageView fx:id="imgToggleChatbotPane" fitHeight="34.0" fitWidth="103.0" layoutX="909.0" layoutY="153.0" onMouseClicked="#toggleChatbotPane" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@media/img_back_page_btn.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <Label layoutX="850.0" layoutY="206.0" prefHeight="64.0" prefWidth="221.0" text="Speak, traveler, and the Oracle shall answer." textAlignment="CENTER" wrapText="true" />
+                              <TextField fx:id="tfPrompt" layoutX="764.0" layoutY="783.0" prefHeight="39.0" prefWidth="301.0" promptText="Thou shall ask" styleClass="pixel-textfield" />
+                              <Button layoutX="1071.0" layoutY="781.0" mnemonicParsing="false" onMouseClicked="#handlePrompt" prefHeight="29.0" prefWidth="83.0" styleClass="pixel-button" text="Send" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </StackPane>
+               </children>
+            </StackPane>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
       </AnchorPane>
    </center>
