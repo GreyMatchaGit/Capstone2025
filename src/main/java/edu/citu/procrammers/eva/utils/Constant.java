@@ -17,12 +17,12 @@ public class Constant {
         public static final String Academy = "academy-view.fxml";
         public static final String Conquest = "conquest-view.fxml";
 
-        public static final String Arrays = "array-visualizer-view.fxml";
-        public static final String Stack = "stack-view.fxml";
-
         public static final String Chatbot = "chatbot-view.fxml";
 
         public static final String PROMPT_PATH = "prompt.json";
         public static final String DATA_PATH = "data.json";
+        public static final String Arrays = "array-visualizer-view.fxml";
+        public static final String Stack = "stack-visualizer-view.fxml";
+        public static final String Queue = "queue-visualizer-view.fxml";
     }
 }
