@@ -1,15 +1,20 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.Eva;
+import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.*;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import static edu.citu.procrammers.eva.data.Database.Error.*;
+import static edu.citu.procrammers.eva.data.Database.Error.TOO_LONG_PASSWORD;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
@@ -19,6 +24,9 @@ public class MainMenuController {
     public ImageView imgProjectEvaBG, imgPlayBtn, imgLogo;
     public TextField tfUsername, tfPassword, tfRegisterUsername, tfRegisterPassword;
     public StackPane spRegisterContainer, spLoginContainer;
+    public Label registerStatusMessage, loginStatusMessage;
+
+    private static final boolean TESTING_MODE_ENABLED = true;
 
     private Timeline logoPulseTimeline;
     private Timeline playBtnPulseTimeline;
@@ -126,11 +134,88 @@ public class MainMenuController {
         slideOutTimeline.play();
     }
 
+    private void handleRegisterSuccessful() {
+        tfUsername.setText(tfRegisterUsername.getText());
+        tfPassword.setText(tfRegisterPassword.getText());
+
+        if (TESTING_MODE_ENABLED) {
+            System.out.println("TESTING MODE ENABLED for registration");
+            handleRegister();
+        } else {
+            login();
+        }
+    }
+
+    private void handleRegisterFailed(int errorCode) {
+        switch (errorCode) {
+            case USERNAME_TAKEN:
+                registerStatusMessage.setText("Username is already taken.");
+                break;
+            case EMPTY_USERNAME:
+                registerStatusMessage.setText("Please enter a username.");
+                break;
+            case EMPTY_PASSWORD:
+                registerStatusMessage.setText("Please enter a password.");
+                break;
+            case EMPTY_USERNAME_PASSWORD:
+                registerStatusMessage.setText("Please enter both username and password.");
+                break;
+            case TOO_LONG_USERNAME:
+                registerStatusMessage.setText("Username must be 20 characters or fewer.");
+                break;
+            case TOO_LONG_PASSWORD:
+                registerStatusMessage.setText("Password must be 25 characters or fewer.");
+                break;
+            default:
+                registerStatusMessage.setText("Registration failed. Please try again.");
+        }
+    }
+
+
+    private void handleLoginFailed() {
+        loginStatusMessage.setText("Invalid username or password.");
+    }
+
+
+    private void handleLoginSuccessful() {
+        System.out.println("Successfully logged in.");
+        NavService.navigateTo(Loading);
+    }
+
+
+    public void login() {
+        String username = tfUsername.getText();
+        String password = tfPassword.getText();
+
+        Eva.currentUser = Database.getInstance().login(
+                username.trim(),
+                password.trim()
+        );
+
+        if (Eva.currentUser == null) {
+            handleLoginFailed();
+        } else {
+            handleLoginSuccessful();
+        }
+    }
+
     public void handleRegister() {
         SoundManager.playSFX("sfx/btn_click.MP3");
-        boolean shouldShow = !spRegisterContainer.isVisible();
-        spRegisterContainer.setVisible(shouldShow);
-        spRegisterContainer.setDisable(!shouldShow);
+        toggleRegisterPane();
+
+        String username = tfRegisterUsername.getText();
+        String password = tfRegisterPassword.getText();
+
+        int registerResult = Database.getInstance().register(
+                username.trim(),
+                password.trim()
+        );
+
+        if (registerResult == NO_ERROR) {
+            handleRegisterSuccessful();
+        } else {
+            handleRegisterFailed(registerResult);
+        }
     }
 
     public void handleLogin() {
@@ -148,5 +233,13 @@ public class MainMenuController {
         });
 
         fadeOut.play();
+
+        login();
+    }
+
+    @FXML
+    private void toggleRegisterPane() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
+        spRegisterContainer.setVisible(!spRegisterContainer.isVisible());
     }
 }
