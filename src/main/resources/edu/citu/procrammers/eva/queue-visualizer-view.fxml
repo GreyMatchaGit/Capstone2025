@@ -59,6 +59,12 @@
                     </StackPane>
                 </children>
             </VBox>
+            <AnchorPane fx:id="apChat" layoutX="1470.0" layoutY="276.0" prefHeight="802.0" prefWidth="448.0" />
+            <ImageView fx:id="imgChatbotBtn" fitHeight="72.0" fitWidth="115.0" layoutX="1800.0" layoutY="990.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@media/img_academy_book.png" />
+                </image>
+            </ImageView>
         </AnchorPane>
     </center>
 </BorderPane>

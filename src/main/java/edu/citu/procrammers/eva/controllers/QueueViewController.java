@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.Constant.Value;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
@@ -19,10 +20,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.json.JSONObject;
 
 import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class QueueViewController {
@@ -35,10 +38,10 @@ public class QueueViewController {
     private static final Color DEFAULTR = Color.WHITE;
 
 
-    @FXML private AnchorPane apVisualizer;
+    @FXML private AnchorPane apVisualizer, apChat;
     @FXML private Button btnEnqueue, btnDequeue, btnFront, btnClear;
     @FXML private TextField tfPrompt;
-    @FXML private ImageView imgBackBtn;
+    @FXML private ImageView imgBackBtn, imgChatbotBtn;
 
     private LinkedList<Integer> queue;
     private List<Rectangle> rectangles;
@@ -48,8 +51,14 @@ public class QueueViewController {
 
     private Node frontMarker;
 
+    public JSONObject dataJSON;
+
+    public ChatBotController chatBotController;
+
     public void initialize() {
         setupGlow(imgBackBtn);
+
+        dataJSON = new JSONObject();
 
         queue = new LinkedList<>();
         rectangles = new ArrayList<>();
@@ -77,7 +86,26 @@ public class QueueViewController {
                 });
             }
         });
+
+        ChatService.updateData(new JSONObject());
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            ChatService.loadChatbot(chatBotController, apChat);
+        });
     }
+
+    private void writeDataJSON() {
+        dataJSON.put("type", "queue");
+        dataJSON.put("size", queue.size());
+        dataJSON.put("elements", queue.toString());
+        ChatService.updateData(dataJSON);
+    }
+
+    private void writePreviousDataJSON(){
+        dataJSON.put("previousQueue", queue.toString());
+        ChatService.fileWriter(dataJSON, DATA_PATH);
+    }
+
 
     public void onButtonClick(ActionEvent event) {
         if(event.getSource() == btnEnqueue) {
@@ -140,7 +168,11 @@ public class QueueViewController {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
 
+        if(size != 0){
+            writePreviousDataJSON();
+        }
         queue.addLast(num);
+        writeDataJSON();
 
         updateList(1);
 
@@ -178,11 +210,13 @@ public class QueueViewController {
             FadeTransition fade = fadeOut(currentVBox);
             slideOut.setOnFinished(event -> fade.play());
             fade.setOnFinished(event -> {
-
+                writePreviousDataJSON();
                 apVisualizer.getChildren().remove(currentVBox);
                 vBoxes.removeFirst();
                 rectangles.removeFirst();
                 labels.removeFirst();
+                queue.removeFirst();
+                writeDataJSON();
 
                 for (int i = 0; i < vBoxes.size(); i++) {
                     VBox vb = vBoxes.get(i);
@@ -253,8 +287,9 @@ public class QueueViewController {
     private void onClearOperation() {
         if(size != 0) {
             tfPrompt.setText("");
+            writePreviousDataJSON();
             queue.clear();
-
+            writeDataJSON();
             // Highlight Everything
             for (int i = 0; i < vBoxes.size(); ++i) {
                 Rectangle r = rectangles.get(i);
