@@ -83,7 +83,7 @@ public class Database {
 
     public User login(String username, String password) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM tbluser WHERE username=?"
+                "SELECT * FROM tblusers WHERE username=?"
         ))  {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -132,7 +132,7 @@ public class Database {
         }
 
         try (PreparedStatement statement = connection.prepareStatement(
-            "INSERT INTO tbluser (username, password) values (?, ?)"
+            "INSERT INTO tblusers (username, password) values (?, ?)"
         )) {
             String hashedPassword = Hash.hashPassword(password);
             statement.setString(1, username);
@@ -171,7 +171,7 @@ public class Database {
 
     private boolean isUsernameAvailable(String username) {
         try (PreparedStatement statement = connection.prepareStatement(
-            "SELECT 1 FROM tbluser WHERE username=?"
+            "SELECT 1 FROM tblusers WHERE username=?"
         )) {
             statement.setString(1, username);
             ResultSet usersWithMatchingUsername = statement.executeQuery();
@@ -215,10 +215,10 @@ public class Database {
             createDatabase.execute();
             establishConnection();
 
-            String createTables = "CREATE TABLE tbluser (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), password VARCHAR(255));";
+            String createTables = "CREATE TABLE tblusers (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), password VARCHAR(255));";
 
             // For admin
-            String createAdmin = "INSERT INTO tbluser (username, password) VALUES (?, ?);";
+            String createAdmin = "INSERT INTO tblusers (username, password) VALUES (?, ?);";
             String adminUsername = "admin";
             String adminPassword = Hash.hashPassword("admin");
 
