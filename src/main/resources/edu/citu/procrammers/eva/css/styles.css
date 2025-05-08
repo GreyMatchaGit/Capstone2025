@@ -69,3 +69,50 @@
     -fx-background-insets: 0;
     -fx-padding: 10;
 }
+
+.pixel-combobox {
+    -fx-background-color: #4E2D2D;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+    -fx-text-fill: #CBB1A6;
+    -fx-background-insets: 0;
+    -fx-padding: 6 10;
+    -fx-cursor: hand;
+}
+
+.pixel-combobox .arrow-button {
+    -fx-background-color: #4E2D2D;
+    -fx-border-color: transparent;
+}
+
+.pixel-combobox .arrow-button .arrow {
+    -fx-background-color: #CBB1A6;
+}
+
+.pixel-combobox:hover {
+    -fx-background-color: #5C3434;
+    -fx-border-color: #CBB1A6;
+}
+
+.pixel-combobox:focused {
+    -fx-effect: dropshadow(gaussian, #CBB1A6, 4, 0.4, 0, 0);
+}
+
+.pixel-combobox .list-cell {
+    -fx-text-fill: #CBB1A6;
+    -fx-background-color: #4E2D2D;
+    -fx-font-family: 'Pixelify Sans';
+}
+
+.pixel-combobox .list-view {
+    -fx-background-color: #4E2D2D;
+    -fx-control-inner-background: #4E2D2D;
+    -fx-border-color: #CBB1A6;
+}
+
+.pixel-combobox .list-view .list-cell:hover {
+    -fx-background-color: #5C3434;
+}
