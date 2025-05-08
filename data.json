@@ -1,12 +1,1 @@
-{
-  "previousTree": {
-    "right": {"element": 14},
-    "element": 12
-  },
-  "root": {
-    "left": {"element": 1},
-    "right": {"element": 14},
-    "element": 12
-  },
-  "type": "binary_tree"
-}
+{}

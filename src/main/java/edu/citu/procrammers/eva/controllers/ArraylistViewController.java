@@ -1,7 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.utils.ArrayNode;
-import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
@@ -9,16 +8,12 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,16 +23,7 @@ import javafx.util.Pair;
 import org.json.JSONObject;
 
 import java.net.URL;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
@@ -70,8 +56,6 @@ public class ArraylistViewController implements Initializable {
     private JSONObject dataJSON;
 
     public ChatBotController chatBotController;
-
-    public void initialize() {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -130,6 +114,7 @@ public class ArraylistViewController implements Initializable {
 
     private void writeDataJSON() {
         dataJSON.put("type", "arraylist");
+        dataJSON.put("size", arrayList.size());
         dataJSON.put("elements", arrayList.toString());
         ChatService.updateData(dataJSON);
     }

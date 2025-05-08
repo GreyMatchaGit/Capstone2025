@@ -25,4 +25,8 @@ public class Constant {
         public static final String Stack = "stack-visualizer-view.fxml";
         public static final String Queue = "queue-visualizer-view.fxml";
     }
+
+    public static class Value{
+        public static final double FRONT_BOUNDARY_X = 100;
+    }
 }

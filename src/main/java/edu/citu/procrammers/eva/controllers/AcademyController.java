@@ -3,6 +3,7 @@ package edu.citu.procrammers.eva.controllers;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.LessonContent;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.fxml.FXML;
@@ -16,7 +17,6 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-import static edu.citu.procrammers.eva.utils.ChatService.loadChatbot;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Chatbot;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 import java.sql.SQLException;
@@ -37,10 +37,15 @@ public class AcademyController {
     public TextArea taDiscussion, taCodeSnippet;
     public Text txtTopicTitle, txtTopicNum;
 
+
     @FXML
     public void initialize() {
         imgBackMenuBtn.setOnMouseClicked(e -> NavService.navigateTo(Selection));
-        imgChatbotBtn.setOnMouseClicked(e -> loadChatbot());
+        imgChatbotBtn.setOnMouseClicked(e ->{
+            ChatService.loadChatbot(chatBotController, apChat);
+            loadLessonContents();
+        });
+
 
         SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
 

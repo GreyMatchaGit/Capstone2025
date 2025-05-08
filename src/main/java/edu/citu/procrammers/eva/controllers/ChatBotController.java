@@ -20,24 +20,13 @@ import java.util.concurrent.CompletableFuture;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class ChatBotController {
-    public VBox vbConversation;
-    public TextField tfChatBox;
-    public Button btnSubmit;
-    public Button btnClose;
+
+    @FXML private VBox vbConversation;
+    @FXML private TextField tfChatBox;
+    @FXML private Button btnSubmit;
+    @FXML private Button btnClose;
 
     private Pane parentContainer;
-
-//    private static ChatBotController instance;
-//
-//    private ChatBotController() {}
-//
-//    public static ChatBotController getInstance() {
-//        if (instance == null) {
-//            instance = new ChatBotController();
-//        }
-//        return instance;
-//    }
-
 
     public void initialize() {
         btnSubmit.setOnAction(e -> handleChatSubmit());
@@ -46,9 +35,7 @@ public class ChatBotController {
         });
     }
 
-    public void setParentContainer(Pane parentContainer) {
-        this.parentContainer = parentContainer;
-    }
+
 
     @FXML
     private void onCloseButtonClicked() {
@@ -117,14 +104,14 @@ public class ChatBotController {
                         .getString("content");
 
                 String summary = null;
-                int index = replyText.indexOf("-Summary-");
+                int index = replyText.indexOf("Summary:");
 
                 if (index != -1) {
                     summary = replyText.substring(index).trim();
                     replyText = replyText.substring(0, index).trim();
                 }
 
-                ChatService.updateSummary(summary);
+//                ChatService.updateSummary(summary);
 
                 Label reply = new Label(replyText);
                 reply.setWrapText(true);
@@ -135,6 +122,10 @@ public class ChatBotController {
                 Platform.runLater(() -> showError("Failed to communicate with API: " + e.getMessage()));
             }
         });
+    }
+
+    public void setParentContainer(Pane parentContainer) {
+        this.parentContainer = parentContainer;
     }
 
     private void showError(String message) {

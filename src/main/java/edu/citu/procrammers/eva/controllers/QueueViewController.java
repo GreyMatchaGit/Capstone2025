@@ -1,23 +1,24 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.utils.Constant.Value;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -33,19 +34,21 @@ public class QueueViewController {
     private static final Color DEFAULT = Color.BLACK;
     private static final Color DEFAULTR = Color.WHITE;
 
-    public AnchorPane apVisualizer;
-    public Button btnEnqueue, btnDequeue, btnFront, btnClear;
-    public TextField tfPrompt;
-    public ImageView imgBackBtn;
+
+    @FXML private AnchorPane apVisualizer;
+    @FXML private Button btnEnqueue, btnDequeue, btnFront, btnClear;
+    @FXML private TextField tfPrompt;
+    @FXML private ImageView imgBackBtn;
 
     private LinkedList<Integer> queue;
     private List<Rectangle> rectangles;
     private List<Label> labels;
     private List<VBox> vBoxes;
-    private int size, capacity;
+    private int size;
+
+    private Node frontMarker;
 
     public void initialize() {
-
         setupGlow(imgBackBtn);
 
         queue = new LinkedList<>();
@@ -53,7 +56,6 @@ public class QueueViewController {
         labels = new ArrayList<>();
         vBoxes = new ArrayList<>();
         size=0;
-        capacity=0;
 
         apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -62,6 +64,16 @@ public class QueueViewController {
                     double centerY = apVisualizer.getHeight() / 2;
                     this.centerX = centerX;
                     this.centerY = centerY;
+
+                    Polygon triangle = new Polygon();
+                    triangle.getPoints().addAll(0.0, 0.0, 20.0, 10.0, 0.0, 20.0); // right pointing
+                    triangle.setFill(Color.RED);
+                    triangle.setLayoutX(Value.FRONT_BOUNDARY_X - 25);
+                    triangle.setLayoutY(centerY + 10);
+                    triangle.setVisible(false);
+
+                    apVisualizer.getChildren().add(triangle);
+                    frontMarker = triangle;
                 });
             }
         });
@@ -93,13 +105,15 @@ public class QueueViewController {
     }
 
     private void updateList(int n) {
+        if(apVisualizer.getChildren().getFirst() == frontMarker) { frontMarker.setVisible(true); }
         for(int i=0; i<n; ++i) {
-            double currentX = (centerX) + capacity*30;
-            double currentY = centerY-100;
-            System.out.println(capacity+ " " +currentX);
-            VBox vBox = createBoxes(capacity,"", currentX, currentY, false);
+            double currentX = (Value.FRONT_BOUNDARY_X + vBoxes.size() * 55);
+            double currentY = centerY;
+            System.out.println(vBoxes.size()+ " " +currentX);
+            VBox vBox = createBoxes(vBoxes.size(),"", currentX, currentY, false);
             FadeTransition ft = fadeIn(vBox);
-            TranslateTransition tt = slideY(vBox, 100);
+            vBox.setTranslateX(100);
+            TranslateTransition tt = slideX(vBox, -100);
             ft.play();
             ft.setOnFinished(e -> tt.play());
         }
@@ -108,7 +122,7 @@ public class QueueViewController {
                 queue.size() + " " +
                 rectangles.size() + " " +
                 labels.size() + " " +
-                vBoxes.size() + " Capacity:" + capacity);
+                vBoxes.size());
         for(VBox vb : vBoxes) {
             for(Node b : vb.getChildren()) {
                 if(b instanceof StackPane) {
@@ -125,18 +139,21 @@ public class QueueViewController {
     private void enqueue() {
         int num = getNum();
         if(num == Integer.MIN_VALUE) return;
+
         queue.addLast(num);
 
         updateList(1);
 
-
         Label l = labels.get(size);
         Rectangle r = rectangles.get(size);
+
         l.setText(Integer.toString(num));
+
         FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, POSITIVE);
         FillTransition reset = fillRectangle(0.3, r, POSITIVE, DEFAULTR);
         SequentialTransition st = new SequentialTransition(highlight, reset);
         st.play();
+
         ++size;
     }
 
@@ -146,38 +163,52 @@ public class QueueViewController {
 
         if(size == 0) return;
 
-        VBox currentVBox = null;
-        Rectangle r = null;
-        Label l;
-        SequentialTransition traversal = new SequentialTransition();
-        currentVBox = vBoxes.get(0);
-        r = rectangles.get(0);
-        l = labels.get(0);
+        VBox currentVBox = vBoxes.getFirst();
+        Rectangle r = rectangles.getFirst();
+        Label l = labels.getFirst();
 
+        SequentialTransition traversal = new SequentialTransition();
         FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
         FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
         SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
-        traversal.getChildren().add(nodeTransition);
+        nodeTransition.play();
 
-        // After traversal, do the slideY animation
-            VBox finalCurrentVBox = currentVBox;
-            Rectangle finalRectangle = r;
-            traversal.setOnFinished(e -> {
-                FillTransition highlightSlide = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
-                FillTransition resetSlide = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
-                SequentialTransition fullSequence = new SequentialTransition(
-                        highlightSlide,
-                        resetSlide
-                );
-                fullSequence.play();
-                fullSequence.setOnFinished(ee -> {
-                    destroyBox(finalCurrentVBox);
-                    vBoxes.remove(finalCurrentVBox);
-                });
+        traversal.setOnFinished(e -> {
+            TranslateTransition slideOut = slideX(currentVBox, -100);
+            FadeTransition fade = fadeOut(currentVBox);
+            slideOut.setOnFinished(event -> fade.play());
+            fade.setOnFinished(event -> {
+
+                apVisualizer.getChildren().remove(currentVBox);
+                vBoxes.removeFirst();
+                rectangles.removeFirst();
+                labels.removeFirst();
+
+                for (int i = 0; i < vBoxes.size(); i++) {
+                    VBox vb = vBoxes.get(i);
+
+                    double targetX = Value.FRONT_BOUNDARY_X + i * 55;
+
+                    KeyValue kv = new KeyValue(vb.layoutXProperty(), targetX, Interpolator.EASE_BOTH);
+                    KeyFrame kf = new KeyFrame(Duration.seconds(0.75), kv);
+                    Timeline timeline = new Timeline(kf);
+                    timeline.play();
+
+                    if (vb.getChildren().size() >= 2) {
+                        Node node = vb.getChildren().get(1);
+                        if (node instanceof Label) {
+                            ((Label) node).setText(Integer.toString(i));
+                        }
+                    }
+                }
+
+                --size;
+                if(size == 0) frontMarker.setVisible(false);
             });
+            slideOut.play();
+        });
 
         traversal.play();
-        --size;
     }
 
 
@@ -186,13 +217,10 @@ public class QueueViewController {
         if(num == Integer.MIN_VALUE) return false;
         if(size == 0) return false;
 
-        VBox currentVBox = null;
-        Rectangle r = null;
-        Label l;
+        VBox currentVBox = vBoxes.getFirst();
+        Rectangle r = rectangles.getFirst();
+        Label l = labels.getFirst();
         SequentialTransition traversal = new SequentialTransition();
-        currentVBox = vBoxes.get(0);
-        r = rectangles.get(0);
-        l = labels.get(0);
 
         FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
         FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
@@ -219,7 +247,6 @@ public class QueueViewController {
         });
 
         traversal.play();
-
         return true;
     }
 
@@ -242,15 +269,15 @@ public class QueueViewController {
             // Destroy All Boxes
             rectangles.clear();
             labels.clear();
-            for (int i = capacity - 1; i >= 0; --i, --capacity) {
+            for (int i = vBoxes.size() - 1; i >= 0; --i) {
                 VBox vb = vBoxes.get(i);
                 destroyBox(vb);
                 vBoxes.remove(i);
                 System.out.println(i);
             }
 
-            updateList(5);
             size = 0;
+            frontMarker.setVisible(false);
             System.out.println("Queue cleared " +
                     queue.size() + " " +
                     rectangles.size() + " " +
@@ -268,7 +295,7 @@ public class QueueViewController {
         Label value = new Label(num);
         value.setStyle("-fx-font-weight: bold;");
         StackPane sp = new StackPane(rect, value);
-        Label index = new Label(Integer.toString(capacity));
+        Label index = new Label(Integer.toString(pos));
         index.setStyle("-fx-font-weight: bold;");
         VBox vbox = new VBox(2);
         vbox.getChildren().addAll(sp, index);
@@ -280,10 +307,6 @@ public class QueueViewController {
         rectangles.add(pos, rect);
         labels.add(pos, value);
         vBoxes.add(pos, vbox);
-        if(!isTemp) {
-            shiftX(0, capacity, -25);
-            capacity++;
-        }
 
         return vbox;
     }
@@ -354,9 +377,9 @@ public class QueueViewController {
 
     private void destroyBox(VBox vbox) {
         FadeTransition fadeOut = fadeOut(vbox);
-        TranslateTransition slideUp = slideY(vbox, -100);
-        slideUp.setOnFinished(event -> fadeOut.play());
-        slideUp.play();
+        TranslateTransition slideLeft = slideX(vbox, -100);
+        slideLeft.setOnFinished(event -> fadeOut.play());
+        slideLeft.play();
         fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
     }
 

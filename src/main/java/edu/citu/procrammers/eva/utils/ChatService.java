@@ -45,6 +45,8 @@ public class ChatService {
         prompt.getJSONArray("messages")
                 .getJSONObject(3)
                 .put("content", summary);
+
+        fileWriter(prompt, PROMPT_PATH);
     }
 
     public static void fileWriter(JSONObject object,String path){
