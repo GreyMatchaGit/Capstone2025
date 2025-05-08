@@ -2,6 +2,8 @@ package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.utils.ChatService;
+import edu.citu.procrammers.eva.utils.NavService;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -10,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -22,12 +26,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
 
+import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
+
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class StackViewController {
     public Button btnPush, btnPop, btnTop, btnClear;
     public AnchorPane apVisualizer;
     public TextField tfPrompt;
+    public ImageView imgBackBtn;
     public ImageView imgChatbotBtn;
     public AnchorPane apChat;
 
@@ -44,6 +52,9 @@ public class StackViewController {
     public ChatBotController chatBotController;
 
     public void initialize() {
+
+        setupGlow(imgBackBtn);
+
         stack = new Stack<>();
         stackPanes = new Stack<>();
         labels = new Stack<>();
@@ -255,5 +266,10 @@ public class StackViewController {
         for(StackPane sp : stackPanes) {
             sp.setLayoutY(sp.getLayoutY() + val);
         }
+    }
+
+    public void navigatePreviousScreen() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
+        NavService.navigateTo(Academy);
     }
 }

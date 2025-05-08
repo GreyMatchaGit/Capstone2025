@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.sql.*;
+import java.util.ArrayList;
 
 import static edu.citu.procrammers.eva.data.Database.Error.*;
 
@@ -234,6 +235,30 @@ public class Database {
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ArrayList<LessonContent> loadLessons() throws SQLException {
+        ArrayList<LessonContent> lessonsList = new ArrayList<>();
+
+        String query = "SELECT lesson_id, topic_title, lesson_text, code_snippet, visualizer_path FROM tbllessons";
+
+        try (
+                PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("lesson_id");
+                String topicTitle = resultSet.getString("topic_title");
+                String lessonText = resultSet.getString("lesson_text");
+                String codeSnippet = resultSet.getString("code_snippet");
+                String visualizerPath = resultSet.getString("visualizer_path");
+
+                LessonContent lesson = new LessonContent(id, topicTitle, lessonText, codeSnippet, visualizerPath);
+                lessonsList.add(lesson);
+            }
+        }
+
+        return lessonsList;
     }
 
     private void fixDatabase() {

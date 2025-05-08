@@ -57,11 +57,6 @@
                   </StackPane>
                </children>
             </HBox>
-            <ImageView fx:id="imgSettingsBtn" fitHeight="78.0" fitWidth="78.0" layoutX="1800.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@media/img_settings_btn.png" />
-               </image>
-            </ImageView>
          </children>
       </AnchorPane>
    </center>

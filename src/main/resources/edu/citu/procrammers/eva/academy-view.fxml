@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.AcademyController">
    <center>
@@ -30,14 +37,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="imgProfileBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1677.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@media/img_profile_btn.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
             <ImageView fx:id="imgLessonsBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1498.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_bookmark_lessons.png" />
@@ -54,6 +53,78 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <ImageView fx:id="imgSettingsBtn" fitHeight="63.0" fitWidth="71.0" layoutX="1680.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_settings_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text fx:id="txtTopicNum" fill="WHITE" layoutX="466.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="page-number-text" text="00" textAlignment="CENTER">
+               <font>
+                  <Font name="Pixelify Sans Bold" size="24.0" />
+               </font>
+            </Text>
+            <Text fx:id="txtTopicTitle" fill="WHITE" layoutX="555.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic-title-text" text="Preface">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Text>
+            <TextArea fx:id="taDiscussion" editable="false" layoutX="457.0" layoutY="283.0" prefHeight="481.0" prefWidth="430.0" styleClass="discussion-text" text="Discussion here" wrapText="true">
+               <font>
+                  <Font name="Pixelify Sans Regular" size="13.0" />
+               </font></TextArea>
+            <ImageView fx:id="imgViewVisualizer" fitHeight="173.0" fitWidth="407.0" layoutX="1005.0" layoutY="309.0" onMouseClicked="#viewVisualizer" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_view_visualizer.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text layoutX="1008.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click to view visualizer">
+               <font>
+                  <Font name="Pixelify Sans Regular" size="13.0" />
+               </font>
+            </Text>
+            <Text layoutX="1009.0" layoutY="515.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Code snippet">
+               <font>
+                  <Font name="Pixelify Sans Regular" size="13.0" />
+               </font>
+            </Text>
+            <StackPane layoutX="1007.0" layoutY="526.0" prefHeight="236.0" prefWidth="397.0">
+               <children>
+                  <Pane prefHeight="237.0" prefWidth="397.0" style="-fx-background-color: #4E2D2D;" />
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="262.0" prefWidth="381.0" stylesheets="@css/styles.css" vbarPolicy="NEVER">
+                     <StackPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </StackPane.margin>
+                     <content>
+                        <TextArea fx:id="taCodeSnippet" editable="false" prefHeight="217.0" prefWidth="378.0" styleClass="code-snippet-text" text="// Code snippet here" wrapText="true">
+                           <font>
+                              <Font name="Pixelify Sans Bold" size="13.0" />
+                           </font></TextArea>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </StackPane>
+            <ImageView fx:id="imgBackBtn" fitHeight="28.0" fitWidth="82.0" layoutX="458.0" layoutY="788.0" onMouseClicked="#prevLesson" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_back_page_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="imgNextBtn" fitHeight="28.0" fitWidth="82.0" layoutX="1336.0" layoutY="788.0" onMouseClicked="#nextLesson" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_next_page_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
             <ImageView fx:id="imgChatbotBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1740.0" layoutY="929.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_profile_btn.png" />
@@ -63,7 +134,64 @@
                </cursor>
             </ImageView>
             <AnchorPane fx:id="apChat" layoutX="1429.0" layoutY="262.0" prefHeight="660.0" prefWidth="372.0" />
+            <AnchorPane fx:id="apPrefaceP2" layoutX="428.0" layoutY="270.0" prefHeight="516.0" prefWidth="1010.0">
+               <children>
+                  <AnchorPane layoutX="31.0" layoutY="13.0" prefHeight="495.0" prefWidth="424.0" style="-fx-background-color: E7D5B3;">
+                     <children>
+                        <ImageView fitHeight="354.0" fitWidth="237.0" layoutX="94.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_oath_hand.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="93.0" fitWidth="365.0" layoutX="30.0" layoutY="365.0">
+                           <image>
+                              <Image url="@media/img_oath_text.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="563.0" layoutY="13.0" prefHeight="497.0" prefWidth="426.0" style="-fx-background-color: E7D5B3;" />
+                  <AnchorPane layoutX="573.0" layoutY="23.0" prefHeight="497.0" prefWidth="426.0" style="-fx-background-color: E7D5B3;">
+                     <children>
+                        <ImageView fitHeight="429.0" fitWidth="418.0" layoutX="3.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_oath_scroll.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="apPrefaceP1" layoutX="428.0" layoutY="270.0" prefHeight="516.0" prefWidth="1010.0">
+               <children>
+                  <AnchorPane layoutX="31.0" layoutY="13.0" prefHeight="495.0" prefWidth="415.0" style="-fx-background-color: E7D5B3;">
+                     <children>
+                        <ImageView fitHeight="238.0" fitWidth="420.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_kingdom_of_eva.jpg" />
+                           </image>
+                        </ImageView>
+                        <TextArea editable="false" layoutX="-10.0" layoutY="240.0" prefHeight="263.0" prefWidth="445.0" styleClass="discussion-text" text="Welcome to the Kingdom of EVA, young adventurer...&#10;&#10;The winds of change stir in the realm of software. The ancient Scrolls of Logic speak of brave souls who mastered the sacred arts of Data Structures — those who wielded arrays like shields, summoned queues and stacks with swift incantations, and unlocked the deep-rooted magic of trees and heaps.&#10;" wrapText="true">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </TextArea>
+                     </children></AnchorPane>
+                  <AnchorPane layoutX="563.0" layoutY="13.0" prefHeight="497.0" prefWidth="426.0" style="-fx-background-color: E7D5B3;">
+                     <children>
+                        <TextArea editable="false" layoutX="-9.0" prefHeight="263.0" prefWidth="445.0" styleClass="discussion-text" text="You now stand at the gates of the Academy of Abstraxia, a mystical institution where only the worthy train in the design and crafting of powerful abstractions, known to many as Abstract Data Types (ADTs). These are no ordinary tools — they are the lifeblood of every great algorithm, the foundation of every noble code.&#10;&#10;But before you don your robe and grasp your keyboard-staff, hear this…" wrapText="true">
+                           <font>
+                              <Font name="Sylfaen" size="13.0" />
+                           </font>
+                        </TextArea>
+                     </children></AnchorPane>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </center>
+   <stylesheets>
+      <URL value="@css/fonts.css" />
+      <URL value="@css/styles.css" />
+   </stylesheets>
 </BorderPane>
