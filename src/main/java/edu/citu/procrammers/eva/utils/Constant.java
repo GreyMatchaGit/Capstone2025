@@ -31,4 +31,9 @@ public class Constant {
         public static final javafx.scene.paint.Color DEFAULT = javafx.scene.paint.Color.BLACK;
         public static final javafx.scene.paint.Color DEFAULTR = javafx.scene.paint.Color.WHITE;
     }
+
+    public static class HashTable {
+        public static final int EMPTY = Integer.MIN_VALUE;
+        public static final int SENTINEL = EMPTY + 1;
+    }
 }
