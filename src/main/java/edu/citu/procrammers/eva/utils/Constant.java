@@ -17,6 +17,7 @@ public class Constant {
         public static final String Conquest = "conquest-view.fxml";
 
         public static final String Arrays = "array-visualizer-view.fxml";
-        public static final String Stack = "stack-view.fxml";
+        public static final String Stack = "stack-visualizer-view.fxml";
+        public static final String Queue = "queue-visualizer-view.fxml";
     }
 }
