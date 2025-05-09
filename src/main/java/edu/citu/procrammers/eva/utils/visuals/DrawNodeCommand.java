@@ -92,6 +92,7 @@ public class DrawNodeCommand extends Command {
 
     @Override public void undo(Runnable onUndo) {
         canvas.getChildren().remove(graphicMap.get(graphicId));
+        onUndo.run();
     }
 
     @Override

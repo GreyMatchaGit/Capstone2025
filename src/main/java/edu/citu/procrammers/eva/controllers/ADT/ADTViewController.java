@@ -40,7 +40,6 @@ public class ADTViewController {
     @FXML private Button btnBackward;
     @FXML private Button btnPlay;
     @FXML private Button btnForward;
-    @FXML private ToggleButton tglIsContinuous;
     @FXML private Slider sliderSpeed;
     @FXML private AnchorPane apMain;
     @FXML private Button btnInsert;
@@ -54,16 +53,19 @@ public class ADTViewController {
 
     public void initialize() {
         initializeSlider();
-        initializeStyles();
         initializeKeyboardListener();
+
+        btnBackward.setDisable(false);
+        btnPlay.setDisable(false);
+
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
             BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
             System.out.println("BST isStandard = " + BST.isStandard);
         });
-
     }
+
 
     private void initializeKeyboardListener() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -102,10 +104,9 @@ public class ADTViewController {
         btnDelete.setDisable(true);
 
         btnBackward.setDisable(true);
-        btnPlay.setDisable(true);
+
         btnForward.setDisable(true);
 
-        tglIsContinuous.setDisable(true);
         tglSeratoMode.setDisable(true);
 
         sliderSpeed.setDisable(true);
@@ -118,11 +119,10 @@ public class ADTViewController {
         btnInsert.setDisable(false);
         btnDelete.setDisable(false);
 
-        btnBackward.setDisable(false);
-        btnPlay.setDisable(false);
-        btnForward.setDisable(false);
+//        btnBackward.setDisable(!(animationManager.isContinuous && tfInput.isDisable()) );
+//        btnPlay.setDisable(false);
+//        btnForward.setDisable(!animationManager.isContinuous || !tfInput.isDisable());
 
-        tglIsContinuous.setDisable(false);
         tglSeratoMode.setDisable(false);
 
         sliderSpeed.setDisable(false);
@@ -153,7 +153,8 @@ public class ADTViewController {
     }
 
     @FXML private void onDeleteButtonClicked() {
-        disableUI();
+        if (tfDelete.getText().isEmpty()) {return;}
+//        disableUI();
         int key = Integer.parseInt(tfDelete.getText());
         clearFields();
         animationManager.commands = BST.deleteElement(key);
@@ -163,36 +164,41 @@ public class ADTViewController {
 
     @FXML
     private void onButtonInsertClicked() {
-        disableUI();
+        if (tfInput.getText().isEmpty()) {return;}
+//        disableUI();
         System.out.println("playing speed: " + animationManager.speed + " seconds ");
         int key = Integer.parseInt(tfInput.textProperty().getValue());
         clearFields();
 
         animationManager.commands = BST.insertElement(key);
         animationManager.play(this::enableUI);
-//        Node newNode = BST.insertElement(key);
-//        addNewNodeUI(newNode);
     }
 
     @FXML private void onButtonBackwardClicked() {
-        disableUI();
+//        disableUI();
         animationManager.undo(this::enableUI);
     }
 
     @FXML private void onButtonPlayClicked() {
-        disableUI();
-        toggleContinuous();
+//        disableUI();
+        animationManager.isContinuous = !animationManager.isContinuous;
+        boolean continuous = animationManager.isContinuous;
+
+        btnPlay.setDisable(false);
+        btnPlay.setText(continuous ? "Pause" : "Play");
+
+//        boolean hasCommands = !animationManager.commands.isEmpty();
+//        btnBackward.setDisable(continuous && hasCommands);
+//        btnForward.setDisable(continuous && hasCommands);
+
+//        System.out.println("Has commands: " + !animationManager.commands.isEmpty());
+//
+//        System.out.println("isContinuous = " + animationManager.isContinuous);
         animationManager.play(this::enableUI);
     }
 
     @FXML private void onButtonForwardClick() {
-        disableUI();
         animationManager.play(this::enableUI);
-    }
-
-    @FXML private void toggleContinuous() {
-        animationManager.isContinuous = !animationManager.isContinuous;
-        System.out.println("isContinuous = " + animationManager.isContinuous);
     }
 
     @FXML
@@ -201,53 +207,8 @@ public class ADTViewController {
         System.out.println("isStandard Mode = " + BST.isStandard);
     }
 
-    private void initializeStyles() {
-        Scene scene = NavService.mainController.mainScreen.getScene();
-
-        scene.getStylesheets().add(Eva.class.getResource("styles/ADT-view.css").toExternalForm());
-
-        tglIsContinuous.getStyleClass().add("switch-toggle");
-
-        Region thumb = new Region();
-        thumb.getStyleClass().add("thumb");
-        tglIsContinuous.setGraphic(thumb);
-
-//        tglIsContinuous.selectedProperty().addListener((obs, oldVal, newVal) -> {
-//            if (newVal) {
-//                thumb.setTranslateX(24);
-//            } else {
-//                thumb.setTranslateX(4);
-//            }
-//        });
-
-        tglSeratoMode.getStyleClass().add("switch-toggle");
-
-        Region thumb2 = new Region();
-        thumb2.getStyleClass().add("thumb");
-        tglSeratoMode.setGraphic(thumb2);
-//        tglIsContinuous.selectedProperty().addListener((obs, oldVal, newVal) -> {
-//            double targetX = newVal ? 24 : 4;
-//
-//            Timeline timeline = new Timeline(
-//                    new KeyFrame(Duration.millis(100),
-//                            new KeyValue(thumb.translateXProperty(), targetX)
-//                    )
-//            );
-//            timeline.play();
-//        });
-
-//        btnPlay.getStyleClass().addAll("button", "play-button");
-//////        btnPlay.setText("Play");
-//        btnBackward.getStyleClass().addAll("button", "backward-button");
-//        btnForward.getStyleClass().addAll("button", "forward-button");
-    }
-
     public void navigatePreviousScreen() {
         SoundManager.playSFX("sfx/btn_click.MP3");
         NavService.navigateTo(Academy);
     }
-//    private void highlightNodeInView(Node node) {
-//        NodeController nodeController = nodeMap.get(node);
-////        nodeController.getCircle().setStroke(Paint.valueOf("GREEN"));
-//    }
 }

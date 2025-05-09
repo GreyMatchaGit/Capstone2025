@@ -6,7 +6,10 @@ import javafx.scene.layout.AnchorPane;
 import java.util.HashMap;
 
 public class DeleteCommand extends Command {
+    Node node;
     int graphicId;
+    double x;
+    double y;
     AnchorPane canvas;
     HashMap<Integer, Node> graphicMap;
 
@@ -19,14 +22,23 @@ public class DeleteCommand extends Command {
     @Override
     public void execute(Runnable onFinished) {
         System.out.println("Deleting graphic: " + graphicId);
-        canvas.getChildren().remove(graphicMap.get(graphicId));
+        node = graphicMap.get(graphicId);
+        canvas.getChildren().remove(node);
+
+        x = node.getLayoutX();
+        y = node.getLayoutY();
 
         onFinished.run();
     }
 
     @Override
     public void undo(Runnable onUndo) {
+        canvas.getChildren().add(node);
+        node.toFront();
+        node.setLayoutX(x);
+        node.setLayoutY(y);
 
+        onUndo.run();
     }
 
     @Override

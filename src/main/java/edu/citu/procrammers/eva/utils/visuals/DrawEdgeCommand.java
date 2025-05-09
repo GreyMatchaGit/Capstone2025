@@ -72,6 +72,7 @@ public class DrawEdgeCommand extends Command {
 
     @Override public void undo(Runnable onUndo) {
         canvas.getChildren().remove(graphicMap.get(id));
+        onUndo.run();
     }
 
     @Override

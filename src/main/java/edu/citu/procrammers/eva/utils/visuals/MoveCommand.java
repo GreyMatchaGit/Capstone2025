@@ -37,8 +37,6 @@ public class MoveCommand extends Command {
 //        Circle circle = ((Circle) ((StackPane) node).getChildren().getFirst());
         Node node = graphicMap.get(graphicId);
 
-
-        System.out.println("Not found so will create one...");
         this.prevX = node.getLayoutX();
         this.prevY = node.getLayoutY();
 
@@ -70,6 +68,7 @@ public class MoveCommand extends Command {
         KeyFrame kf = new KeyFrame(Duration.millis(300), kvX, kvY); // 300ms animati
         timeline.getKeyFrames().add(kf);// on
         timeline.play();
+        onUndo.run();
     }
 
     @Override
