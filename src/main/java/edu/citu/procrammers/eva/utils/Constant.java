@@ -25,15 +25,14 @@ public class Constant {
         public static final String DATA_PATH = "data.json";
         public static final String Arrays = "array-visualizer-view.fxml";
         public static final String Stack = "stack-view.fxml";
+        public static final String Queue = "queue-visualizer-view.fxml";
+        public static final String Deque = "deque-visualizer-view.fxml";
 
         public static final Color POSITIVE = Color.ORANGE;
         public static final Color NEGATIVE = Color.RED;
         public static final Color SEARCH = Color.GREENYELLOW;
         public static final Color DEFAULT = Color.BLACK;
         public static final Color DEFAULTR = Color.WHITE;
-        public static final String Stack = "stack-visualizer-view.fxml";
-        public static final String Queue = "queue-visualizer-view.fxml";
-        public static final String Deque = "deque-visualizer-view.fxml";
         public static final String BST = "bst-visualizer-view.fxml";
     }
 

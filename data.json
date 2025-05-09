@@ -1,1 +1,4 @@
-{}
+{
+  "previousTree": {"element": 1},
+  "type": "binary_tree"
+}
