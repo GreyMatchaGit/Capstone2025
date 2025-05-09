@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.json.JSONObject;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 import java.sql.SQLException;
@@ -44,6 +45,8 @@ public class AcademyController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        ChatService.updateData(new JSONObject());
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
