@@ -36,6 +36,6 @@ public class LinearProbingStrategy implements CollisionStrategy {
             return FINISHED;
         }
         iteration++;
-        return index;
+        return index + iteration;
     }
 }

@@ -37,6 +37,6 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
         }
 
         iteration++;
-        return index;
+        return index + iteration * iteration;
     }
 }
