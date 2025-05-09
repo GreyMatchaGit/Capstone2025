@@ -38,7 +38,7 @@
                            <Region prefHeight="243.0" prefWidth="328.0" />
                                  <TextField fx:id="tfValue" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
                            <Region prefHeight="243.0" prefWidth="17.0" />
-                                 <Button fx:id="btnAdd" mnemonicParsing="false" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD TAIL" />
+                                 <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addTail" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD TAIL" />
                            <Region prefHeight="104.0" prefWidth="506.0" />
                              </items>
                          </ToolBar>
@@ -51,7 +51,7 @@
                            <Image url="@media/img_visualizer_bg.jpg" />
                         </image>
                      </ImageView>
-                       <AnchorPane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #ff0000;" />
+                       <AnchorPane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
                   </children>
                </StackPane>
             </children>
