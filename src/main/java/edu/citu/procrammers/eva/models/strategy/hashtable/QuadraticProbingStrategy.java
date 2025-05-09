@@ -26,14 +26,12 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
     public int handleCollision(int index) {
 
         /*
-         * Paramdam: Index is initially the result from the compression function.
+         * Param: Index is initially the result from the compression function.
          * Return: FINISHED if it found the index to insert the value in.
          * Else, Iteration increments by 1.
          */
 
-        if(array.get(index).getNumber() == EMPTY
-                || array.get(index).getNumber() == SENTINEL) {
-            array.get(index).setNumber(value);
+        if(array.get(index).getNumber() == EMPTY || array.get(index).getNumber() == SENTINEL) {
             return FINISHED;
         }
 

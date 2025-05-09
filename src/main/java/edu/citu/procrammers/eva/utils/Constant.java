@@ -30,11 +30,16 @@ public class Constant {
         public static final javafx.scene.paint.Color SEARCH = javafx.scene.paint.Color.GREENYELLOW;
         public static final javafx.scene.paint.Color DEFAULT = javafx.scene.paint.Color.BLACK;
         public static final javafx.scene.paint.Color DEFAULTR = javafx.scene.paint.Color.WHITE;
+        public static final javafx.scene.paint.Color PASTEL_ORANGE = javafx.scene.paint.Color.valueOf("#FFBD44");
+        public static final javafx.scene.paint.Color SUNSET_ORANGE = javafx.scene.paint.Color.valueOf("#FF605C");
+        public static final javafx.scene.paint.Color MALACHITE = javafx.scene.paint.Color.valueOf("#00CA4E");
     }
 
     public static class HashTable {
         public static final int EMPTY = Integer.MIN_VALUE;
-        public static final int SENTINEL = EMPTY + 1;
+        public static final int FULL  = EMPTY + 1;
+        public static final int SENTINEL = FULL + 1;
         public static final int FINISHED = SENTINEL + 1;
+        public static final int INVALID_COLLISION_METHOD = FINISHED + 1;
     }
 }

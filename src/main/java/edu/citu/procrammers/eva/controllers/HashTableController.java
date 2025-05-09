@@ -1,16 +1,15 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.models.strategy.hashtable.*;
-import edu.citu.procrammers.eva.utils.ArrayNode;
-import edu.citu.procrammers.eva.utils.Constant;
-import edu.citu.procrammers.eva.utils.NavService;
-import edu.citu.procrammers.eva.utils.SoundManager;
+import edu.citu.procrammers.eva.utils.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,17 +23,18 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static edu.citu.procrammers.eva.controllers.HashTableController.CollisionMethod.*;
-import static edu.citu.procrammers.eva.controllers.HashTableController.errorHandling.LOGGER_PREFIX;
-import static edu.citu.procrammers.eva.utils.Constant.HashTable.EMPTY;
-import static edu.citu.procrammers.eva.utils.Constant.HashTable.FINISHED;
+import static edu.citu.procrammers.eva.controllers.HashTableController.ErrorHandling.LOGGER_PREFIX;
+import static edu.citu.procrammers.eva.utils.Constant.HashTable.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class HashTableController implements Initializable {
 
-    public static class errorHandling {
+    public static class ErrorHandling {
         public static String LOGGER_PREFIX = "[HashTableController]";
     }
 
@@ -55,6 +55,8 @@ public class HashTableController implements Initializable {
     @FXML public ImageView imgBackBtn;
 
     private ArrayList<ArrayNode> arrayNodes;
+    private int size = 0;
+    private int capacity = -1;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,17 +65,9 @@ public class HashTableController implements Initializable {
 
         Platform.runLater(() -> {
             ArrayNode.initializeVisualizer(visualizer);
-            initHashTable(5);
+            capacity = 5;
+            initHashTable(capacity);
         });
-    }
-
-    public void startAlgorithm() {
-
-    }
-
-    private void test() {
-        arrayNodes.get(0).addToBucket(5);
-        arrayNodes.get(0).addToBucket(4);
     }
 
     private void add(int value) {
@@ -83,16 +77,24 @@ public class HashTableController implements Initializable {
         try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
+            if (size == capacity) {
+                System.out.println("Array is currently full.");
+                pulseAllNodes(1000);
+                return;
+            }
+
             if (arrayNodeAtIndex.getNumber() == EMPTY) {
                 System.out.println(LOGGER_PREFIX + String.format(" Index %d is empty.", index));
-                select(arrayNodeAtIndex, 700);
+                select(arrayNodeAtIndex, 1000, MALACHITE);
                 arrayNodeAtIndex.setNumber(value);
-                select(arrayNodeAtIndex, 300);
+                ++size;
             } else {
                 System.out.println(LOGGER_PREFIX + String.format(" A collision occurred at index %d. Handling the collision...", index));
                 handleCollision(index, value);
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+
+            System.out.println("Current size is " + size);
+        } catch (RuntimeException e) {
             System.out.println(LOGGER_PREFIX + " " + e.getMessage());
         }
     }
@@ -119,9 +121,11 @@ public class HashTableController implements Initializable {
                 collision = new QuadraticProbingStrategy(arrayNodes, value, index);
                 break;
             default:
-                System.out.println(LOGGER_PREFIX +
-                        " Choose a valid collision handling method. INVALID: " +
-                        cbCollision.toString());
+                System.out.println(
+                    LOGGER_PREFIX +
+                    " Choose a valid collision handling method. INVALID: " +
+                    cbCollision.toString()
+                );
                 return;
         }
 
@@ -129,10 +133,26 @@ public class HashTableController implements Initializable {
     }
 
     private void handleCollisionHelper(int index, int value, CollisionStrategy strategy) {
-        if (index == FINISHED)
-            return;
+        ArrayNode currentNode = arrayNodes.get(index);
 
-        handleCollisionHelper(strategy.handleCollision(index), value, strategy);
+        int nextIndex = strategy.handleCollision(index);
+
+        if (nextIndex == FINISHED) {
+            Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
+            currentNode.setNumber(value);
+            ++size;
+            System.out.println("Current size is " + size);
+            return;
+        }
+
+        Platform.runLater(() -> check(currentNode, 1000));
+
+        PauseTransition pause = new PauseTransition(Duration.millis(1000));
+        pause.setOnFinished(event -> {
+            handleCollisionHelper(nextIndex, value, strategy);
+        });
+
+        pause.play();
     }
 
     private int getHashCode(int value)  {
@@ -147,6 +167,7 @@ public class HashTableController implements Initializable {
     private void initHashTable(int capacity) {
         arrayNodes = new ArrayList<>();
         visualizer.getChildren().clear();
+        size = 0;
 
         try {
             for (int i = 0; i < capacity; ++i) {
@@ -160,7 +181,6 @@ public class HashTableController implements Initializable {
     }
 
     private void setListeners() {
-
         // tfPrompt should only accept digits and space
         tfPrompt.setOnKeyTyped(keyEvent -> {
             char characterPressed = keyEvent.getCharacter().charAt(0);
@@ -170,40 +190,55 @@ public class HashTableController implements Initializable {
                 tfPrompt.positionCaret(prompt.length());
             }
         });
+
+        // when the collision method is changed, reset the hashtable
+        cbCollision.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (oldValue == null) return;
+            if (!oldValue.equals(newValue)) {
+                initHashTable(capacity);
+            }
+        });
     }
 
-    private boolean select(ArrayNode arrayNode, long durationInMillis) {
-        pulseNode(arrayNode, Constant.Color.DEFAULT, Color.GREEN).play();
-        fadeColorTo(arrayNode, Constant.Color.DEFAULTR, Color.valueOf("#a0e052")).play();
-        try {
-            Thread.sleep(durationInMillis);
-        } catch (InterruptedException e) {
-            System.out.println("[HashTableController] Error: " + e.getMessage());
-            return false;
-        }
-        fadeColorTo(arrayNode, Color.valueOf("#a0e052"), Constant.Color.DEFAULTR).play();
-        return true;
+    private void select(ArrayNode arrayNode, long durationInMillis, Color color) {
+        pulseNode(arrayNode, Constant.Color.DEFAULT, color).play();
+        fadeColorTo(arrayNode, Constant.Color.DEFAULTR, color).play();
+
+        PauseTransition pause = new PauseTransition(Duration.millis(durationInMillis));
+        pause.setOnFinished(event -> {
+            fadeColorTo(arrayNode, color, Constant.Color.DEFAULTR).play();
+        });
+
+        pause.play();
     }
 
-    private boolean deselect(ArrayNode arrayNode, long durationInMillis) {
-        pulseNode(arrayNode, Constant.Color.POSITIVE, Constant.Color.DEFAULT).play();
-        try {
-            Thread.sleep(durationInMillis);
-        } catch (InterruptedException e) {
-            System.out.println("[HashTableController] Error: " + e.getMessage());
-            return false;
+    private void pulseAllNodes(long durationInMillis) {
+        for (ArrayNode arrayNode : arrayNodes) {
+            select(arrayNode, durationInMillis, SUNSET_ORANGE);
         }
-        return true;
+    }
+
+    private void check(ArrayNode arrayNode, long durationInMillis) {
+
+        pulseNode(arrayNode, Constant.Color.DEFAULT, PASTEL_ORANGE).play();
+        fadeColorTo(arrayNode, Constant.Color.DEFAULTR, PASTEL_ORANGE).play();
+
+        PauseTransition pause = new PauseTransition(Duration.millis(durationInMillis));
+        pause.setOnFinished(event -> {
+            fadeColorTo(arrayNode, PASTEL_ORANGE, Constant.Color.DEFAULTR).play();
+        });
+
+        pause.play();
     }
 
     private Timeline fadeColorTo(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(arrayNode.getRectangle().fillProperty(), from)
-                ),
-                new KeyFrame(Duration.seconds(0.5),
-                        new KeyValue(arrayNode.getRectangle().fillProperty(), to)
-                )
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(arrayNode.getRectangle().fillProperty(), from)
+            ),
+            new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(arrayNode.getRectangle().fillProperty(), to)
+            )
         );
         timeline.setCycleCount(1);
         timeline.setAutoReverse(false);
@@ -213,18 +248,18 @@ public class HashTableController implements Initializable {
 
     private Timeline pulseNode(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
-                        new KeyValue(arrayNode.getValue().textFillProperty(), from)
-                ),
-                new KeyFrame(Duration.seconds(0.3),
-                        new KeyValue(arrayNode.getRectangle().strokeProperty(), to),
-                        new KeyValue(arrayNode.getValue().textFillProperty(), to)
-                ),
-                new KeyFrame(Duration.seconds(0.6),
-                        new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
-                        new KeyValue(arrayNode.getValue().textFillProperty(), from)
-                )
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
+                new KeyValue(arrayNode.getValue().textFillProperty(), from)
+            ),
+            new KeyFrame(Duration.seconds(0.6),
+                new KeyValue(arrayNode.getRectangle().strokeProperty(), to),
+                new KeyValue(arrayNode.getValue().textFillProperty(), to)
+            ),
+            new KeyFrame(Duration.seconds(0.9),
+                new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
+                new KeyValue(arrayNode.getValue().textFillProperty(), from)
+            )
         );
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
@@ -243,17 +278,28 @@ public class HashTableController implements Initializable {
         cbCollision.setItems(FXCollections.observableList(collisionMethods));
     }
 
+    public void clear() {
+        pulseAllNodes(1000);
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(1300));
+        pauseTransition.setOnFinished(actionEvent -> initHashTable(5));
+        pauseTransition.play();
+    }
+
     @FXML
     private void onButtonClick(ActionEvent event) {
         try {
             String BUTTON_ID =  ((Button) event.getSource()).getId();
             String input = tfPrompt.getText();
-            int value = Integer.parseInt(input);
+            int value = 0;
+            if (!input.isEmpty()) {
+                value = Integer.parseInt(input);
+            }
 
             switch (BUTTON_ID) {
                 case "btnAdd" -> add(value);
                 case "btnRemove" -> remove(value);
                 case "btnSearch" -> search(value);
+                case "btnClear" -> clear();
             }
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
@@ -264,5 +310,13 @@ public class HashTableController implements Initializable {
     private void navigatePreviousScreen() {
         SoundManager.playSFX("sfx/btn_click.MP3");
         NavService.navigateTo(Academy);
+    }
+
+    public void pause(long durationInMillis) {
+        try {
+            Thread.sleep(durationInMillis);
+        } catch (InterruptedException e) {
+            System.out.println(LOGGER_PREFIX + " " + e.getMessage());
+        }
     }
 }
