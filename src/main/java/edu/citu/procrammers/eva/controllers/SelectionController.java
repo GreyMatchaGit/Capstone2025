@@ -33,10 +33,8 @@ public class SelectionController {
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
             fadeOut.setOnFinished(event -> {
-                SoundManager.fadeOutMusic();
                 NavService.navigateTo(Academy);
             });
-
             fadeOut.play();
         });
         spConquest.setOnMouseClicked(e -> {
@@ -45,10 +43,8 @@ public class SelectionController {
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
             fadeOut.setOnFinished(event -> {
-                SoundManager.fadeOutMusic();
                 NavService.navigateTo(Conquest);
             });
-
             fadeOut.play();
         });
 

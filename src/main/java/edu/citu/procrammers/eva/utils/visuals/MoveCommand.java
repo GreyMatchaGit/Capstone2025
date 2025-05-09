@@ -30,7 +30,7 @@ public class MoveCommand extends Command {
     }
 
     @Override
-    public void execute(Runnable onFinished) {;
+    public void execute(Runnable onFinished) {
         Timeline timeline = new Timeline();
 //        Circle circle = ((Circle) ((StackPane) node).getChildren().getFirst());
         Node node = graphicMap.get(graphicId);
