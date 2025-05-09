@@ -1,0 +1,128 @@
+/* ArrayListConquest specific styles */
+
+.title-text {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8d686;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}
+
+.subtitle-text {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 30px;
+    -fx-text-fill: #f8d686;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 3, 0, 0, 0);
+}
+
+.game-label {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 24px;
+    -fx-text-fill: #d6bfa9;
+}
+
+.spell-label {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 22px;
+    -fx-text-fill: #d6bfa9;
+}
+
+.spell-container {
+    -fx-background-color: rgba(56, 34, 15, 0.8);
+    -fx-background-radius: 15;
+    -fx-border-color: #f8d686;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.arraylist-text {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c6e9ff;
+    -fx-effect: dropshadow(three-pass-box, #4f8fff, 10, 0, 0, 0);
+}
+
+.dispel-button {
+    -fx-background-color: #611414;
+    -fx-background-radius: 10;
+    -fx-border-color: #f8d686;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 20px;
+    -fx-text-fill: #f8d686;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}
+
+.dispel-button:hover {
+    -fx-background-color: #7a1c1c;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,215,0,0.6), 10, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+.dispel-button:pressed {
+    -fx-background-color: #501010;
+}
+
+.spell-input {
+    -fx-background-color: rgba(20, 20, 20, 0.8);
+    -fx-background-radius: 10;
+    -fx-border-color: #f8d686;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 18px;
+    -fx-text-fill: #c6e9ff;
+    -fx-prompt-text-fill: rgba(198, 233, 255, 0.6);
+}
+
+.narration-area {
+    -fx-background-color: rgba(56, 34, 15, 0.7);
+    -fx-background-radius: 15;
+    -fx-border-color: #f8d686;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16px;
+    -fx-text-fill: #e0d0c0;
+    -fx-control-inner-background: transparent;
+    -fx-padding: 30;
+}
+
+.narration-area .content {
+    -fx-background-color: transparent;
+}
+
+.narration-area .viewport {
+    -fx-background-color: transparent;
+}
+
+.narration-area .scroll-bar {
+    -fx-background-color: rgba(56, 34, 15, 0.3);
+}
+
+.narration-area .scroll-bar .thumb {
+    -fx-background-color: #f8d686;
+}
+
+.time-progress {
+    -fx-accent: #2e8b57;
+    -fx-background-color: rgba(20, 20, 20, 0.5);
+    -fx-background-radius: 8;
+    -fx-border-color: #7a1c1c;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+}
+
+.time-progress .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+    -fx-background-color: #2e8b57;
+}
+
+.time-progress .track {
+    -fx-background-radius: 8;
+} 

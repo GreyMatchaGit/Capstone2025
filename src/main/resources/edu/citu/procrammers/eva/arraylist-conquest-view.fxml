@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ArrayListConquestController">
+   <center>
+      <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
+         <children>
+            <StackPane prefHeight="1080.0" prefWidth="1920.0">
+               <children>
+                  <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@media/img_loading_screen_bg.png" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="CENTER" prefHeight="1080.0" prefWidth="1849.0" spacing="20.0">
+                     <children>
+                        <Label styleClass="title-text" text="Spellbreaker's Duel" />
+                        <HBox alignment="CENTER" spacing="20.0">
+                           <children>
+                              <Label styleClass="subtitle-text" text="Round:" />
+                              <Label fx:id="lblRoundCounter" styleClass="subtitle-text" text="Round 1/5" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Label styleClass="game-label" text="Health:" />
+                              <HBox fx:id="hbHealthContainer" alignment="CENTER" spacing="5.0" />
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <VBox alignment="CENTER" prefHeight="190.0" prefWidth="1120.0" spacing="10.0" styleClass="spell-container">
+                           <children>
+                              <Label styleClass="spell-label" text="Corrupted Spell (Target):" />
+                              <Label fx:id="lblTargetArrayList" styleClass="arraylist-text" text="[&quot;fire&quot;, &quot;water&quot;, &quot;earth&quot;, &quot;air&quot;, &quot;light&quot;]" />
+                              <Region prefHeight="200.0" prefWidth="200.0" />
+                              <Label styleClass="spell-label" text="Your Incantation (Current):" />
+                              <Label fx:id="lblCurrentArrayList" styleClass="arraylist-text" text="[&quot;fire&quot;, &quot;water&quot;]" />
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets left="200.0" right="200.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Label styleClass="spell-label" text="Enter Spell Command:" />
+                              <TextField fx:id="tfSpellCommand" prefHeight="50.0" prefWidth="500.0" promptText="e.g. addLast(&quot;earth&quot;)" styleClass="spell-input" />
+                              <Button fx:id="btnDispel" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" styleClass="dispel-button" text="Dispel" />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <VBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Label styleClass="spell-label" text="Curse Mist (Time Remaining):" />
+                              <ProgressBar fx:id="pbTimeLimit" prefHeight="30.0" prefWidth="700.0" progress="0.0" styleClass="time-progress" />
+                           </children>
+                        </VBox>
+                        <TextArea fx:id="taNarration" editable="false" prefHeight="200.0" prefWidth="800.0" styleClass="narration-area" wrapText="true">
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="200.0" right="200.0" top="20.0" />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" left="200.0" right="200.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </StackPane>
+            <ImageView fx:id="imgSettingsBtn" fitHeight="63.0" fitWidth="71.0" layoutX="311.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@media/img_settings_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="imgBackMenuBtn" fitHeight="64.0" fitWidth="177.0" layoutX="160.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_back_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <HBox layoutX="1425.0" layoutY="140.0" prefHeight="92.0" prefWidth="333.0" spacing="10.0" styleClass="profile-container">
+               <children>
+                  <ImageView fitHeight="82.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@media/img_user_profile.png" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="226.0">
+                     <children>
+                        <Label fx:id="lblUserName" styleClass="profile-name" text="User name" />
+                        <Label fx:id="lblUserLevel" styleClass="profile-level" text="User level">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ProgressBar fx:id="pbUserExpLevel" prefHeight="20.0" prefWidth="200.0" progress="0.0" styleClass="level-progress-bar" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
+         </children>
+      </AnchorPane>
+   </center>
+   <stylesheets>
+      <URL value="@css/fonts.css" />
+      <URL value="@css/conquest-styles.css" />
+      <URL value="@css/arraylist-conquest-styles.css" />
+   </stylesheets>
+</BorderPane>

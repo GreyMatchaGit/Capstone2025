@@ -24,6 +24,7 @@ public class ConquestController {
     public ImageView imgBackMenuBtn, imgSettingsBtn;
     public ProgressBar pbUserExpLevel;
     public Label lblUserName, lblUserLevel;
+    public ImageView imgLvl1;
 
     private User currentUser = Eva.currentUser;
 
@@ -42,7 +43,7 @@ public class ConquestController {
         }
 
         SoundManager.playBackgroundMusic("music/conquest_music.MP3", true);
-        setupGlow(imgBackMenuBtn, imgSettingsBtn);
+        setupGlow(imgBackMenuBtn, imgSettingsBtn, imgLvl1);
 
         lblUserName.setText(currentUser.username);
         lblUserLevel.setText("Level " + level);
@@ -65,6 +66,19 @@ public class ConquestController {
             SoundManager.pauseMusic();
             NavService.navigateTo(Settings);
             NavService.previousPage = Conquest;
+        });
+        
+        // Configure Level 1 (Spellbreaker's Duel) to navigate to ArrayListConquest
+        imgLvl1.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+            fadeOut.setFromValue(0);
+            fadeOut.setToValue(1);
+            fadeOut.setOnFinished(event -> {
+                SoundManager.fadeOutMusic(() -> NavService.navigateTo(ArrayListConquest));
+            });
+            fadeOut.play();
         });
     }
 }

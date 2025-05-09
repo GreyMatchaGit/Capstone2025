@@ -32,7 +32,7 @@ public class LoadingController {
 //        Disabled loop for now
 //        bounceCycle.setCycleCount(Animation.INDEFINITE);
 
-        bounceCycle.setCycleCount(4);
+        bounceCycle.setCycleCount(2);
         bounceCycle.setOnFinished(e -> {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
