@@ -226,10 +226,6 @@ public class MainMenuController {
         fadeOut.setOnFinished(e -> {
             SoundManager.fadeOutMusic();
             NavService.navigateTo(Loading);
-
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            delay.setOnFinished(event -> NavService.navigateTo(Selection));
-            delay.play();
         });
 
         fadeOut.play();

@@ -19,7 +19,6 @@ public class SelectionController {
     public Pane fadePane;
     public StackPane spAcademy;
     public StackPane spConquest;
-    public ImageView imgSettingsBtn;
 
     @FXML
     public void initialize() {

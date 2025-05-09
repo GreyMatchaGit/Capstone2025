@@ -21,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.application.Platform;
 
 import java.io.IOException;
 
@@ -47,18 +48,15 @@ public class AcademyController {
 
     @FXML
     public void initialize() {
+
         SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
+        setupGlow(imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane);
 
         try {
             lessons =  Database.getInstance().loadLessons();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        imgBackMenuBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
-            NavService.navigateTo(Selection);
-        });
 
         imgToggleChatbotPane.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
@@ -71,19 +69,18 @@ public class AcademyController {
             toggleChatpane();
         });
 
-        setupGlow(imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane);
-
         imgBackBtn.setVisible(false);
         spChatbot.setVisible(false);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
-            SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
-
+            
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
-            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic());
+            fadeOut.setOnFinished(event -> {
+                SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
+            });
             fadeOut.play();
         });
 
