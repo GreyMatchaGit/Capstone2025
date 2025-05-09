@@ -55,11 +55,15 @@ public class ArraylistViewController implements Initializable {
 
     private JSONObject dataJSON;
 
+    private boolean isChatbotVisible;
+
     public ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupGlow(imgBackBtn, imgChatbotBtn);
+
+        isChatbotVisible = false;
 
         arrayNodes = new ArrayList<>();
         arrayList = new ArrayList<>();
@@ -106,10 +110,17 @@ public class ArraylistViewController implements Initializable {
         });
 
         ChatService.updateData(new JSONObject());
+        ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
 
         imgChatbotBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
-            ChatService.loadChatbot(chatBotController, apChat);
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
         });
     }
 

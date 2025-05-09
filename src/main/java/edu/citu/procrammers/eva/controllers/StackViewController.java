@@ -44,9 +44,13 @@ public class StackViewController {
 
     public ChatBotController chatBotController;
 
+    private boolean isChatbotVisible;
+
     public void initialize() {
 
         setupGlow(imgBackBtn);
+
+        isChatbotVisible = false;
 
         stack = new Stack<>();
         stackPanes = new Stack<>();
@@ -71,7 +75,18 @@ public class StackViewController {
             pointY = apVisualizer.getHeight() * 0.9;
         });
         ChatService.updateData(new JSONObject());
-        imgChatbotBtn.setOnMouseClicked(e -> { ChatService.loadChatbot(chatBotController, apChat); });
+        ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
+        });
     }
 
     private void writeDataJSON() {

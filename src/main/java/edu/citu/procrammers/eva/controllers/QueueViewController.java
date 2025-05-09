@@ -55,8 +55,12 @@ public class QueueViewController {
 
     public ChatBotController chatBotController;
 
+    public boolean isChatbotVisible;
+
     public void initialize() {
         setupGlow(imgBackBtn);
+
+        isChatbotVisible = false;
 
         dataJSON = new JSONObject();
 
@@ -88,9 +92,15 @@ public class QueueViewController {
         });
 
         ChatService.updateData(new JSONObject());
-
+        ChatService.loadChatbot(chatBotController, apChat);
         imgChatbotBtn.setOnMouseClicked(e -> {
-            ChatService.loadChatbot(chatBotController, apChat);
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
         });
     }
 
