@@ -1,5 +1,7 @@
 package edu.citu.procrammers.eva.utils;
 
+import javafx.scene.paint.Color;
+
 public class Constant {
 
     public static class Page {
@@ -32,5 +34,12 @@ public class Constant {
         public static final double BOX_SIZE = 50.0;
         public static final double OFFSET = 55.0;
         public static final double FRONT_BOUNDARY_X = 100.0;
+        public static final String Stack = "stack-view.fxml";
+
+        public static final Color POSITIVE = Color.ORANGE;
+        public static final Color NEGATIVE = Color.RED;
+        public static final Color SEARCH = Color.GREENYELLOW;
+        public static final Color DEFAULT = Color.BLACK;
+        public static final Color DEFAULTR = Color.WHITE;
     }
 }
