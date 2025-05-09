@@ -1,20 +1,15 @@
 package edu.citu.procrammers.eva.utils.visuals;
 
 import edu.citu.procrammers.eva.Eva;
-import edu.citu.procrammers.eva.controllers.ADT.NodeController;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import edu.citu.procrammers.eva.controllers.NodeController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.HashMap;

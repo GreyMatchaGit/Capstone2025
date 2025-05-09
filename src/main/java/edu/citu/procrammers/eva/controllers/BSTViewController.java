@@ -1,47 +1,26 @@
-package edu.citu.procrammers.eva.controllers.ADT;
+package edu.citu.procrammers.eva.controllers;
 
-import edu.citu.procrammers.eva.Eva;
-import edu.citu.procrammers.eva.controllers.ChatBotController;
 import edu.citu.procrammers.eva.models.data_structures.BST;
-import edu.citu.procrammers.eva.models.data_structures.Node;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.util.Duration;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.EventListener;
 import java.util.function.UnaryOperator;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 
 
-public class ADTViewController {
+public class BSTViewController {
     public AnchorPane apVisualizer;
     public AnchorPane apChat;
     public ImageView imgChatbotBtn;
