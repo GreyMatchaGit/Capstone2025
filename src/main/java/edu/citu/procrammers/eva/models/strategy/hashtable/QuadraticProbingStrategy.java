@@ -12,11 +12,13 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
     private int value;
     private int size;
     private int iteration;
+    private int originalIndex;
 
-    public QuadraticProbingStrategy(ArrayList<ArrayNode> array, int value) {
+    public QuadraticProbingStrategy(ArrayList<ArrayNode> array, int value, int originalIndex) {
         this.array = array;
         this.value = value;
         size = array.size();
+        this.originalIndex = originalIndex;
         iteration = 0;
     }
 
@@ -29,14 +31,13 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
          * Else, Iteration increments by 1.
          */
 
-        int currentIndex = (index + iteration * iteration) % size;
-        if(array.get(currentIndex).getNumber() == EMPTY
-                || array.get(currentIndex).getNumber() == SENTINEL) {
-            array.get(currentIndex).setNumber(value);
+        if(array.get(index).getNumber() == EMPTY
+                || array.get(index).getNumber() == SENTINEL) {
+            array.get(index).setNumber(value);
             return FINISHED;
         }
 
         iteration++;
-        return index + iteration * iteration;
+        return (originalIndex + iteration * iteration) % size;
     }
 }

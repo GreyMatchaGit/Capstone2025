@@ -116,7 +116,7 @@ public class HashTableController implements Initializable {
                 collision = new LinearProbingStrategy(arrayNodes, value);
                 break;
             case QUADRATIC_PROBING:
-                collision = new QuadraticProbingStrategy(arrayNodes, value);
+                collision = new QuadraticProbingStrategy(arrayNodes, value, index);
                 break;
             default:
                 System.out.println(LOGGER_PREFIX +

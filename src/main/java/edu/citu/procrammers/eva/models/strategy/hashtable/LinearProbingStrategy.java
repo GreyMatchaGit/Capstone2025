@@ -29,13 +29,12 @@ public class LinearProbingStrategy implements CollisionStrategy {
          * Else, Iteration increments by 1.
          */
 
-        int currentIndex = (index + iteration) % size;
-        if(array.get(currentIndex).getNumber() == EMPTY
-                || array.get(currentIndex).getNumber() == SENTINEL) {
-            array.get(currentIndex).setNumber(value);
+        if(array.get(index).getNumber() == EMPTY
+                || array.get(index).getNumber() == SENTINEL) {
+            array.get(index).setNumber(value);
             return FINISHED;
         }
         iteration++;
-        return index + iteration;
+        return (index + iteration) % size;
     }
 }
