@@ -19,6 +19,13 @@
     -fx-font-size: 25;
 }
 
+.coming-soon-text {
+    -fx-text-fill: white;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-weight: bold;
+    -fx-font-size: 85;
+}
+
 .page-number-text {
     -fx-fill: white;
     -fx-font-family: 'Pixelify Sans';
@@ -66,6 +73,7 @@
     -fx-highlight-text-fill: #4E2D2D;
     -fx-caret-color: #CBB1A6;
 }
+
 .password-field:focused {
     -fx-border-color: #CBB1A6;
     -fx-effect: dropshadow(gaussian, #CBB1A6, 4, 0.4, 0, 0);
