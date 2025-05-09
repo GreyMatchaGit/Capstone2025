@@ -245,10 +245,8 @@ public class ArraylistViewController implements Initializable {
         if (currentNode != null) {
             VBox vbox = currentNode.getVBox();
             traversal.setOnFinished(e -> {
-                pulseNodeFound(vbox, currentNode.getRectangle(), true);
-                PauseTransition pt = pause(2);
-                pt.setOnFinished(ee -> {
-                    destroyBox(vbox);
+                SequentialTransition st = destroyBox(vbox);
+                st.setOnFinished(event -> {
                     apVisualizer.getChildren().remove(vbox);
                     shiftX(arrayNodes.indexOf(currentNode), capacity, -55);
                     capacity--;
@@ -257,7 +255,7 @@ public class ArraylistViewController implements Initializable {
                     dynamicAddResizeList(1);
                     updateIndexes();
                 });
-                pt.play();
+                st.play();
                 disableButtons(false);
             });
         } else {
@@ -273,7 +271,7 @@ public class ArraylistViewController implements Initializable {
     }
 
     private void removeAtElement() {
-        int pos = getNum();
+        int pos = getPos();
         tfPromptNum.clear();
 
         if(pos <= 0 || pos > size) {
@@ -283,31 +281,19 @@ public class ArraylistViewController implements Initializable {
 
         int index = pos-1;
         ArrayNode currentNode = arrayNodes.get(index);
-        VBox finalVBox = currentNode.getVBox();
-        Rectangle finalRectangle = currentNode.getRectangle();
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
-        FillTransition highlight = fillRectangle(0.3, finalRectangle, DEFAULTR, NEGATIVE);
-        SequentialTransition fullSequence = new SequentialTransition(
-                pause,
-                highlight
-        );
-        fullSequence.setOnFinished(event -> {
-            --size;
-            createBoxes(capacity,
-                    "",
-                    (centerX) + capacity*30,
-                    centerY);
-            SequentialTransition st = destroyBox(finalVBox);
-            st.play();
-            PauseTransition pt = new PauseTransition(Duration.seconds(0.5));
-            pt.setOnFinished(ee-> {
-                shiftX(index, capacity, -55);
+        VBox vbox = currentNode.getVBox();
+            SequentialTransition st = destroyBox(vbox);
+            st.setOnFinished(event -> {
+                apVisualizer.getChildren().remove(vbox);
+                shiftX(arrayNodes.indexOf(currentNode), capacity, -55);
+                capacity--;
+                size--;
+                arrayNodes.remove(currentNode);
+                dynamicAddResizeList(1);
+                updateIndexes();
             });
-            pt.play();
-            arrayNodes.remove(index);
-            updateIndexes();
-        });
-        fullSequence.play();
+            st.play();
+        disableButtons(false);
 
         if(size <= ceil(2.0/3 * capacity)) {
             int remove = (int) ceil(capacity * 0.75);
@@ -324,7 +310,6 @@ public class ArraylistViewController implements Initializable {
         ArrayNode currentNode = searchHelper(num, traversal);
 
         if (currentNode != null) {
-            VBox finalVBox = currentNode.getVBox();
             traversal.setOnFinished(e -> {
                 pulseNodeFound(currentNode.getVBox(), currentNode.getRectangle(), false);
                 disableButtons(false);
