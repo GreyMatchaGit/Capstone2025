@@ -116,8 +116,10 @@ public class ChatBotController {
                     summary = replyText.substring(index).trim();
                     replyText = replyText.substring(0, index).trim();
                 }
-
-                // ChatService.updateSummary(summary);
+                
+                if(summary != null) {
+                    ChatService.updateSummary(summary);
+                }
 
                 HBox botBubble = createBotBubble(replyText);
                 Platform.runLater(() -> vbConversation.getChildren().add(botBubble));
