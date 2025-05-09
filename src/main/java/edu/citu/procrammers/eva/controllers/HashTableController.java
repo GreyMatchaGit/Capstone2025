@@ -110,10 +110,10 @@ public class HashTableController implements Initializable {
         dataJSON.put("previousCollisionHandling", cbCollision.getValue());
         dataJSON.put("previousCompressionMethod", cbCompression.getValue());
 
-        List<Object> values = getElements();
+        List<Object> elements = getElements();
 
         dataJSON.put("previousSize", arrayNodes.size());
-        dataJSON.put("previousHashTable", values);
+        dataJSON.put("previousHashTable", elements);
         dataJSON.put("previousCapacity", capacity);
         ChatService.fileWriter(dataJSON, DATA_PATH);
     }
@@ -126,13 +126,13 @@ public class HashTableController implements Initializable {
                 for (ArrayNode node : arrayNodes) {
                     List<Integer> bucketList = new ArrayList<>();
                     int mainVal = node.getNumber();
-                    if (mainVal > Constant.HashTable.SENTINEL) {
+                    if (mainVal > SENTINEL) {
                         bucketList.add(mainVal);
                     }
 
                     for (ArrayNode bucketNode : node.getBucket()) {
                         int val = bucketNode.getNumber();
-                        if (val > Constant.HashTable.SENTINEL) {
+                        if (val > SENTINEL) {
                             bucketList.add(val);
                         }
                     }
@@ -145,7 +145,7 @@ public class HashTableController implements Initializable {
             case QUADRATIC_PROBING:
                 for (ArrayNode node : arrayNodes) {
                     int val = node.getNumber();
-                    if (val != Constant.HashTable.SENTINEL) {
+                    if (val != EMPTY) {
                         values.add(val);
                     } else {
                         values.add(null);
@@ -269,7 +269,7 @@ public class HashTableController implements Initializable {
         try {
             for (int i = 0; i < capacity; ++i) {
                 ArrayNode newNode = new ArrayNode();
-                newNode.setNumber(SENTINEL);
+                newNode.setNumber(EMPTY);
                 arrayNodes.add(newNode);
             }
         } catch (RuntimeException e) {
