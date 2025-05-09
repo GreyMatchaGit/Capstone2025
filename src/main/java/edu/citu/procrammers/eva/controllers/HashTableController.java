@@ -176,7 +176,7 @@ public class HashTableController implements Initializable {
 
             if(size != 0) writePreviousDataJSON();
 
-            if (arrayNodeAtIndex.getNumber() == EMPTY) {
+            if (arrayNodeAtIndex.getNumber() <= SENTINEL) {
                 System.out.println(LOGGER_PREFIX + String.format(" Index %d is empty.", index));
                 select(arrayNodeAtIndex, 1000, MALACHITE);
                 arrayNodeAtIndex.setNumber(value);
