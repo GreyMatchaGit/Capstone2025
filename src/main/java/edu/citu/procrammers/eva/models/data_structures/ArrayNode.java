@@ -1,6 +1,6 @@
-package edu.citu.procrammers.eva.utils;
+package edu.citu.procrammers.eva.models.data_structures;
 
-import javafx.scene.Node;
+import edu.citu.procrammers.eva.utils.Constant;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -9,14 +9,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static edu.citu.procrammers.eva.utils.Constant.EMPTY_STRING;
 
 public class ArrayNode {
 
-    private static AnchorPane apVisualizer;
     public static Pane apVisualizer;
 
     public static void initializeVisualizer(Pane anchorPane) {
@@ -115,6 +113,8 @@ public class ArrayNode {
     }
 
     public VBox getVBox() { return vbox; }
+    public VBox getBucketContainer() { return bucketContainer; }
+    public ArrayList<ArrayNode> getBucket() { return bucket; }
     public StackPane getStackPane() { return sp; }
     public Rectangle getRectangle() { return rect; }
     public Label getValue() { return value; }

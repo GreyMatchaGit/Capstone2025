@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import java.util.Stack;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;

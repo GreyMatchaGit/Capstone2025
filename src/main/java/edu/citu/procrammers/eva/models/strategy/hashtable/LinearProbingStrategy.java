@@ -1,6 +1,6 @@
 package edu.citu.procrammers.eva.models.strategy.hashtable;
 
-import edu.citu.procrammers.eva.utils.ArrayNode;
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 
 import java.util.ArrayList;
 

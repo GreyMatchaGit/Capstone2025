@@ -72,6 +72,15 @@
                     </StackPane>
                 </children>
             </VBox>
+            <AnchorPane fx:id="apChat" layoutX="1450.0" layoutY="327.0" prefHeight="618.0" prefWidth="425.0" />
+            <ImageView fx:id="imgChatbotBtn" fitHeight="69.0" fitWidth="98.0" layoutX="1784.0" layoutY="951.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@media/img_chatbot_btn.png" />
+                </image>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </ImageView>
         </AnchorPane>
     </center>
    <stylesheets>

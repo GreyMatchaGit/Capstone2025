@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.models.strategy.hashtable.*;
 import edu.citu.procrammers.eva.utils.*;
 import javafx.animation.KeyFrame;
@@ -7,8 +8,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,19 +16,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static edu.citu.procrammers.eva.controllers.HashTableController.CollisionMethod.*;
 import static edu.citu.procrammers.eva.controllers.HashTableController.ErrorHandling.LOGGER_PREFIX;
 import static edu.citu.procrammers.eva.utils.Constant.HashTable.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
+import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class HashTableController implements Initializable {
@@ -52,29 +53,119 @@ public class HashTableController implements Initializable {
     @FXML public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
     @FXML public TextField tfPrompt;
     @FXML public ComboBox<String> cbCompression, cbCollision;
-    @FXML public ImageView imgBackBtn;
+    @FXML public ImageView imgBackBtn, imgChatbotBtn;
+    @FXML public AnchorPane apChat;
 
     private ArrayList<ArrayNode> arrayNodes;
     private int size = 0;
     private int capacity = -1;
+    private boolean isChatbotVisible = false;
+
+    private JSONObject dataJSON;
+
+    private ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUI();
         setListeners();
 
+        dataJSON = new JSONObject();
+
         Platform.runLater(() -> {
             ArrayNode.initializeVisualizer(visualizer);
             capacity = 5;
             initHashTable(capacity);
         });
+
+        ChatService.updateData(new JSONObject());
+        ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
+        });
+    }
+
+    private void writeDataJSON() {
+        dataJSON.put("type", "hashtable");
+        dataJSON.put("size", arrayNodes.size());
+        dataJSON.put("capacity", capacity);
+        dataJSON.put("collisionHandling", cbCollision.getValue());
+        dataJSON.put("compressionMethod", cbCompression.getValue());
+
+        List<Object> elements = getElements();
+
+        dataJSON.put("elements", elements);
+        ChatService.updateData(dataJSON);
+    }
+
+    private void writePreviousDataJSON(){
+        dataJSON.put("previousCollisionHandling", cbCollision.getValue());
+        dataJSON.put("previousCompressionMethod", cbCompression.getValue());
+
+        List<Object> values = getElements();
+
+        dataJSON.put("previousSize", arrayNodes.size());
+        dataJSON.put("previousHashTable", values);
+        dataJSON.put("previousCapacity", capacity);
+        ChatService.fileWriter(dataJSON, DATA_PATH);
+    }
+
+    private List<Object> getElements(){
+        List<Object> values = new ArrayList<>();
+
+        switch(cbCollision.getValue()){
+            case SEPARATE_CHAINING:
+                for (ArrayNode node : arrayNodes) {
+                    List<Integer> bucketList = new ArrayList<>();
+                    int mainVal = node.getNumber();
+                    if (mainVal > Constant.HashTable.SENTINEL) {
+                        bucketList.add(mainVal);
+                    }
+
+                    for (ArrayNode bucketNode : node.getBucket()) {
+                        int val = bucketNode.getNumber();
+                        if (val > Constant.HashTable.SENTINEL) {
+                            bucketList.add(val);
+                        }
+                    }
+
+                    values.add(bucketList);
+                }
+                break;
+
+            case LINEAR_PROBING:
+            case QUADRATIC_PROBING:
+                for (ArrayNode node : arrayNodes) {
+                    int val = node.getNumber();
+                    if (val != Constant.HashTable.SENTINEL) {
+                        values.add(val);
+                    } else {
+                        values.add(null);
+                    }
+                }
+                break;
+
+            default:
+                System.out.println(LOGGER_PREFIX + "Choose a valid collision handling method. INVALID: " + cbCollision.toString());
+                return null;
+        }
+
+        return values;
     }
 
     private void add(int value) {
         int hashCode = getHashCode(value);
         int index = compress(hashCode);
 
-        try {
+      try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
             if (size == capacity) {
@@ -82,6 +173,8 @@ public class HashTableController implements Initializable {
                 pulseAllNodes(1000);
                 return;
             }
+
+            if(size != 0) writePreviousDataJSON();
 
             if (arrayNodeAtIndex.getNumber() == EMPTY) {
                 System.out.println(LOGGER_PREFIX + String.format(" Index %d is empty.", index));
@@ -94,6 +187,7 @@ public class HashTableController implements Initializable {
             }
 
             System.out.println("Current size is " + size);
+            writeDataJSON();
         } catch (RuntimeException e) {
             System.out.println(LOGGER_PREFIX + " " + e.getMessage());
         }
@@ -175,7 +269,7 @@ public class HashTableController implements Initializable {
         try {
             for (int i = 0; i < capacity; ++i) {
                 ArrayNode newNode = new ArrayNode();
-                newNode.setNumber(EMPTY);
+                newNode.setNumber(SENTINEL);
                 arrayNodes.add(newNode);
             }
         } catch (RuntimeException e) {

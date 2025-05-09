@@ -23,6 +23,7 @@ import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.Constant.Value.*;
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
 import static java.lang.Math.ceil;

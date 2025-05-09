@@ -24,8 +24,8 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
-import static edu.citu.procrammers.eva.utils.Constant.Value.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class DequeViewController {
@@ -36,9 +36,9 @@ public class DequeViewController {
     @FXML private ImageView imgBackBtn, imgChatbotBtn;
 
     private LinkedList<Integer> deque = new LinkedList<>();
-    private List<Rectangle> rectangles = new java.util.ArrayList<>();
-    private List<Label> labels = new java.util.ArrayList<>();
-    private List<VBox> vBoxes = new java.util.ArrayList<>();
+    private List<Rectangle> rectangles = new ArrayList<>();
+    private List<Label> labels = new ArrayList<>();
+    private List<VBox> vBoxes = new ArrayList<>();
     private int size = 0;
 
     private Node frontMarker;
@@ -64,9 +64,9 @@ public class DequeViewController {
                     centerY = apVisualizer.getHeight() / 2;
 
                     Polygon tri1 = new Polygon(0,0, 20,10, 0,20);
-                    tri1.setFill(Color.RED);
+                    tri1.setFill(NEGATIVE);
                     Polygon tri2 = new Polygon(20,0, 0,10, 20,20);
-                    tri2.setFill(Color.ORANGE);
+                    tri2.setFill(POSITIVE);
                     apVisualizer.getChildren().addAll(tri1, tri2);
                     frontMarker = tri1;
                     backMarker = tri2;
@@ -194,7 +194,8 @@ public class DequeViewController {
 
     private VBox createBoxes(int pos, int num) {
         Rectangle rect = new Rectangle(Value.BOX_SIZE, Value.BOX_SIZE);
-        rect.setFill(DEFAULTR); rect.setStroke(Color.BLACK); rect.setStrokeWidth(2);
+        rect.setFill(DEFAULTR);
+        rect.setStroke(DEFAULT); rect.setStrokeWidth(2);
         Label value = new Label(Integer.toString(num)); value.setStyle("-fx-font-weight:bold;");
         StackPane sp = new StackPane(rect, value);
         Label idx = new Label(Integer.toString(pos)); idx.setStyle("-fx-font-weight:bold;");

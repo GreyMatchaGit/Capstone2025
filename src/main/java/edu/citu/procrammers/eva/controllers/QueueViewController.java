@@ -24,8 +24,8 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
-import static edu.citu.procrammers.eva.utils.Constant.Value.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class QueueViewController {
@@ -74,7 +74,7 @@ public class QueueViewController {
 
                     Polygon triangle = new Polygon();
                     triangle.getPoints().addAll(0.0, 0.0, 20.0, 10.0, 0.0, 20.0); // right pointing
-                    triangle.setFill(Color.RED);
+                    triangle.setFill(DEFAULT);
                     triangle.setLayoutX(Value.FRONT_BOUNDARY_X - 25);
                     triangle.setLayoutY(centerY + 10);
                     triangle.setVisible(false);

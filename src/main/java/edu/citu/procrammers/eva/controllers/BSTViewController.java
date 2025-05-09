@@ -21,9 +21,8 @@ import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 
 
 public class BSTViewController {
-    public AnchorPane apVisualizer;
-    public AnchorPane apChat;
-    public ImageView imgChatbotBtn;
+    @FXML private AnchorPane apChat;
+    @FXML private ImageView imgChatbotBtn;
     @FXML private Button btnBackward;
     @FXML private Button btnPlay;
     @FXML private Button btnForward;

@@ -1,6 +1,5 @@
 package edu.citu.procrammers.eva.controllers;
 
-import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.LessonContent;
 import edu.citu.procrammers.eva.utils.ChatService;
@@ -8,20 +7,14 @@ import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.io.IOException;
-
-import static edu.citu.procrammers.eva.utils.Constant.Page.Chatbot;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 import java.sql.SQLException;
 import java.util.ArrayList;
