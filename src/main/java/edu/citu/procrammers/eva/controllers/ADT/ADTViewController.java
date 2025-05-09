@@ -190,13 +190,6 @@ public class ADTViewController {
         btnPlay.setDisable(false);
         btnPlay.setText(continuous ? "Pause" : "Play");
 
-//        boolean hasCommands = !animationManager.commands.isEmpty();
-//        btnBackward.setDisable(continuous && hasCommands);
-//        btnForward.setDisable(continuous && hasCommands);
-
-//        System.out.println("Has commands: " + !animationManager.commands.isEmpty());
-//
-//        System.out.println("isContinuous = " + animationManager.isContinuous);
         animationManager.play(this::enableUI);
     }
 
