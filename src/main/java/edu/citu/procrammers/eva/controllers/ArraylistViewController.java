@@ -1,409 +1,409 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
+import edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
+import java.net.URL;
 import java.util.*;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
+import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
+import static java.lang.Math.ceil;
 
-public class ArraylistViewController {
+public class ArraylistViewController implements Initializable {
 
     private double centerX, centerY;
 
     public AnchorPane apVisualizer;
     public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
-    public TextField tfPrompt;
+    public TextField tfPromptNum, tfPromptPos;
     public ImageView imgBackBtn;
+    public Button[] btns;
 
-    private List<Integer> arrayList;
-    private List<StackPane> stackPanes;
-    private List<VBox> vBoxes;
-    private int size, capacity;
+    private List<ArrayNode> arrayNodes;
+    private int size, capacity, maxCap;
 
-    public void initialize() {
-
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         setupGlow(imgBackBtn);
 
-        arrayList = new ArrayList<>();
-        stackPanes = new ArrayList<>();
-        vBoxes = new ArrayList<>();
+        arrayNodes = new ArrayList<>();
+        btns = new Button[]{btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear};
+
+        ArrayNode.initializeVisualizer(apVisualizer);
+
         size=0;
         capacity=0;
+        maxCap = 20;
 
-        apVisualizer.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double centerX = newVal.doubleValue() / 2;
-            this.centerX = centerX;
+        apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                Platform.runLater(() -> {
+                    double centerX = (apVisualizer.getWidth() / 2);
+                    double centerY = (apVisualizer.getHeight() / 2);
+                    this.centerX = centerX;
+                    this.centerY = centerY;
+                });
+            }
         });
 
-        apVisualizer.heightProperty().addListener((obs, oldVal, newVal) -> {
-            double centerY = newVal.doubleValue() / 2;
-            this.centerY = centerY;
-
+        tfPromptNum.setOnKeyTyped(keyEvent -> {
+            char characterPressed = keyEvent.getCharacter().charAt(0);
+            if (!Character.isDigit(characterPressed) && characterPressed != ' ' && characterPressed != '\b') {
+                String prompt = tfPromptNum.getText();
+                tfPromptNum.setText( tfPromptNum.getText(0, prompt.length() - 1));
+                tfPromptNum.positionCaret(prompt.length());
+            }
         });
 
         // Create initial nodes, capacity = 5
         Platform.runLater(() -> {
-            for(int i=1; i<=5; ++i) {
-                createBox("");
-            }
+            dynamicAddResizeList(5);
         });
     }
 
     public void onButtonClick(ActionEvent event) {
-        if(event.getSource() == btnAdd) {
-            addElement();
-        } else if(event.getSource() == btnAddAt) {
-            addAtElement();
-        } else if(event.getSource() == btnRemove) {
-            removeElement();
-        } else if(event.getSource() == btnRemoveAt) {
-            removeAtElement();
-        } else if(event.getSource() == btnSearch) {
-            searchElement();
-        } else if(event.getSource() == btnClear) {
-            onClearOperation();
+        String buttonID = ((Button)event.getSource()).getId();
+        disableButtons(true);
+        switch (buttonID) {
+            case "btnAdd" -> addElement();
+            case "btnAddAt" -> addAtElement();
+            case "btnRemove" -> removeElement();
+            case "btnRemoveAt" -> removeAtElement();
+            case "btnSearch" -> searchElement();
+            case "btnClear" -> onClearOperation();
         }
+        disableButtons(false);
+    }
+
+    private boolean isDigitOrSpace(char character) {
+        return Character.isDigit(character) || character == ' ' || character == '\b';
     }
 
     private int getNum() {
-        String prompt = tfPrompt.getText();
+        String prompt = tfPromptNum.getText().trim();
         int num = Integer.MIN_VALUE;
         try {
             num = Integer.parseInt(prompt);
         } catch (IllegalArgumentException e) {
             System.err.println("Invalid Input!");
         } finally {
-            tfPrompt.setText("");
+            tfPromptNum.clear();
         }
         return num;
     }
 
-    private Pair<Integer, Integer> getNumAndPos() {
-        int num = Integer.MIN_VALUE;
-        int pos;
-
-        String prompt = tfPrompt.getText().trim();
-        StringTokenizer st = new StringTokenizer(prompt, " ");
-
+    private int getPos() {
+        String prompt = tfPromptPos.getText().trim();
+        int pos = -1;
         try {
-            num = Integer.parseInt(st.nextToken());
-            pos = Integer.parseInt(st.nextToken());
-            if (pos <= 0 || pos > size+1) {
-                throw new IllegalArgumentException("Invalid Position");
-            }
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            System.err.println("Invalid Arguments: " + e.getMessage());
+            pos = Integer.parseInt(prompt);
+            if(pos < 1 || pos > size + 1) throw new IllegalArgumentException();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid Input!");
             pos = -1;
         } finally {
-            tfPrompt.setText("");
+            tfPromptPos.clear();
         }
-
-        return new Pair<>(pos, num);
+        return pos;
     }
 
-    private void updateList(int n) {
-        for(int i=1; i<=n; ++i) {
-            createBox("");
+    private void dynamicAddResizeList(int n) {
+        for(int i=0; i<n; ++i) {
+            double totalWidth = (capacity) * 50 + capacity * 5;
+//            double startX = centerX - totalWidth / 2;
+            double currentX = centerX + totalWidth;
+            double currentY = centerY-50;
+            VBox vBox = createBoxes(capacity,"", currentX, currentY);
+//            shiftX(0, capacity, -55);
+            capacity++;
+
+            FadeTransition ft = fadeIn(vBox);
+            TranslateTransition tt = slideY(vBox, 50);
+            ft.play();
+            ft.setOnFinished(e -> tt.play());
         }
+        // Save Layouts X
+        for(int i = 0; i < capacity; ++i) {
+            ArrayNode node = arrayNodes.get(i);
+            node.setX(node.getVBox().getLayoutX());
+        }
+    }
+
+    private void dynamicSubResizeList(int n) {
+        int minCapacity = 5;
+        int removable = Math.max(0, capacity - minCapacity);
+        int actualRemove = Math.min(n, removable);
+
+        // Highlight Everything to Delete
+        for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
+            ArrayNode arrayNode = arrayNodes.get(i);
+            Rectangle r = arrayNode.getRectangle();
+            FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, NEGATIVE);
+            highlight.play();
+        }
+
+        // Destroy All Boxes
+        for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
+            ArrayNode arrayNode = arrayNodes.get(i);
+            VBox vb = arrayNode.getVBox();
+            destroyBox(vb).play();
+            arrayNodes.remove(i);
+            apVisualizer.getChildren().remove(vb);
+        }
+        capacity -= actualRemove;
+        shiftX(0, capacity, 55*actualRemove);
     }
 
     private void addElement() {
         int num = getNum();
+        tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
-        arrayList.add(num);
 
         if(size == capacity) {
-            int additional = (int) Math.ceil(capacity * 0.5);
-            updateList(additional);
+            // resize updateList()
+            int additional = (int) ceil(capacity * 0.5);
+            if(capacity != maxCap) {
+                additional = Math.min(additional, maxCap - capacity);
+                dynamicAddResizeList(additional);
+            } else return;
         }
 
-        StackPane sp = stackPanes.get(size);
-        Rectangle r = null;
-        Label l = null;
-        for (Node n : sp.getChildren()) {
-            if (n instanceof Label) {
-                l = (Label)n;
-                ((Label) n).setText(Integer.toString(num));
-            } else if(n instanceof Rectangle) {
-                r = (Rectangle) n;
-            }
-
-        }
-        assert r!=null && l!=null;
-        highlightNode(r, l);
-        size++;
+        ArrayNode arrayNode = arrayNodes.get(size);
+        arrayNode.setValue(String.valueOf(num));
+        Rectangle r = arrayNode.getRectangle();
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, POSITIVE);
+        FillTransition reset = fillRectangle(0.3, r, POSITIVE, DEFAULTR);
+        SequentialTransition st = new SequentialTransition(highlight, reset);
+        st.play();
+        ++size;
     }
 
     private void addAtElement() {
-        Pair pair = getNumAndPos();
-        int num = (int) pair.getValue();
-        int pos = (int) pair.getKey();
+        int num = getNum();
+        int pos = getPos();
 
         if(num == Integer.MIN_VALUE || pos == -1) return;
 
         if(size == capacity) {
             // resize updateList()
-            int additional = (int) Math.ceil(capacity * 0.5);
-            updateList(additional);
+            int additional = (int) ceil(capacity * 0.5);
+            if(capacity != maxCap) {
+                additional = Math.min(additional, maxCap - capacity);
+                dynamicAddResizeList(additional);
+            } else return;
         }
-
-        Rectangle r = null;
-        Label l = null;
-        if(pos == size+1) {
-            arrayList.add(num);
-            StackPane sp = stackPanes.get(pos-1);
-            for (Node n : sp.getChildren()) {
-                if (n instanceof Label) {
-                    ((Label) n).setText(Integer.toString(num));
-                    l = (Label) n;
-                } else if(n instanceof Rectangle) {
-                    r = (Rectangle)n;
-                }
-            }
-        } else {
-            arrayList.add(pos-1, num);
-            for(int i = pos-1; i < stackPanes.size() && i < arrayList.size(); ++i) {
-                for (Node n : stackPanes.get(i).getChildren()) {
-                    if (n instanceof Label) {
-                        ((Label) n).setText(Integer.toString(arrayList.get(i)));
-                        if(i == pos-1) l = (Label) n;
-                    } else if(n instanceof Rectangle) {
-                        if(i == pos-1) r = (Rectangle)n;
-                    }
-                }
-            }
-        }
-        assert r!=null && l!=null;
-        highlightNode(r, l);
+        int index = pos-1;
+        ArrayNode origNode = arrayNodes.get(index);
+        double currentX = origNode.getX();
+        // Spawn box
+        VBox vBox = createBoxes(index, String.valueOf(num), currentX-55, centerY-100);
+        ArrayNode newNode = arrayNodes.get(index);
+        Rectangle r = newNode.getRectangle();
+        FadeTransition ft = fadeIn(vBox);
+        TranslateTransition tt = slideY(vBox, 100);
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, POSITIVE);
+        FillTransition reset = fillRectangle(0.3, r, POSITIVE, DEFAULTR);
+        SequentialTransition st = new SequentialTransition(highlight, reset);
+        ft.play();
+        ft.setOnFinished(e -> tt.play());
+        tt.setOnFinished(e -> st.play());
+        // Destroy last box
+        ArrayNode toDelete = arrayNodes.get(capacity);
+        apVisualizer.getChildren().remove(toDelete.getVBox());
+        arrayNodes.remove(toDelete);
+        shiftX(index, capacity, 55);
+        updateIndexes();
         ++size;
     }
 
     private void removeElement() {
         int num = getNum();
+        tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
 
-        if(arrayList.contains(num)) {
-            int index = arrayList.indexOf(num);
-            arrayList.remove(index);
-            Rectangle r = null;
-            Label l = null;
-            for(int i = index; i < stackPanes.size() || i < arrayList.size(); ++i) {
-                for (Node n : stackPanes.get(i).getChildren()) {
-                    if (n instanceof Label) {
-                        String label = i < arrayList.size() ? Integer.toString(arrayList.get(i)) : "";
-                        ((Label) n).setText(label);
-                        l = (Label) n;
-                    } else if(n instanceof Rectangle) {
-                        r = (Rectangle) n;
-                    }
-                }
-                if(i == index) {
-                    highlightNode(r, l);
-                    VBox vbox = (VBox) stackPanes.get(i).getParent();
-                    phantomDelete(vbox.getLayoutX(), vbox.getLayoutY(), Integer.toString(num), i);
-                }
-            }
+        SequentialTransition traversal = new SequentialTransition();
+        ArrayNode currentNode = searchHelper(num, traversal);
 
-            --size;
+        if (currentNode != null) {
+            VBox vbox = currentNode.getVBox();
+            traversal.setOnFinished(e -> {
+                SequentialTransition st = destroyBox(vbox);
+                st.setOnFinished(event -> {
+                    apVisualizer.getChildren().remove(vbox);
+                    shiftX(arrayNodes.indexOf(currentNode), capacity, -55);
+                    capacity--;
+                    size--;
+                    arrayNodes.remove(currentNode);
+                    dynamicAddResizeList(1);
+                    updateIndexes();
+                });
+                st.play();
+                disableButtons(false);
+            });
         } else {
-            System.err.println("Number is non-existent");
+            pulseNodeAll(arrayNodes, traversal);
+            disableButtons(false);
+        }
+        traversal.play();
+
+        if(size <= ceil(2.0/3 * capacity)) {
+            int remove = (int) ceil(capacity * 0.75);
+            dynamicSubResizeList(remove);
         }
     }
 
     private void removeAtElement() {
-        int pos = getNum();
+        int pos = getPos();
+        tfPromptNum.clear();
 
-        if(pos <= 0 || pos > size || pos == Integer.MIN_VALUE) {
+        if(pos <= 0 || pos > size) {
             System.err.println("Invalid Position");
             return;
         }
 
-        arrayList.remove(pos-1);
-        for(int i = pos-1; i < stackPanes.size() || i < arrayList.size(); ++i) {
-            for (Node n : stackPanes.get(i).getChildren()) {
-                if (n instanceof Label) {
-                    String label = i < arrayList.size() ? Integer.toString(arrayList.get(i)) : "";
-                    ((Label) n).setText(label);
-                }
-            }
+        int index = pos-1;
+        ArrayNode currentNode = arrayNodes.get(index);
+        VBox vbox = currentNode.getVBox();
+            SequentialTransition st = destroyBox(vbox);
+            st.setOnFinished(event -> {
+                apVisualizer.getChildren().remove(vbox);
+                shiftX(arrayNodes.indexOf(currentNode), capacity, -55);
+                capacity--;
+                size--;
+                arrayNodes.remove(currentNode);
+                dynamicAddResizeList(1);
+                updateIndexes();
+            });
+            st.play();
+        disableButtons(false);
+
+        if(size <= ceil(2.0/3 * capacity)) {
+            int remove = (int) ceil(capacity * 0.75);
+            dynamicSubResizeList(remove);
         }
-        --size;
     }
 
     private void searchElement() {
         int num = getNum();
+        tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
 
-        if(arrayList.contains(num)) {
-            int index = arrayList.indexOf(num);
-            StackPane sp = stackPanes.get(index);
-            Rectangle r = null;
-            Label l = null;
-            for (Node n : sp.getChildren()) {
-                if (n instanceof Rectangle) {
-                    r = (Rectangle) n;
-                } else {
-                    l = (Label) n;
-                }
-            }
+        SequentialTransition traversal = new SequentialTransition();
+        ArrayNode currentNode = searchHelper(num, traversal);
 
-            highlightNode(r, l);
-
+        if (currentNode != null) {
+            traversal.setOnFinished(e -> {
+                pulseNodeFound(currentNode.getVBox(), currentNode.getRectangle(), false);
+                disableButtons(false);
+            });
         } else {
-            System.err.println("Number not found!");
+            pulseNodeAll(arrayNodes, traversal);
+            disableButtons(false);
         }
+
+        traversal.play();
+
+    }
+
+    private ArrayNode searchHelper(int num, SequentialTransition traversal) {
+
+        int index;
+        for (index = 0; index < size; index++) {
+            ArrayNode currentNode = arrayNodes.get(index);
+            Rectangle r = currentNode.getRectangle();
+            FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+            FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+            SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+            traversal.getChildren().add(nodeTransition);
+
+            if (currentNode.getNumber() == num) {
+                return currentNode;
+            }
+        }
+
+        return null;
     }
 
     private void onClearOperation() {
-        tfPrompt.setText("");
-        arrayList.clear();
+        if(size != 0) {
+            tfPromptNum.clear();
+            tfPromptPos.clear();
 
-        // Highlight Everything
-        for(StackPane sp : stackPanes) {
-            Rectangle r = null;
-            Label l = null;
-            for(Node n : sp.getChildren()) {
-                if(n instanceof Label) {
-                    l = (Label) n;
-                    l.setText("");
-                } else if(n instanceof Rectangle) {
-                    r = (Rectangle) n;
-                }
+            // Highlight Everything
+            for (ArrayNode arrayNode : arrayNodes) {
+                Rectangle r = arrayNode.getRectangle();
+                arrayNode.setNumber(Integer.MIN_VALUE);
+                FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, NEGATIVE);
+                highlight.play();
             }
-            highlightNode(r, l);
-        }
 
+            // Destroy All Boxes
+            for (ArrayNode arrayNode : arrayNodes) {
+                VBox vb = arrayNode.getVBox();
+                destroyBox(vb).play();
+            }
 
-        size = 0;
-        int removed=0;
-        for(int i=capacity-1; i>=5; --i, --capacity) {
-            stackPanes.remove(i);
-            VBox vb = vBoxes.get(i);
-            destroyBox(vb);
-            vBoxes.remove(i);
-            removed++;
-        }
-        shiftX(25 * removed);
-    }
-
-
-    // Animation utils
-    private void createBox(String num) {
-        Rectangle rect = new Rectangle(50, 50);
-        rect.setFill(Color.WHITE);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(2);
-        Label value = new Label(num);
-        value.setStyle("-fx-font-weight: bold;");
-        StackPane sp = new StackPane(rect, value);
-        Label index = new Label(Integer.toString(capacity));
-        index.setStyle("-fx-font-weight: bold;");
-        VBox vbox = new VBox(2);
-        vbox.getChildren().addAll(sp, index);
-        vbox.setStyle("-fx-alignment: center;");
-        vbox.setLayoutX((centerX) + capacity*30);
-        vbox.setLayoutY(centerY-100);
-
-        apVisualizer.getChildren().add(vbox);
-        stackPanes.add(sp);
-        vBoxes.add(vbox);
-
-        shiftX(-25);
-        capacity++;
-
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), vbox);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.setCycleCount(1);
-
-        TranslateTransition slideDown = new TranslateTransition(Duration.seconds(1), vbox);
-        slideDown.setByY(100); // Move down by 100 units
-        slideDown.setCycleCount(1);
-
-        fadeIn.setOnFinished(event -> slideDown.play());
-        fadeIn.play();
-    }
-
-    private void highlightNode(Rectangle r, Label l) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(r.strokeProperty(), Color.BLACK),
-                        new KeyValue(l.textFillProperty(), Color.BLACK)
-                ),
-                new KeyFrame(Duration.seconds(1),
-                        new KeyValue(r.strokeProperty(), Color.ORANGE),
-                        new KeyValue(l.textFillProperty(), Color.ORANGE)
-                ),
-                new KeyFrame(Duration.seconds(1.25),
-                        new KeyValue(r.strokeProperty(), Color.BLACK),
-                        new KeyValue(l.textFillProperty(), Color.BLACK)
-                )
-        );
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        timeline.play();
-    }
-
-    private void destroyBox(VBox vbox) {
-
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), vbox);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setCycleCount(1);
-
-        TranslateTransition slideUp = new TranslateTransition(Duration.seconds(1), vbox);
-        slideUp.setByY(-100);
-        slideUp.setCycleCount(1);
-
-        slideUp.setOnFinished(event -> fadeOut.play());
-        slideUp.play();
-
-        fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
-    }
-
-    private void shiftX(int val) {
-        for(VBox vb : vBoxes) {
-            vb.setLayoutX(vb.getLayoutX() + val);
+            PauseTransition pt = new PauseTransition(Duration.seconds(1.5));
+            pt.play();
+            pt.setOnFinished(e -> {
+                size = 0;
+                capacity = 0;
+                dynamicAddResizeList(5);
+                disableButtons(false);
+            });
         }
     }
 
-    private void phantomDelete(double x, double y, String num, int indexing) {
-        Rectangle rect = new Rectangle(50, 50);
-        rect.setFill(Color.WHITE);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(2);
-        Label value = new Label(num);
-        value.setStyle("-fx-font-weight: bold;");
-        StackPane sp = new StackPane(rect, value);
-        Label index = new Label(Integer.toString(indexing));
-        index.setStyle("-fx-font-weight: bold;");
-        VBox vbox = new VBox(2);
-        vbox.getChildren().addAll(sp, index);
-        vbox.setStyle("-fx-alignment: center;");
-        vbox.setLayoutX(x);
-        vbox.setLayoutY(y);
+    // Better Utilities
+    private VBox createBoxes(int pos, String num, double x, double y) {
+        System.out.println("Pos " + pos +
+                " X: " + x + " Y: " + y + " Capacity: " + capacity);
+        ArrayNode arrayNode = new ArrayNode(num, pos, x, y);
+        arrayNodes.add(pos, arrayNode);
+        VBox vbox = arrayNode.getVBox();
 
-        apVisualizer.getChildren().add(vbox);
-        highlightNode(rect, value);
-        destroyBox(vbox);
+        return vbox;
+    }
+
+    private void updateIndexes() {
+        for(int i=0; i<capacity; ++i) {
+            ArrayNode arrayNode = arrayNodes.get(i);
+            arrayNode.setIndex(String.valueOf(i));
+        }
+    }
+
+    // Better Animations
+    private void shiftX(int start, int end ,double val) {
+        for(int i=start; i<end; ++i) {
+            ArrayNode arrayNode = arrayNodes.get(i);
+            VBox vb = arrayNode.getVBox();
+            arrayNode.setX(vb.getLayoutX() + val);
+            vb.setLayoutX(arrayNode.getX());
+        }
+    }
+
+    private void disableButtons(boolean b) {
+        for(Button btn : btns) {
+            btn.setDisable(b);
+        }
     }
 
     public void navigatePreviousScreen() {

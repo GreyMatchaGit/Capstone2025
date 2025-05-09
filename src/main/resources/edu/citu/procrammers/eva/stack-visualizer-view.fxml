@@ -56,7 +56,17 @@
                               <Image url="@media/img_visualizer_bg.jpg" />
                            </image>
                         </ImageView>
-                        <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1812.0" />
+                        <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1812.0">
+                           <ImageView fx:id="imgChatbotBtn" fitHeight="69.0" fitWidth="98.0" layoutX="1718.0" layoutY="676.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@media/img_chatbot_btn.png" />
+                              </image>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </ImageView>
+                           <AnchorPane fx:id="apChat" layoutX="1422.0" layoutY="7.0" prefHeight="660.0" prefWidth="372.0" />
+                        </AnchorPane>
                      </children>
                   </StackPane>
                </children>

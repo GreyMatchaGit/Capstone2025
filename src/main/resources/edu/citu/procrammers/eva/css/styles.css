@@ -183,3 +183,49 @@
     -fx-translate-y: 2;
     -fx-effect: none;
 }
+
+.chatbot-pane {
+    -fx-background-color: rgba(78, 45, 45, 0.95);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-border-color: #CBB1A6;
+    -fx-border-width: 8;
+    -fx-effect: dropshadow(gaussian, black, 10, 0.3, 0, 2);
+}
+
+.chatbot-close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4E2D2D;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 20;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-content-display: center;
+}
+.chatbot-close-btn:hover {
+    -fx-text-fill: #933b3b;
+    -fx-font-weight: bold;
+}
+
+.user-chat-bubble {
+    -fx-background-color: #e3b344;
+    -fx-text-fill: #4E2D2D;
+    -fx-background-radius: 15;
+    -fx-padding: 10;
+    -fx-max-width: 250;
+    -fx-wrap-text: true;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+}
+
+.bot-chat-bubble {
+    -fx-background-color: #4E2D2D;
+    -fx-text-fill: #CBB1A6;
+    -fx-background-radius: 15;
+    -fx-padding: 10;
+    -fx-max-width: 250;
+    -fx-wrap-text: true;
+    -fx-font-family: 'Pixelify Sans';
+    -fx-font-size: 16;
+}

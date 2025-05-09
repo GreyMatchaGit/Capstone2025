@@ -43,6 +43,8 @@ public class AnimationManager {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].toUpperCase();
             switch (arg) {
+                case "STOP":
+                    return new StopCommand();
                 case "CREATECIRCLE":
                     int key = Integer.parseInt(args[++i]);
                     graphicId = Integer.parseInt(args[++i]);
@@ -98,44 +100,68 @@ public class AnimationManager {
         return null;
     }
 
+    public int getCurrentIndex() { return currentIndex; }
+
     private void step() {
-//        history.push(commands.get(currentIndex));
-        commands.get(currentIndex).execute(() -> {});
-        currentIndex++;
+        System.out.println("Stepping...");
+        while (currentIndex < commands.size()) {
+            Command command = commands.get(currentIndex);
+            System.out.println("Executing (index = " + currentIndex+ "): " + command);
+            command.execute(() -> {});
+            currentIndex++;
+            if (command instanceof StopCommand) {
+                break; // Stop after a chunk
+            }
+            history.push(command);
+        }
     }
 
     public void undo() {
-        if (!history.isEmpty()) {
-            System.out.println("Undo Command: ");
-            history.pop().undo(() -> {});
-            currentIndex--;
-        }
-    }
-
-    public void play() {
-        if (currentIndex >= commands.size()) {
-            System.out.println("No more commands to play");
-            history = new Stack<>();
-            commands.clear();
-            currentIndex = 0;
+        if (history.isEmpty()) {
+            System.out.println("No previous commands...");
             return;
         }
-        Command command = commands.get(currentIndex);
-        history.push(command);
-        System.out.println("Executing Command: " + command);
+
+        currentIndex--; // Step back before undoing
+        Command command = history.pop();
+        if (command instanceof StopCommand) {
+            System.out.println("Hit StopCommand, stopping undo.");
+            return;
+        }
+
+
+        System.out.println("Undo Command (index = " + currentIndex+ "): " + command);
+        command.undo(() -> {
+            PauseTransition pause = new PauseTransition(Duration.seconds(speed));
+            pause.setOnFinished(e -> undo());
+            pause.play();
+        });
+    }
+
+
+    public void play(Runnable callback) {
+        if (currentIndex >= commands.size()) {
+            System.out.println("No more commands to play");
+            history.clear();
+            commands.clear();
+            currentIndex = 0;
+            callback.run();
+            return;
+        }
+
+        history.push(new StopCommand());
 
         if (isContinuous) {
-            command.execute(() -> {
-                currentIndex++;
-                PauseTransition pause = new PauseTransition(Duration.seconds(speed));
-                pause.setOnFinished(e -> play());
-                pause.play();
-            });
+            step();
+            PauseTransition pause = new PauseTransition(Duration.seconds(speed));
+            pause.setOnFinished(e -> play(callback));
+            pause.play();
         }
         else {
             step();
         }
     }
+
 
 
 

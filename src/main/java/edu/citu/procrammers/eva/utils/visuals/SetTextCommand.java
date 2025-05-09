@@ -4,7 +4,9 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.HashMap;
@@ -27,32 +29,41 @@ public class SetTextCommand extends Command {
 
     @Override
     public void execute(Runnable onFinished) {
-        Text text = new Text(elem);
+        Text text = (Text)graphicMap.get(id);
+
+        if (text == null) {
+            text = new Text(elem);
+            graphicMap.put(id, text);
+        }
+
         canvas.getChildren().add(text);
 
         // Measure the text dimensions
-        Bounds bounds = text.getLayoutBounds();
-        double textWidth = bounds.getWidth();
-        double textHeight = bounds.getHeight();
+        text.setFont(Font.font(14));
 
-//        Circle redDot = new Circle(3); // radius 3 pixels
+        text.setFill(Color.valueOf("#E9DBD5"));
+        Bounds bounds = text.getLayoutBounds();
+        double textWidth = bounds.getCenterX();
+        double textHeight = bounds.getCenterY();
+//        Circle redDot = new Circle(1); // radius 3 pixels
 //        redDot.setFill(Color.RED);
 //        redDot.setLayoutX(x); // absolute center X
 //        redDot.setLayoutY(y); // absolute center Y
 //        canvas.getChildren().add(redDot); // Add separately to canvas
-        // Center the text at (x, y)
-        text.setLayoutX(x - textWidth / 2);
-        text.setLayoutY(y + textHeight / 4); // vertical tweak for baseline alignment
+//        // Center the text at (x, y)
+//        text.setLayoutX(x);
+//        text.setLayoutY(y); // vertical tweak for baseline alignment
 
-        text.setLayoutX(x);
-        text.setLayoutY(y);
-        graphicMap.put(id, text);
+        text.setLayoutX(x - textWidth);
+        text.setLayoutY(y - textHeight);
+
         onFinished.run();
     }
 
     @Override
     public void undo(Runnable onUndo) {
-
+        canvas.getChildren().remove(graphicMap.get(id));
+        onUndo.run();
     }
 
     @Override

@@ -25,5 +25,6 @@ public class ChangeElementCommand extends Command {
     @Override
     public void undo(Runnable onUndo) {
         text.setText(prevElement);
+        onUndo.run();
     }
 }
