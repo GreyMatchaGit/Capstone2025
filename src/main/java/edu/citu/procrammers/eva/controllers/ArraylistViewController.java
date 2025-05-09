@@ -31,7 +31,7 @@ public class ArraylistViewController implements Initializable {
 
     public AnchorPane apVisualizer;
     public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
-    public TextField tfPrompt;
+    public TextField tfPromptNum, tfPromptPos;
     public ImageView imgBackBtn;
     public Button[] btns;
 
@@ -54,7 +54,7 @@ public class ArraylistViewController implements Initializable {
         apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 Platform.runLater(() -> {
-                    double centerX = (apVisualizer.getWidth() / 2) - 25;
+                    double centerX = (apVisualizer.getWidth() / 2);
                     double centerY = (apVisualizer.getHeight() / 2);
                     this.centerX = centerX;
                     this.centerY = centerY;
@@ -62,18 +62,18 @@ public class ArraylistViewController implements Initializable {
             }
         });
 
-        tfPrompt.setOnKeyTyped(keyEvent -> {
+        tfPromptNum.setOnKeyTyped(keyEvent -> {
             char characterPressed = keyEvent.getCharacter().charAt(0);
             if (!Character.isDigit(characterPressed) && characterPressed != ' ' && characterPressed != '\b') {
-                String prompt = tfPrompt.getText();
-                tfPrompt.setText( tfPrompt.getText(0, prompt.length() - 1));
-                tfPrompt.positionCaret(prompt.length());
+                String prompt = tfPromptNum.getText();
+                tfPromptNum.setText( tfPromptNum.getText(0, prompt.length() - 1));
+                tfPromptNum.positionCaret(prompt.length());
             }
         });
 
         // Create initial nodes, capacity = 5
         Platform.runLater(() -> {
-            dynamicAddResizeList(1);
+            dynamicAddResizeList(5);
         });
     }
 
@@ -96,52 +96,52 @@ public class ArraylistViewController implements Initializable {
     }
 
     private int getNum() {
-        String prompt = tfPrompt.getText().trim();
+        String prompt = tfPromptNum.getText().trim();
         int num = Integer.MIN_VALUE;
         try {
             num = Integer.parseInt(prompt);
         } catch (IllegalArgumentException e) {
             System.err.println("Invalid Input!");
         } finally {
-            tfPrompt.setText("");
+            tfPromptNum.clear();
         }
         return num;
     }
 
-    private Pair<Integer, Integer> getNumAndPos() {
-        int num = Integer.MIN_VALUE;
-        int pos;
-
-        String prompt = tfPrompt.getText().trim();
-        StringTokenizer st = new StringTokenizer(prompt, " ");
-
+    private int getPos() {
+        String prompt = tfPromptPos.getText().trim();
+        int pos = -1;
         try {
-            num = Integer.parseInt(st.nextToken());
-            pos = Integer.parseInt(st.nextToken());
-            if (pos <= 0 || pos > size+1) {
-                throw new IllegalArgumentException("Invalid Position");
-            }
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            System.err.println("Invalid Arguments: " + e.getMessage());
+            pos = Integer.parseInt(prompt);
+            if(pos < 1 || pos > size + 1) throw new IllegalArgumentException();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid Input!");
             pos = -1;
         } finally {
-            tfPrompt.setText("");
+            tfPromptPos.clear();
         }
-
-        return new Pair<>(pos, num);
+        return pos;
     }
 
     private void dynamicAddResizeList(int n) {
         for(int i=0; i<n; ++i) {
-            double totalWidth = (capacity + 1) * 50 + capacity * 5;
-            double startX = centerX - totalWidth / 2;
-            double currentX = startX + (capacity+1) *55;
+            double totalWidth = (capacity) * 50 + capacity * 5;
+//            double startX = centerX - totalWidth / 2;
+            double currentX = centerX + totalWidth;
             double currentY = centerY-50;
             VBox vBox = createBoxes(capacity,"", currentX, currentY, false);
+//            shiftX(0, capacity, -55);
+            capacity++;
+
             FadeTransition ft = fadeIn(vBox);
             TranslateTransition tt = slideY(vBox, 50);
             ft.play();
             ft.setOnFinished(e -> tt.play());
+        }
+        // Save Layouts X
+        for(int i = 0; i < capacity; ++i) {
+            ArrayNode node = arrayNodes.get(i);
+            node.setX(node.getVBox().getLayoutX());
         }
     }
 
@@ -171,6 +171,7 @@ public class ArraylistViewController implements Initializable {
 
     private void addElement() {
         int num = getNum();
+        tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
 
         if(size == capacity) {
@@ -193,9 +194,8 @@ public class ArraylistViewController implements Initializable {
     }
 
     private void addAtElement() {
-        Pair pair = getNumAndPos();
-        int num = (int) pair.getValue();
-        int pos = (int) pair.getKey();
+        int num = getNum();
+        int pos = getPos();
 
         if(num == Integer.MIN_VALUE || pos == -1) return;
 
@@ -234,6 +234,7 @@ public class ArraylistViewController implements Initializable {
 
     private void removeElement() {
         int num = getNum();
+        tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
 
         boolean isExisting = false;
@@ -307,6 +308,7 @@ public class ArraylistViewController implements Initializable {
 
     private void removeAtElement() {
         int pos = getNum();
+        tfPromptNum.clear();
 
         if(pos <= 0 || pos > size || pos == Integer.MIN_VALUE) {
             System.err.println("Invalid Position");
@@ -353,35 +355,21 @@ public class ArraylistViewController implements Initializable {
 
     private void searchElement() {
         int num = getNum();
+        tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
 
-        boolean isExisting = false;
-        ArrayNode currentNode = null;
-        int index;
         SequentialTransition traversal = new SequentialTransition();
-        for (index = 0; index < size; index++) {
-            currentNode = arrayNodes.get(index);
-            Rectangle r = currentNode.getRectangle();
-            FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
-            FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
-            SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
-            traversal.getChildren().add(nodeTransition);
+        ArrayNode currentNode = searchHelper(num, traversal);
 
-            if (currentNode.getNumber() == num) {
-                isExisting = true;
-                break;
-            }
-        }
-
-        if (isExisting) {
+        if (currentNode != null) {
             VBox finalVBox = currentNode.getVBox();
             Rectangle finalRectangle = currentNode.getRectangle();
             traversal.setOnFinished(e -> {
-                TranslateTransition tFirst = slideY(finalVBox, -100);
+                TranslateTransition tFirst = slideY(finalVBox, -75);
                 PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
                 FillTransition highlight = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
                 FillTransition reset = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
-                TranslateTransition tLast = slideY(finalVBox, 100);
+                TranslateTransition tLast = slideY(finalVBox, 75);
                 SequentialTransition fullSequence = new SequentialTransition(
                         tFirst,
                         pause,
@@ -390,31 +378,49 @@ public class ArraylistViewController implements Initializable {
                         tLast
                 );
                 fullSequence.play();
-
                 disableButtons(false);
             });
         } else {
-            traversal.setOnFinished(e-> {
-                for (int i = 0; i < capacity; i++) {
-                    ArrayNode arrayNode = arrayNodes.get(i);
-                    Rectangle rr = arrayNode.getRectangle();
-                    FillTransition highlight = fillRectangle(0.3, rr, DEFAULTR, NEGATIVE);
-                    FillTransition reset = fillRectangle(0.3, rr, NEGATIVE, DEFAULTR);
-                    SequentialTransition st = new SequentialTransition(highlight, reset);
-                    st.play();
-                }
-
-                disableButtons(false);
-            });
+            ParallelTransition pulseNegativeFound = new ParallelTransition();
+            for (int i = 0; i < capacity; i++) {
+                ArrayNode node = arrayNodes.get(i);
+                Rectangle rr = node.getRectangle();
+                FillTransition highlight = fillRectangle(0.3, rr, DEFAULTR, NEGATIVE);
+                FillTransition reset = fillRectangle(0.3, rr, NEGATIVE, DEFAULTR);
+                SequentialTransition st = new SequentialTransition(highlight, reset);
+                pulseNegativeFound.getChildren().add(st);
+            }
+            traversal.getChildren().add(pulseNegativeFound);
+            disableButtons(false);
         }
-        traversal.play();
-        System.out.println(size);
 
+        traversal.play();
+
+    }
+
+    private ArrayNode searchHelper(int num, SequentialTransition traversal) {
+
+        int index;
+        for (index = 0; index < size; index++) {
+            ArrayNode currentNode = arrayNodes.get(index);
+            Rectangle r = currentNode.getRectangle();
+            FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+            FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+            SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+            traversal.getChildren().add(nodeTransition);
+
+            if (currentNode.getNumber() == num) {
+                return currentNode;
+            }
+        }
+
+        return null;
     }
 
     private void onClearOperation() {
         if(size != 0) {
-            tfPrompt.setText("");
+            tfPromptNum.clear();
+            tfPromptPos.clear();
 
             // Highlight Everything
             for (ArrayNode arrayNode : arrayNodes) {
@@ -430,34 +436,40 @@ public class ArraylistViewController implements Initializable {
                 destroyBox(vb).play();
             }
 
-            size = 0;
-            capacity = 0;
-            dynamicAddResizeList(5);
-            disableButtons(false);
+            PauseTransition pt = new PauseTransition(Duration.seconds(1.5));
+            pt.play();
+            pt.setOnFinished(e -> {
+                size = 0;
+                capacity = 0;
+                dynamicAddResizeList(5);
+                disableButtons(false);
+            });
         }
     }
 
     // Better Utilities
     private VBox createBoxes(int pos, String num, double x, double y, boolean isTemp) {
+        System.out.println("Pos " + pos +
+                " X: " + x + " Y: " + y + " Capacity: " + capacity);
         ArrayNode arrayNode = new ArrayNode(num, pos, x, y);
         arrayNodes.add(pos, arrayNode);
         VBox vbox = arrayNode.getVBox();
 
-        if(!isTemp) {
-            double newTotalWidth = 50 * (capacity+1) + capacity * 5;
-            double oldTotalWidth = 50 * (capacity) + (capacity-1) * 5;
-            double delta = -(newTotalWidth - oldTotalWidth) / 2;
-
-            System.out.println("Capacity: " + capacity +
-                    "\nNew: " + newTotalWidth +
-                    "\nOld: " + oldTotalWidth);
-            for(ArrayNode an : arrayNodes) {
-                System.out.println(an.getX());
-            }
-
-            shiftX(0, capacity, delta);
-            capacity++;
-        }
+//        if(!isTemp) {
+//            double newTotalWidth = 50 * (capacity+1) + capacity * 5;
+//            double oldTotalWidth = 50 * (capacity) + (capacity-1) * 5;
+//            double delta = -(newTotalWidth - oldTotalWidth) / 2;
+//
+//            System.out.println("Capacity: " + capacity +
+//                    "\nNew: " + newTotalWidth +
+//                    "\nOld: " + oldTotalWidth);
+//            for(ArrayNode an : arrayNodes) {
+//                System.out.println(an.getX());
+//            }
+//
+//            shiftX(0, capacity, -55);
+//            capacity++;
+//        }
 
         return vbox;
     }
@@ -489,7 +501,7 @@ public class ArraylistViewController implements Initializable {
     }
 
     private TranslateTransition slideY(VBox vBox, double y) {
-        TranslateTransition slide = new TranslateTransition(Duration.seconds(0.75), vBox);
+        TranslateTransition slide = new TranslateTransition(Duration.seconds(0.60), vBox);
         slide.setByY(y);
         slide.setCycleCount(1);
 
