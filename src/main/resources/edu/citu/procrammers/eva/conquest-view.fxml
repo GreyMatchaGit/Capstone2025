@@ -19,7 +19,6 @@
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
             <StackPane prefHeight="1080.0" prefWidth="1920.0">
                <children>
                   <ScrollPane hbarPolicy="NEVER" prefHeight="1080.0" prefWidth="1920.0" style="-fx-padding: 0; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;" vbarPolicy="NEVER">
@@ -134,6 +133,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
       </AnchorPane>
    </center>

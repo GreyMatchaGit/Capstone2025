@@ -105,7 +105,6 @@ public class ArrayListConquestController {
         });
         
         btnDispel.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
             processSpellCommand();
         });
         
@@ -284,6 +283,8 @@ public class ArrayListConquestController {
                 }
                 return;
             }
+
+            SoundManager.playSFX("sfx/attack.MP3");
             
             updateListDisplay();
 
@@ -291,7 +292,6 @@ public class ArrayListConquestController {
                 stopTimer();
                 gameActive = false;
                 
-                SoundManager.playSFX("sfx/btn_click.MP3");
                 taNarration.appendText("\nThe corrupted chant dissipates — well done, Spellbreaker!\n");
                 
                 currentIndex++;
