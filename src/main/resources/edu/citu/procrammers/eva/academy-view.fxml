@@ -18,7 +18,6 @@
    <center>
       <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
             <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_loading_screen_bg.png" />
@@ -37,15 +36,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="imgLessonsBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1498.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@media/img_bookmark_lessons.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
-            <ImageView fx:id="imgTutorBkmrk" fitHeight="93.0" fitWidth="177.0" layoutX="1511.0" layoutY="453.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgChatbotBtn" fitHeight="93.0" fitWidth="177.0" layoutX="1465.0" layoutY="302.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@media/img_bookmark_tutor.png" />
                </image>
@@ -178,6 +169,25 @@
                      </children></AnchorPane>
                </children>
             </AnchorPane>
+            <StackPane fx:id="spChatbot" prefHeight="1080.0" prefWidth="1920.0" visible="false">
+               <children>
+                  <AnchorPane opacity="0.51" prefHeight="421.0" prefWidth="1920.0" style="-fx-background-color: black;" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <AnchorPane fx:id="apChat" layoutX="660.0" layoutY="183.0" prefHeight="690.0" prefWidth="680.0" />
+                        <ImageView fx:id="imgToggleChatbotPane" fitHeight="42.0" fitWidth="121.0" layoutX="907.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_back_page_btn.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </StackPane>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
       </AnchorPane>
    </center>

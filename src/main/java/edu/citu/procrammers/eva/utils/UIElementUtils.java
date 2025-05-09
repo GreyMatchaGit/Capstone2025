@@ -19,6 +19,11 @@ public class UIElementUtils {
         }
     }
 
+    public static <E extends Node> void setupGlow(Node c) {
+        c.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> c.setEffect(new Glow(0.3)));
+        c.addEventHandler(MouseEvent.MOUSE_EXITED, e -> c.setEffect(null));
+    }
+
     @SafeVarargs
     public static <E extends Node> void setupScalingAnimation(double scaleFactor, E... components) {
         for (E c : components) {

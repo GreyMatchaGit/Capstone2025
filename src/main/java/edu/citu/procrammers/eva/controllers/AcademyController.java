@@ -1,19 +1,28 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.LessonContent;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.io.IOException;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.Chatbot;
+import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -25,28 +34,54 @@ public class AcademyController {
     private int index = -2;
 
     public Pane fadePane;
+    public AnchorPane apChat;
+    public ChatBotController chatBotController;
     public AnchorPane apPrefaceP1, apPrefaceP2;
-    public ImageView imgLessonsBkmrk, imgTutorBkmrk, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer;
+    public ImageView imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane;
+    public StackPane spChatbot;
     public TextArea taDiscussion, taCodeSnippet;
     public Text txtTopicTitle, txtTopicNum;
+
 
     @FXML
     public void initialize() {
         SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
-
         try {
             lessons =  Database.getInstance().loadLessons();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        setupGlow(imgLessonsBkmrk, imgTutorBkmrk, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer);
+        imgBackMenuBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            NavService.navigateTo(Selection);
+        });
+
+        imgToggleChatbotPane.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            toggleChatpane();
+        });
+
+        imgChatbotBtn.setOnMouseClicked(e ->{
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            ChatService.loadChatbot(chatBotController, apChat, GeneralChatbot);
+            toggleChatpane();
+        });
+
+        setupGlow(imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane);
 
         imgBackBtn.setVisible(false);
+        spChatbot.setVisible(false);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
+
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+            fadeOut.setFromValue(0);
+            fadeOut.setToValue(1);
+            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic());
+            fadeOut.play();
         });
 
         imgSettingsBtn.setOnMouseClicked(e -> {
@@ -72,6 +107,7 @@ public class AcademyController {
     }
 
     public void nextLesson() {
+        System.out.println("Index: " + index);
         SoundManager.playSFX("sfx/btn_click.MP3");
         index++;
 
@@ -95,6 +131,7 @@ public class AcademyController {
     }
 
     public void prevLesson() {
+        System.out.println("Index: " + index);
         SoundManager.playSFX("sfx/btn_click.MP3");
         index--;
 
@@ -106,15 +143,12 @@ public class AcademyController {
         } else if (index == -1) {
             apPrefaceP2.setVisible(true);
             apPrefaceP2.setTranslateX(0);
-            return;
-        }
-
-
-        imgBackBtn.setVisible(index - 1 >= 0);
-        if (index > 0 && index < lessons.size()) {
-            imgNextBtn.setVisible(true);
         }
 
         loadLessonContents();
+    }
+
+    public void toggleChatpane() {
+        spChatbot.setVisible(!spChatbot.isVisible());
     }
 }
