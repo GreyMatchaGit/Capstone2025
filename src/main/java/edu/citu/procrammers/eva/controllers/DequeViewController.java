@@ -209,11 +209,41 @@ public class DequeViewController {
     }
 
     private void onClearOperation() {
-        deque.clear(); size = 0;
-        apVisualizer.getChildren().removeAll(vBoxes);
-        rectangles.clear(); labels.clear(); vBoxes.clear();
-        writeDataJSON();
-        updateLayout();
+        if(size != 0) {
+            tfPrompt.setText("");
+            writePreviousDataJSON();
+            deque.clear();
+            writeDataJSON();
+            // Highlight Everything
+            for (int i = 0; i < vBoxes.size(); ++i) {
+                Rectangle r = rectangles.get(i);
+                Label l = labels.get(i);
+                l.setText("");
+                FillTransition highlight = fillRectangle(0.6, r, DEFAULTR, NEGATIVE);
+                Timeline tl = highlightNode(r,l,NEGATIVE,NEGATIVE);
+                ParallelTransition pt = new ParallelTransition(highlight, tl);
+                pt.play();
+            }
+
+            // Destroy All Boxes
+            rectangles.clear();
+            labels.clear();
+            for (int i = vBoxes.size() - 1; i >= 0; --i) {
+                VBox vb = vBoxes.get(i);
+                destroyBox(vb);
+                vBoxes.remove(i);
+                System.out.println(i);
+            }
+
+            size = 0;
+            frontMarker.setVisible(false);
+            backMarker.setVisible(false);
+            System.out.println("Deque cleared " +
+                    deque.size() + " " +
+                    rectangles.size() + " " +
+                    labels.size() + " " +
+                    vBoxes.size());
+        }
     }
 
     public void navigatePreviousScreen() {
@@ -225,9 +255,9 @@ public class DequeViewController {
         if (size == 0) return;
         writePreviousDataJSON();
         deque.removeFirst();
-        VBox removed = vBoxes.remove(0);
-        rectangles.remove(0);
-        labels.remove(0);
+        VBox removed = vBoxes.removeFirst();
+        rectangles.removeFirst();
+        labels.removeFirst();
 
         FadeTransition fade = new FadeTransition(Duration.seconds(0.3), removed);
         fade.setToValue(0);
@@ -260,22 +290,132 @@ public class DequeViewController {
     }
 
     private void peekFirst() {
-        if (size == 0) return;
-        Rectangle rect = rectangles.get(0);
-        FillTransition ft = new FillTransition(Duration.seconds(0.5), rect);
-        ft.setToValue(SEARCH);
-        ft.setAutoReverse(true);
-        ft.setCycleCount(2);
-        ft.play();
+        int num = deque.getFirst();
+        if(num == Integer.MIN_VALUE) return;
+        if(size == 0) return ;
+
+        VBox currentVBox = vBoxes.getFirst();
+        Rectangle r = rectangles.getFirst();
+        Label l = labels.getFirst();
+        SequentialTransition traversal = new SequentialTransition();
+
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+        FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+        SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+        traversal.getChildren().add(nodeTransition);
+
+        // After traversal, do the slideY animation
+        VBox finalCurrentVBox = currentVBox;
+        Rectangle finalRectangle = r;
+        traversal.setOnFinished(e -> {
+            TranslateTransition tFirst = slideY(finalCurrentVBox, -100);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+            FillTransition highlightSlide = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
+            FillTransition resetSlide = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
+            TranslateTransition tLast = slideY(finalCurrentVBox, 100);
+            SequentialTransition fullSequence = new SequentialTransition(
+                    tFirst,
+                    pause,
+                    highlightSlide,
+                    resetSlide,
+                    tLast
+            );
+            fullSequence.play();
+        });
+
+        traversal.play();
     }
 
     private void peekLast() {
-        if (size == 0) return;
-        Rectangle rect = rectangles.get(size - 1);
-        FillTransition ft = new FillTransition(Duration.seconds(0.5), rect);
-        ft.setToValue(SEARCH);
-        ft.setAutoReverse(true);
-        ft.setCycleCount(2);
-        ft.play();
+        int num = deque.getLast();
+        if(num == Integer.MIN_VALUE) return;
+        if(size == 0) return ;
+
+        VBox currentVBox = vBoxes.getLast();
+        Rectangle r = rectangles.getLast();
+        Label l = labels.getLast();
+        SequentialTransition traversal = new SequentialTransition();
+
+        FillTransition highlight = fillRectangle(0.3, r, DEFAULTR, SEARCH);
+        FillTransition reset = fillRectangle(0.3, r, SEARCH, DEFAULTR);
+        SequentialTransition nodeTransition = new SequentialTransition(highlight, reset);
+        traversal.getChildren().add(nodeTransition);
+
+        // After traversal, do the slideY animation
+        VBox finalCurrentVBox = currentVBox;
+        Rectangle finalRectangle = r;
+        traversal.setOnFinished(e -> {
+            TranslateTransition tFirst = slideY(finalCurrentVBox, -100);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+            FillTransition highlightSlide = fillRectangle(0.3, finalRectangle, DEFAULTR, SEARCH);
+            FillTransition resetSlide = fillRectangle(0.3, finalRectangle, SEARCH, DEFAULTR);
+            TranslateTransition tLast = slideY(finalCurrentVBox, 100);
+            SequentialTransition fullSequence = new SequentialTransition(
+                    tFirst,
+                    pause,
+                    highlightSlide,
+                    resetSlide,
+                    tLast
+            );
+            fullSequence.play();
+        });
+
+        traversal.play();
+        return;
     }
+
+    private FadeTransition fadeOut(VBox vBox) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), vBox);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setCycleCount(1);
+
+        return fadeOut;
+    }
+
+    private FillTransition fillRectangle(double duration, Rectangle r, Color from, Color to) {
+        FillTransition fill = new FillTransition(Duration.seconds(duration), r);
+        fill.setFromValue(from);
+        fill.setToValue(to);
+
+        return fill;
+    }
+
+    private TranslateTransition slideY(VBox vBox, double y) {
+        TranslateTransition slide = new TranslateTransition(Duration.seconds(0.75), vBox);
+        slide.setByY(y);
+        slide.setCycleCount(1);
+
+        return slide;
+    }
+
+    private Timeline highlightNode(Rectangle r, Label l, Color from, Color to) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(r.strokeProperty(), from),
+                        new KeyValue(l.textFillProperty(), from)
+                ),
+                new KeyFrame(Duration.seconds(0.3),
+                        new KeyValue(r.strokeProperty(), to),
+                        new KeyValue(l.textFillProperty(), to)
+                ),
+                new KeyFrame(Duration.seconds(0.6),
+                        new KeyValue(r.strokeProperty(), from),
+                        new KeyValue(l.textFillProperty(), from)
+                )
+        );
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+
+        return timeline;
+    }
+
+    private void destroyBox(VBox vbox) {
+        FadeTransition fadeOut = fadeOut(vbox);
+        TranslateTransition slideUp = slideY(vbox, -100);
+        slideUp.setOnFinished(event -> fadeOut.play());
+        slideUp.play();
+        fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
+    }
+
 }
