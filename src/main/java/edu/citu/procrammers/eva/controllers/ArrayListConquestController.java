@@ -211,21 +211,32 @@ public class ArrayListConquestController {
         stopTimer();
         
         pbTimeLimit.setProgress(1.0);
-        timerTimeline = new Timeline(
-            new KeyFrame(Duration.ZERO, e -> {}),
-            new KeyFrame(Duration.seconds(40), e -> {
-                if (pbTimeLimit.getProgress() <= 0) {
-                    timeExpired();
-                }
-            })
-        );
         
-        timerTimeline.setCycleCount(Timeline.INDEFINITE);
-        timerTimeline.getKeyFrames().add(
-            new KeyFrame(Duration.millis(200), event -> {
-                pbTimeLimit.setProgress(pbTimeLimit.getProgress() - 0.005);
-            })
-        );
+        // Calculate number of frames for smooth animation (25 frames per second)
+        int totalFrames = 40 * 25;  // 40 seconds * 25 fps
+        double decrementPerFrame = 1.0 / totalFrames;
+        
+        timerTimeline = new Timeline();
+        timerTimeline.setCycleCount(totalFrames);
+        
+        // Add frame for decrementing progress
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(40), event -> {
+            double newProgress = pbTimeLimit.getProgress() - decrementPerFrame;
+            pbTimeLimit.setProgress(newProgress);
+            
+            // Check if we've reached the end
+            if (newProgress <= 0) {
+                timeExpired();
+            }
+        });
+        
+        timerTimeline.getKeyFrames().add(keyFrame);
+        timerTimeline.setOnFinished(event -> {
+            if (gameActive) {
+                timeExpired();
+            }
+        });
+        
         timerTimeline.play();
     }
     
@@ -283,7 +294,7 @@ public class ArrayListConquestController {
                 }
                 return;
             }
-
+            
             SoundManager.playSFX("sfx/attack.MP3");
             
             updateListDisplay();

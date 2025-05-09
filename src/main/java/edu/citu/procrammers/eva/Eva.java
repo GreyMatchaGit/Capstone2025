@@ -7,6 +7,7 @@ import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -28,6 +29,10 @@ public class Eva extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(360);
+
+        Image appIcon = new Image(getClass().getResourceAsStream("/edu/citu/procrammers/eva/media/icon_project_logo.png"));
+        primaryStage.getIcons().add(appIcon);
+        
         Database.getInstance();
         new NavService(primaryStage);
 
