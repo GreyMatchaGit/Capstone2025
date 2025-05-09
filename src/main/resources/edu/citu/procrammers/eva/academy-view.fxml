@@ -120,6 +120,15 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <ImageView fx:id="imgChatbotBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1740.0" layoutY="929.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_profile_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <AnchorPane fx:id="apChat" layoutX="1429.0" layoutY="262.0" prefHeight="660.0" prefWidth="372.0" />
             <AnchorPane fx:id="apPrefaceP2" layoutX="428.0" layoutY="270.0" prefHeight="516.0" prefWidth="1010.0">
                <children>
                   <AnchorPane layoutX="31.0" layoutY="13.0" prefHeight="495.0" prefWidth="424.0" style="-fx-background-color: E7D5B3;">

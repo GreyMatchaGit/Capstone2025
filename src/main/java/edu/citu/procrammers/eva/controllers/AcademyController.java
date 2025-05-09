@@ -1,23 +1,31 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.LessonContent;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.io.IOException;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.Chatbot;
+import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -30,16 +38,26 @@ public class AcademyController {
     private int index = -2;
 
     public Pane fadePane;
+    public AnchorPane apChat;
+    public ChatBotController chatBotController;
     public AnchorPane apPrefaceP1, apPrefaceP2;
+    public ImageView imgLessonsBkmrk, imgTutorBkmrk, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgChatbotBtn;
     public StackPane spChatbot;
-    public ImageView imgTutorBkmrk, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer;
     public ImageView imgToggleChatbotPane;
     public TextArea taDiscussion, taCodeSnippet;
     public Text txtTopicTitle, txtTopicNum;
     public TextField tfPrompt;
 
+
     @FXML
     public void initialize() {
+        imgBackMenuBtn.setOnMouseClicked(e -> NavService.navigateTo(Selection));
+        imgChatbotBtn.setOnMouseClicked(e ->{
+            ChatService.loadChatbot(chatBotController, apChat);
+            loadLessonContents();
+        });
+
+
         SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
 
         try {
@@ -123,8 +141,18 @@ public class AcademyController {
             apPrefaceP2.setTranslateX(0);
             return;
         }
+    }
 
-
+    private void loadChatbot() {
+        try{
+            FXMLLoader loader = new FXMLLoader(Eva.class.getResource(Chatbot));
+            BorderPane chatbotUI = loader.load();
+            chatBotController = loader.getController();
+            chatBotController.setParentContainer(apChat);
+            apChat.getChildren().setAll(chatbotUI);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         imgBackBtn.setVisible(index - 1 >= 0);
         if (index > 0 && index < lessons.size()) {
             imgNextBtn.setVisible(true);

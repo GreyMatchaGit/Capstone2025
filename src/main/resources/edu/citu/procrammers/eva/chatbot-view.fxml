@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="598.0" prefWidth="469.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ChatBotController">
+   <children>
+      <StackPane prefHeight="597.0" prefWidth="469.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fitHeight="693.0" fitWidth="420.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@media/img_chat_bg.png" />
+               </image>
+            </ImageView>
+            <AnchorPane prefHeight="601.0" prefWidth="457.0">
+               <children>
+                  <Button fx:id="btnClose" layoutX="37.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-font-weight: bold; -fx-font-size: 30;" styleClass="chatbot-close-btn" text="x">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
+                  <Label layoutX="171.0" layoutY="3.0" style="-fx-font-size: 40;" styleClass="bold-text" text="Oracle" />
+                  <TextField fx:id="tfChatBox" layoutX="89.0" layoutY="489.0" prefHeight="35.0" prefWidth="208.0" promptText="Thou shall ask..." styleClass="pixel-textfield" />
+                  <ScrollPane hbarPolicy="NEVER" layoutX="78.0" layoutY="69.0" prefHeight="411.0" prefWidth="320.0">
+                     <padding>
+                        <Insets left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <content>
+                        <VBox fx:id="vbConversation" prefWidth="280.0" spacing="15.0" style="-fx-background-color: transparent;" />
+                     </content>
+                  </ScrollPane>
+                  <Button fx:id="btnSubmit" layoutX="301.0" layoutY="489.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" mnemonicParsing="false" prefHeight="38.0" prefWidth="85.0" style="-fx-padding: 0;" styleClass="pixel-button" text="Submit" />
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+   </children>
+   <stylesheets>
+      <URL value="@css/fonts.css" />
+      <URL value="@css/styles.css" />
+   </stylesheets>
+</AnchorPane>

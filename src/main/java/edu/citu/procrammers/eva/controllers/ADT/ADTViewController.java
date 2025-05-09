@@ -1,8 +1,10 @@
 package edu.citu.procrammers.eva.controllers.ADT;
 
 import edu.citu.procrammers.eva.Eva;
+import edu.citu.procrammers.eva.controllers.ChatBotController;
 import edu.citu.procrammers.eva.models.data_structures.BST;
 import edu.citu.procrammers.eva.models.data_structures.Node;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
@@ -17,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -26,6 +29,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.awt.*;
@@ -37,6 +41,9 @@ import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 
 
 public class ADTViewController {
+    public AnchorPane apVisualizer;
+    public AnchorPane apChat;
+    public ImageView imgChatbotBtn;
     @FXML private Button btnBackward;
     @FXML private Button btnPlay;
     @FXML private Button btnForward;
@@ -52,6 +59,8 @@ public class ADTViewController {
     private BST BST;
     private AnimationManager animationManager;
 
+    public ChatBotController chatBotController;
+
     public void initialize() {
         initializeSlider();
         initializeStyles();
@@ -60,6 +69,12 @@ public class ADTViewController {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apMain);
             BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
+        });
+
+        ChatService.updateData(new JSONObject());
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            ChatService.loadChatbot(chatBotController, apChat);
         });
     }
 

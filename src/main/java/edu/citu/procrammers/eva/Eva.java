@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class Eva extends Application {
@@ -29,8 +30,10 @@ public class Eva extends Application {
         primaryStage.setMinHeight(360);
         Database.getInstance();
         new NavService(primaryStage);
-        NavService.navigateTo(Splash);
+//        NavService.navigateTo(Splash);
+        NavService.navigateTo(Arrays);
         NavService.setFullScreen(true);
+//        NavService.setFullScreen(true);
         primaryStage.show();
     }
 }
