@@ -15,10 +15,6 @@ public class Eva extends Application {
 
     public static User currentUser = null;
 
-    public static void resetAppState() {
-        currentUser = null;
-    }
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -29,8 +25,9 @@ public class Eva extends Application {
         primaryStage.setMinHeight(360);
         Database.getInstance();
         new NavService(primaryStage);
-        NavService.navigateTo(ADT);
-//        NavService.navigateTo(Academy);
+//        NavService.navigateTo(Splash);
+        NavService.navigateTo(Arrays);
+        NavService.setFullScreen(true);
 //        NavService.setFullScreen(true);
         primaryStage.show();
     }

@@ -59,7 +59,7 @@ public class ArraylistViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setupGlow(imgBackBtn);
+        setupGlow(imgBackBtn, imgChatbotBtn);
 
         arrayNodes = new ArrayList<>();
         arrayList = new ArrayList<>();
@@ -108,6 +108,7 @@ public class ArraylistViewController implements Initializable {
         ChatService.updateData(new JSONObject());
 
         imgChatbotBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
             ChatService.loadChatbot(chatBotController, apChat);
         });
     }
