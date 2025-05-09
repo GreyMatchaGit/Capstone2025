@@ -35,6 +35,7 @@ public class BST extends Tree {
     private int id;
 
     public JSONObject dataJSON;
+
     public BST(AnimationManager animationManager, double width, double height, AnchorPane canvas) {
         super(animationManager, width, height);
         this.canvas = canvas;
@@ -44,19 +45,20 @@ public class BST extends Tree {
         w = width;
         h = height;
 
-        FIRST_PRINT_POS_X  = 50;
-        PRINT_VERTICAL_GAP  = 20;
-        PRINT_HORIZONTAL_GAP = 50;
+        FIRST_PRINT_POS_X  = 60;
+        PRINT_VERTICAL_GAP  = 30;
+        PRINT_HORIZONTAL_GAP = 60;
 
         startingX =  w / 2;
         first_print_pos_y  = h - 2 * PRINT_VERTICAL_GAP;
-        print_max  = w - 10;
+        print_max  = w - 20;
 
-        WIDTH_DELTA  = 50;
-        HEIGHT_DELTA = 50;
-        STARTING_Y = 80;
+        WIDTH_DELTA  = 60;
+        HEIGHT_DELTA = 60;
+        STARTING_Y = 90;
 
         id = 0;
+        isStandard = true;
         isStandard = false;
     }
 
@@ -111,6 +113,7 @@ public class BST extends Tree {
             graphicId = Integer.toString(root.graphicId);
             System.out.println("Command Creation: id = " + graphicId);
             commands.add(am.newCommand("CreateCircle", insertee, graphicId, x, y));
+            commands.add(am.newCommand("Stop"));
             writeDataJSON();
         }
         else {
@@ -122,6 +125,7 @@ public class BST extends Tree {
             y = Double.toString(100);
 
             commands.add(am.newCommand("CreateCircle", insertee, graphicId, x, y));
+            commands.add(am.newCommand("Stop"));
 
             insert(insertElem, root, commands);
 
@@ -141,35 +145,20 @@ public class BST extends Tree {
                 parentId,
                 Integer.toString(1)
         ));
-//        this.cmd("SetHighlight", tree.graphicID , 1);
-//        this.cmd("SetHighlight", elem.graphicID , 1);
 
-//        if (elem.element < parent.element)
-//        {
-//            this.cmd("SetText", 0,  elem.data + " < " + tree.data + ".  Looking at left subtree");
-//        }
-//        else
-//        {
-//            this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");
-//        }
-//        this.cmd("Step");
-
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand(
                 "SetHighlight",
                 parentId,
                 Integer.toString(0)
         ));
-//        this.cmd("SetHighlight", tree.graphicID, 0);
-//        this.cmd("SetHighlight", elem.graphicID, 0);
 
         if (elem.element < parent.element)
         {
             if (parent.getLeft() == null)
             {
                 writePreviousDataJSON();
-//                this.cmd("SetText", 0,"Found null tree, inserting element");
-//
-//                this.cmd("SetHighlight", elem.graphicID, 0);
+
                 parent.setLeft(elem);
                 elem.setParent(parent);
 
@@ -177,17 +166,12 @@ public class BST extends Tree {
                 parent.outgoingLineId = lineId;
                 elem.incomingLineId = lineId;
 
-
                 commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
                 writeDataJSON();
-//                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
             }
             else
             {
-//                this.cmd("CreateHighlightCircle", this.highlightID, HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-//                this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-//                this.cmd("Step");
-//                this.cmd("Delete", this.highlightID);
+                commands.add(am.newCommand("Stop"));
                 this.insert(elem, parent.getLeft(), commands);
             }
         }
@@ -195,30 +179,23 @@ public class BST extends Tree {
         {
             if (parent.getRight() == null) {
                 writePreviousDataJSON();
-//                this.cmd("SetText",  0, "Found null tree, inserting element");
-//                this.cmd("SetHighlight", elem.graphicID, 0);
                 parent.setRight(elem);
                 elem.setParent(parent);
-//                this.cmd("Connect", tree.graphicID, elem.graphicID, LINK_COLOR);
 
                 elem.x.set(parent.x.getValue() + WIDTH_DELTA/2);
                 elem.y.set(parent.y.getValue() + HEIGHT_DELTA);
 
-                parent.outgoingLineId = id;
-                elem.incomingLineId = id;
-                String lineId = Integer.toString(id++);
-                commands.add(am.newCommand("Connect", lineId, parentId, childId));
+                int lineId = id++;
+                parent.outgoingLineId = lineId;
+                elem.incomingLineId = lineId;
+
                 writeDataJSON();
 
-                System.out.printf("Node %d at (%.2f, %.2f)\n", elem.element, elem.x.get(), elem.y.get());
-//                elem.y = parent.y + HEIGHT_DELTA;
-//                this.cmd("Move", elem.graphicID, elem.x, elem.y);
+                commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
+
             }
             else {
-//                this.cmd("CreateHighlightCircle", this.highlightID, HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-//                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-//                this.cmd("Step");
-//                this.cmd("Delete", this.highlightID);
+                commands.add(am.newCommand("Stop"));
                 this.insert(elem, parent.getRight(), commands);
             }
         }
@@ -237,7 +214,7 @@ public class BST extends Tree {
 
             this.setNewPositions(this.root, startingPoint, STARTING_Y, 0);
             this.animateNewPositions(root, commands);
-//            this.cmd("Step");
+            commands.add(am.newCommand("Stop"));
         }
     }
 
@@ -247,13 +224,7 @@ public class BST extends Tree {
 
             String newX = Double.toString(node.x.get());
             String newY = Double.toString(node.y.get());
-//            System.out.println("Moving: " + graphicId);
-            commands.add(am.newCommand(new String[] {
-                    "Move",
-                    graphicId,
-                    newX,
-                    newY
-            }));
+            commands.add(am.newCommand("Move", graphicId, newX, newY));
             animateNewPositions(node.getLeft(), commands);
             animateNewPositions(node.getRight(), commands);
         }
@@ -267,11 +238,8 @@ public class BST extends Tree {
             }
             else if (side == 1) {
                 xPosition = xPosition + tree.leftWidth;
-//                System.out.println("Left width: " + tree.leftWidth);
-//                System.out.println("in right side x = " + xPx osition);
             }
             tree.x.set(xPosition);
-//            System.out.printf("Node %d new pos(%.2f, %.2f)\n", tree.element, tree.x.get(), tree.y.get());
             this.setNewPositions(tree.getLeft(), xPosition, yPosition + HEIGHT_DELTA, -1);
             this.setNewPositions(tree.getRight(), xPosition, yPosition + HEIGHT_DELTA, 1);
         }
@@ -284,21 +252,12 @@ public class BST extends Tree {
         }
         tree.leftWidth = Math.max(this.resizeWidths(tree.getLeft()), WIDTH_DELTA / 2);
         tree.rightWidth = Math.max(this.resizeWidths(tree.getRight()), WIDTH_DELTA / 2);
-//        System.out.printf("Node %d width: %.2f, %.2f", tree.element, tree.leftWidth, tree.rightWidth);
         return tree.leftWidth + tree.rightWidth;
     }
 
     public List<Command> deleteElement(int keyToDelete) {
         List<Command> commands = new ArrayList<>();
-//        this.commands = [];
-//        this.cmd("SetText", 0, "Deleting "+deletedValue);
-//        this.cmd("Step");
-//        this.cmd("SetText", 0, "");
-//        this.highlightID = this.nextIndex++;
-//        this.delete(root, keyToDelete, commands);
-//        this.cmd("SetText", 0, "");
         delete(root, keyToDelete, commands);
-        // Do delete
         return commands;
     }
 
@@ -311,55 +270,42 @@ public class BST extends Tree {
                 leftchild = node.getParent().getLeft() == node;
             }
             commands.add(am.newCommand("SetHighlight", nodeId, Integer.toString(1)));
-//            if (keyToDelete < node.getElement()) {
-//                this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");
-//            }
-//            else if (valueToDelete > tree.data) {
-//                this.cmd("SetText",  0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");
-//            }
-//            else {
-//                this.cmd("SetText",  0, valueToDelete + " == " + tree.data + ".  Found node to delete");
-//            }
-//            this.cmd("Step");
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", nodeId, Integer.toString(0)));
 
             if (keyToDelete == node.getElement()) {
                 writePreviousDataJSON();
                 if (node.getLeft() == null && node.getRight() == null) {
-//                    this.cmd("SetText", 0, "Node to delete is a leaf.  Delete it.");
-//                    this.cmd("Delete", tree.graphicID);
                     commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
 
                     commands.add(am.newCommand("Delete", nodeId));
                     if (leftchild && node.getParent() != null) {
                         node.getParent().setLeft(null);
-                        System.out.println("Bang");
                     }
                     else if (node.getParent() != null) {
-                        System.out.println("right");
                         node.getParent().setRight(null);
                     }
                     else {
-                        System.out.println("null root");
                         root = null;
                     }
                     writeDataJSON();
                     this.resizeTree(commands);
-//                    this.cmd("Step");
+                    commands.add(am.newCommand("Stop"));
                 }
                 else if (node.getLeft() == null) {
-//                    this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");
                     if (node.getParent() != null) {
-//                        this.cmd("Disconnect",  tree.parent.graphicID, tree.graphicID);
                         commands.add(am.newCommand("Delete", Integer.toString(node.outgoingLineId)));
                         commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
-//                        commands.add(am.newCommand("Delete", Integer.toString(node.outgoingLineId)));
 
                         String parentId = Integer.toString(node.getParent().graphicId);
                         String childId = Integer.toString(node.getRight().graphicId);
 
-                        commands.add(am.newCommand("Connect", Integer.toString(id++), parentId, childId));
-//                        this.cmd("Step");
+                        int lineId = id++;
+                        node.getParent().outgoingLineId = lineId;
+                        node.getRight().incomingLineId = lineId;
+
+                        commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
+                        commands.add(am.newCommand("Stop"));
                         commands.add(am.newCommand("Delete", nodeId));
                         if (leftchild) {
                             node.getParent().setLeft(node.getRight());;
@@ -379,19 +325,21 @@ public class BST extends Tree {
                     this.resizeTree(commands);
                 }
                 else if (node.getRight() == null) {
-//                    this.cmd("SetText", 0, "Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");
                     if (node.getParent() != null) {
-//                        this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
                         commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
                         commands.add(am.newCommand("Delete", Integer.toString(node.outgoingLineId)));
-//                        this.cmd("Connect", node.parent.graphicID, node.left.graphicID, BST.LINK_COLOR);
-//                        this.cmd("Step");
+
+                        commands.add(am.newCommand("Stop"));
                         commands.add(am.newCommand("Delete", nodeId));
 
                         String parentId = Integer.toString(node.getParent().graphicId);
                         String childId = Integer.toString(node.getLeft().graphicId);
+
+                        int lineId = id++;
+                        node.getParent().outgoingLineId = lineId;
+                        node.getLeft().incomingLineId = lineId;
 //
-                        commands.add(am.newCommand("Connect", Integer.toString(id++), parentId, childId));
+                        commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
                         if (leftchild) {
                             node.getParent().setLeft(node.getLeft());
                         }
@@ -410,28 +358,24 @@ public class BST extends Tree {
                 }
                 else  {
                     if (isStandard) {
+                        System.out.println("Standard mode");
                         standardMode(node, commands);
                     }
                     else {
+                        System.out.println("Serato mode");
                         seratoMode(node, commands);
                     }
                 }
-            }//
+            }
             else if (keyToDelete < node.getElement()) {
                 if (node.getLeft() != null) {
-//                    this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, node.x, node.y);
-//                    this.cmd("Move", this.highlightID, node.left.x, node.left.y);
-//                    this.cmd("Step");
-//                    this.cmd("Delete", this.highlightID);
+                    commands.add(am.newCommand("Stop"));
                 }
                 this.delete(node.getLeft(), keyToDelete, commands);
             }
             else {
                 if (node.getRight() != null) {
-//                    this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, node.x, node.y);
-//                    this.cmd("Move", this.highlightID, node.right.x, node.right.y);
-//                    this.cmd("Step");
-//                    this.cmd("Delete", this.highlightID);
+                    commands.add(am.newCommand("Stop"));
                 }
                 delete(node.getRight(), keyToDelete, commands);
             }
@@ -447,52 +391,34 @@ public class BST extends Tree {
     private void standardMode(Node node, List<Command> commands) {
         writePreviousDataJSON();
         String nodeId = Integer.toString(node.graphicId);
-        // tree.left != null && tree.right != null{
-//                    this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");
 
-//                    this.highlightID = this.nextIndex;
-//                    this.nextIndex += 1;
-//                    this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, node.x, node.y);
-//                    Node tmp = node;
         Node tmp = node.getLeft();
-//                    String highlightID = Integer.toString(id++);
-//                    this.cmd("Move", this.highlightID, tmp.x, tmp.y);
-
-        String tmpX = Double.toString(tmp.x.get());
-        String tmpY = Double.toString(tmp.y.get());
-//                    commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
-//                    this.cmd("Step");
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         while (tmp.getRight() != null)
         {
             tmp = tmp.getRight();
-//                        tmpX = Double.toString(tmp.x.get());
-//                        tmpY = Double.toString(tmp.y.get());
-//                        commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
-//                        this.cmd("Step");
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         }
-//                    this.cmd("SetText", node.graphicID, " ");
-//                    var labelID = this.nextIndex;
-//                    this.nextIndex += 1;
-//                    this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
-        node.setElement(tmp.element);
-        commands.add(am.newCommand("SetText", Integer.toString(id++), Integer.toString(tmp.element),
-                Double.toString(tmp.x.get()), Double.toString(tmp.y.get())));
-        commands.add(am.newCommand("Move", Integer.toString(id - 1), Double.toString(node.x.get()), Double.toString(node.y.get())));
-        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
-//                    this.cmd("Move", labelID, node.x, node.y);
-//                    this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");
 
-//                    this.cmd("Step");
-//                    this.cmd("SetHighlight", node.graphicID, 0);
+        node.setElement(tmp.element);
+
+        String labelId = Integer.toString(id++);
+        commands.add(am.newCommand("SetText", labelId, Integer.toString(tmp.element),
+                Double.toString(tmp.x.get()), Double.toString(tmp.y.get())));
+        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, ""));
+        commands.add(am.newCommand("Move", labelId, Double.toString(node.x.get()), Double.toString(node.y.get())));
+
+        commands.add(am.newCommand("Stop"));
+        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
+        commands.add(am.newCommand("Delete", labelId));
+
         commands.add(am.newCommand("SetHighlight", nodeId, Integer.toString(0)));
-//                    this.cmd("Delete", labelID);
-//                    this.cmd("SetText", node.graphicID, node.data);
-//                    this.cmd("Delete", this.highlightID);
-//                    this.cmd("SetText", 0,"Remove node whose value we copied.");
 
         if (tmp.getLeft() == null)
         {
@@ -504,7 +430,7 @@ public class BST extends Tree {
                 node.setLeft(null);
             }
             String tmpId = Integer.toString(tmp.graphicId);
-//                        this.cmd("Delete", tmp.graphicID);
+
             commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
             commands.add(am.newCommand("Delete", tmpId));
 
@@ -512,27 +438,21 @@ public class BST extends Tree {
             writeDataJSON();
         }
         else {
-//                        this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
             commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
-//                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, BST.LINK_COLOR);
-
             String tmpParentId = Integer.toString(tmp.getParent().graphicId);
             String tmpLeftId = Integer.toString(tmp.getLeft().graphicId);
             String tmpRightId = Integer.toString(tmp.getRight().graphicId);
             commands.add(am.newCommand("Connect", tmpParentId, tmpLeftId, tmpRightId));
-//                        this.cmd("Step");
-//                        this.cmd("Delete", tmp.graphicID);
+            commands.add(am.newCommand("Stop"));
+
             commands.add(am.newCommand("Delete", Integer.toString(tmp.graphicId)));
             if (tmp.getParent() != node) {
                 tmp.getParent().setRight(tmp.getLeft());
-//                            tmp.left.parent = tmp.parent;
                 tmp.getLeft().setParent(tmp.getParent());
             }
             else {
                 node.setLeft(tmp.getLeft());
-//                            node.left = tmp.left;
                 tmp.getLeft().setParent(node);
-//                            tmp.left.parent = node;
             }
             this.resizeTree(commands);
         }
@@ -541,52 +461,34 @@ public class BST extends Tree {
     private void seratoMode(Node node, List<Command> commands) {
         writePreviousDataJSON();
         String nodeId = Integer.toString(node.graphicId);
-        // tree.left != null && tree.right != null{
-//                    this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");
 
-//                    this.highlightID = this.nextIndex;
-//                    this.nextIndex += 1;
-//                    this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, node.x, node.y);
-//                    Node tmp = node;
         Node tmp = node.getRight();
-//                    String highlightID = Integer.toString(id++);
-//                    this.cmd("Move", this.highlightID, tmp.x, tmp.y);
 
-        String tmpX = Double.toString(tmp.x.get());
-        String tmpY = Double.toString(tmp.y.get());
-//                    commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
-//                    this.cmd("Step");
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         while (tmp.getLeft() != null)
         {
             tmp = tmp.getLeft();
-//                        tmpX = Double.toString(tmp.x.get());
-//                        tmpY = Double.toString(tmp.y.get());
-//                        commands.add(am.newCommand("Move", highlightID, tmpX, tmpY));
-//                        this.cmd("Step");
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         }
-//                    this.cmd("SetText", node.graphicID, " ");
-//                    var labelID = this.nextIndex;
-//                    this.nextIndex += 1;
-//                    this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
-        node.setElement(tmp.element);
-        commands.add(am.newCommand("SetText", Integer.toString(id++), Integer.toString(tmp.element),
-                Double.toString(tmp.x.get()), Double.toString(tmp.y.get())));
-        commands.add(am.newCommand("Move", Integer.toString(id - 1), Double.toString(node.x.get()), Double.toString(node.y.get())));
-        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
-//                    this.cmd("Move", labelID, node.x, node.y);
-//                    this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");
 
-//                    this.cmd("Step");
-//                    this.cmd("SetHighlight", node.graphicID, 0);
+        node.setElement(tmp.element);
+        String labelId = Integer.toString(id++);
+        commands.add(am.newCommand("SetText", labelId, Integer.toString(tmp.element),
+                Double.toString(tmp.x.get()), Double.toString(tmp.y.get())));
+        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, ""));
+        commands.add(am.newCommand("Move", labelId, Double.toString(node.x.get()), Double.toString(node.y.get())));
+
+        commands.add(am.newCommand("Stop"));
+        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
+        commands.add(am.newCommand("Delete", labelId));
+
         commands.add(am.newCommand("SetHighlight", nodeId, Integer.toString(0)));
-//                    this.cmd("Delete", labelID);
-//                    this.cmd("SetText", node.graphicID, node.data);
-//                    this.cmd("Delete", this.highlightID);
-//                    this.cmd("SetText", 0,"Remove node whose value we copied.");
 
         if (tmp.getRight() == null)
         {
@@ -598,7 +500,7 @@ public class BST extends Tree {
                 node.setRight(null);
             }
             String tmpId = Integer.toString(tmp.graphicId);
-//                        this.cmd("Delete", tmp.graphicID);
+
             commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
             commands.add(am.newCommand("Delete", tmpId));
 
@@ -606,37 +508,33 @@ public class BST extends Tree {
             writeDataJSON();
         }
         else {
-//                        this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
+
             commands.add(am.newCommand("Delete", Integer.toString(tmp.incomingLineId)));
-//                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, BST.LINK_COLOR);
 
             String tmpParentId = Integer.toString(tmp.getParent().graphicId);
             String tmpLeftId = Integer.toString(tmp.getLeft().graphicId);
             String tmpRightId = Integer.toString(tmp.getRight().graphicId);
             commands.add(am.newCommand("Connect", tmpParentId, tmpLeftId, tmpRightId));
-//                        this.cmd("Step");
-//                        this.cmd("Delete", tmp.graphicID);
+            commands.add(am.newCommand("Stop"));
+
             commands.add(am.newCommand("Delete", Integer.toString(tmp.graphicId)));
             if (tmp.getParent() != node) {
                 tmp.getParent().setLeft(tmp.getRight());
-//                            tmp.left.parent = tmp.parent;
+
                 tmp.getRight().setParent(tmp.getParent());
             }
             else {
                 node.setRight(tmp.getRight());
-//                            node.left = tmp.left;
+
                 tmp.getRight().setParent(node);
-//                            tmp.left.parent = node;
             }
             this.resizeTree(commands);
             writeDataJSON();
         }
     }
 
-
     @Override
     public Node insert(int num) {
-//        return insert(root, null, num);
         return null;
     }
 
@@ -644,21 +542,4 @@ public class BST extends Tree {
     public int remove(int num) { // TODO
         return 0;
     }
-    public Node getRoot() {
-        return root;
-    }
-
-    public void setRoot(Node root) {
-        this.root = root;
-    }
-
-    public void print(Node root) {
-        if (root == null) {
-            return ;
-        }
-        System.out.print(root.element + " ");
-        print(root.getLeft());
-        print(root.getRight());
-    }
-
 }
