@@ -243,7 +243,11 @@ public class BST extends Tree {
                         String parentId = Integer.toString(node.getParent().graphicId);
                         String childId = Integer.toString(node.getRight().graphicId);
 
-                        commands.add(am.newCommand("Connect", Integer.toString(id++), parentId, childId));
+                        int lineId = id++;
+                        node.getParent().outgoingLineId = lineId;
+                        node.getRight().incomingLineId = lineId;
+
+                        commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
                         commands.add(am.newCommand("Stop"));
                         commands.add(am.newCommand("Delete", nodeId));
                         if (leftchild) {
@@ -272,8 +276,12 @@ public class BST extends Tree {
 
                         String parentId = Integer.toString(node.getParent().graphicId);
                         String childId = Integer.toString(node.getLeft().graphicId);
+
+                        int lineId = id++;
+                        node.getParent().outgoingLineId = lineId;
+                        node.getLeft().incomingLineId = lineId;
 //
-                        commands.add(am.newCommand("Connect", Integer.toString(id++), parentId, childId));
+                        commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
                         if (leftchild) {
                             node.getParent().setLeft(node.getLeft());
                         }
@@ -325,14 +333,14 @@ public class BST extends Tree {
         String nodeId = Integer.toString(node.graphicId);
 
         Node tmp = node.getLeft();
-
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
         commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         while (tmp.getRight() != null)
         {
             tmp = tmp.getRight();
-
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
             commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
@@ -394,24 +402,29 @@ public class BST extends Tree {
 
         Node tmp = node.getRight();
 
+        commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
         commands.add(am.newCommand("Stop"));
         commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         while (tmp.getLeft() != null)
         {
             tmp = tmp.getLeft();
-
+            commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(1)));
             commands.add(am.newCommand("Stop"));
             commands.add(am.newCommand("SetHighlight", Integer.toString(tmp.graphicId), Integer.toString(0)));
         }
 
         node.setElement(tmp.element);
-        commands.add(am.newCommand("SetText", Integer.toString(id++), Integer.toString(tmp.element),
+        String labelId = Integer.toString(id++);
+        commands.add(am.newCommand("SetText", labelId, Integer.toString(tmp.element),
                 Double.toString(tmp.x.get()), Double.toString(tmp.y.get())));
-        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
-        commands.add(am.newCommand("Move", Integer.toString(id - 1), Double.toString(node.x.get()), Double.toString(node.y.get())));
+        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, ""));
+        commands.add(am.newCommand("Move", labelId, Double.toString(node.x.get()), Double.toString(node.y.get())));
+
         commands.add(am.newCommand("Stop"));
+        commands.add(am.newCommand("ChangeNodeElementUI", nodeId, Integer.toString(node.element)));
+        commands.add(am.newCommand("Delete", labelId));
 
         commands.add(am.newCommand("SetHighlight", nodeId, Integer.toString(0)));
 
