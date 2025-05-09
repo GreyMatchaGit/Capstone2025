@@ -40,9 +40,13 @@ public class BSTViewController {
 
     public ChatBotController chatBotController;
 
+    private boolean isChatbotVisible;
+
     public void initialize() {
         initializeSlider();
         initializeKeyboardListener();
+
+        isChatbotVisible = false;
 
         btnBackward.setDisable(true);
         btnPlay.setDisable(false);
@@ -59,9 +63,15 @@ public class BSTViewController {
         });
 
         ChatService.updateData(new JSONObject());
-
+        ChatService.loadChatbot(chatBotController, apChat);
         imgChatbotBtn.setOnMouseClicked(e -> {
-            ChatService.loadChatbot(chatBotController, apChat);
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
         });
     }
 

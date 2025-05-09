@@ -1,29 +1,22 @@
 package edu.citu.procrammers.eva.controllers;
 
-import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Stack;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
@@ -51,9 +44,13 @@ public class StackViewController {
 
     public ChatBotController chatBotController;
 
+    private boolean isChatbotVisible;
+
     public void initialize() {
 
         setupGlow(imgBackBtn);
+
+        isChatbotVisible = false;
 
         stack = new Stack<>();
         stackPanes = new Stack<>();
@@ -78,7 +75,18 @@ public class StackViewController {
             pointY = apVisualizer.getHeight() * 0.9;
         });
         ChatService.updateData(new JSONObject());
-        imgChatbotBtn.setOnMouseClicked(e -> { ChatService.loadChatbot(chatBotController, apChat); });
+        ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
+        });
     }
 
     private void writeDataJSON() {

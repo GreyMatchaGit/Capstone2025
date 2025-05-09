@@ -29,7 +29,8 @@ public class Constant {
     }
 
     public static class Value{
-        public static final double FRONT_BOUNDARY_X = 100;
-        public static final double BACK_BOUNDARY_X = -50;
+        public static final double BOX_SIZE = 50.0;
+        public static final double OFFSET = 55.0;
+        public static final double FRONT_BOUNDARY_X = 100.0;
     }
 }

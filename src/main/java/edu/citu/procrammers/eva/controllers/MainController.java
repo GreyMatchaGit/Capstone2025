@@ -1,15 +1,10 @@
 package edu.citu.procrammers.eva.controllers;
 
-import javafx.animation.Interpolator;
-import javafx.animation.ScaleTransition;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;

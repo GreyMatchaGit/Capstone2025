@@ -1,23 +1,16 @@
 package edu.citu.procrammers.eva.controllers;
 
-import com.sun.tools.javac.Main;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-
 import static edu.citu.procrammers.eva.utils.Constant.Page.Splash;
-import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class ErrorController {
     public static String errorMsg = "Error";
