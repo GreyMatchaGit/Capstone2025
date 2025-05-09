@@ -2,9 +2,7 @@ package edu.citu.procrammers.eva.utils;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.MainController;
-import edu.citu.procrammers.eva.controllers.SelectionController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

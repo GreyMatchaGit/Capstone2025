@@ -2,9 +2,6 @@ package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Algorithm {
 
     protected AnimationManager am;

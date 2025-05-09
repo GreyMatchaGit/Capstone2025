@@ -1,7 +1,6 @@
 package edu.citu.procrammers.eva.utils.visuals;
 
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class SetHighlightCommand extends Command {

@@ -1,10 +1,8 @@
 package edu.citu.procrammers.eva.utils.visuals;
 
-import edu.citu.procrammers.eva.controllers.ADT.NodeController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 

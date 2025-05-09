@@ -4,7 +4,6 @@ import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.ChatBotController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import org.json.JSONObject;
 
