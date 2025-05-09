@@ -27,6 +27,7 @@ public class Constant {
         public static final String Stack = "stack-view.fxml";
         public static final String Queue = "queue-visualizer-view.fxml";
         public static final String Deque = "deque-visualizer-view.fxml";
+        public static final String LinkedList = "linkedlist-visualizer-view.fxml";
 
         public static final Color POSITIVE = Color.ORANGE;
         public static final Color NEGATIVE = Color.RED;

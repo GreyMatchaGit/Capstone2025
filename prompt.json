@@ -6,7 +6,7 @@
     },
     {
       "role": "system",
-      "content": "{\"previousTree\":{\"element\":1},\"type\":\"binary_tree\"}"
+      "content": "{}"
     },
     {
       "role": "user",
