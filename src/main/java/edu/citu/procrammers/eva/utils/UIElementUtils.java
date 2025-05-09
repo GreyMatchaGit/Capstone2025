@@ -19,12 +19,9 @@ public class UIElementUtils {
         }
     }
 
-    public static void toggleGlow(Node n) {
-        if (n.getEffect() == null) {
-            n.setEffect(new Glow(0.3));
-        } else {
-            n.setEffect(null);
-        }
+    public static <E extends Node> void setupGlow(Node c) {
+        c.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> c.setEffect(new Glow(0.3)));
+        c.addEventHandler(MouseEvent.MOUSE_EXITED, e -> c.setEffect(null));
     }
 
     @SafeVarargs
