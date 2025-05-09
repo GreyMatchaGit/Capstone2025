@@ -2,6 +2,7 @@ package edu.citu.procrammers.eva.utils.visuals;
 
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
 
 import java.util.HashMap;
 
@@ -23,10 +24,11 @@ public class DeleteCommand extends Command {
     public void execute(Runnable onFinished) {
         System.out.println("Deleting graphic: " + graphicId);
         node = graphicMap.get(graphicId);
-        canvas.getChildren().remove(node);
 
         x = node.getLayoutX();
         y = node.getLayoutY();
+
+        canvas.getChildren().remove(node);
 
         onFinished.run();
     }
@@ -34,7 +36,12 @@ public class DeleteCommand extends Command {
     @Override
     public void undo(Runnable onUndo) {
         canvas.getChildren().add(node);
-        node.toFront();
+        if (node instanceof Line) {
+            node.toBack();
+        }
+        else {
+            node.toFront();
+        }
         node.setLayoutX(x);
         node.setLayoutY(y);
 

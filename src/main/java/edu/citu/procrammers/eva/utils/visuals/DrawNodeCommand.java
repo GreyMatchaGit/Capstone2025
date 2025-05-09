@@ -51,6 +51,7 @@ public class DrawNodeCommand extends Command {
         try {
             StackPane nodeView = (StackPane) graphicMap.get(graphicId);
             Circle circle;
+
             if (nodeView == null) {
                 System.out.println("Creating node");
                 FXMLLoader loader = new FXMLLoader(Eva.class.getResource("ADT_visuals/node-view.fxml"));

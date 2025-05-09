@@ -104,13 +104,13 @@ public class AnimationManager {
         System.out.println("Stepping...");
         while (currentIndex < commands.size()) {
             Command command = commands.get(currentIndex);
-            history.push(command);
-            System.out.println("Executing: " + command);
+            System.out.println("Executing (index = " + currentIndex+ "): " + command);
             command.execute(() -> {});
             currentIndex++;
             if (command instanceof StopCommand) {
                 break; // Stop after a chunk
             }
+            history.push(command);
         }
     }
 
@@ -124,6 +124,7 @@ public class AnimationManager {
             return;
         }
 
+        currentIndex--; // Step back before undoing
         Command command = history.pop();
         if (command instanceof StopCommand) {
             System.out.println("Hit StopCommand, stopping undo.");
@@ -131,8 +132,8 @@ public class AnimationManager {
             return;
         }
 
-        currentIndex--; // Step back before undoing
-        System.out.println("Undo Command: " + command);
+
+        System.out.println("Undo Command (index = " + currentIndex+ "): " + command);
         command.undo(() -> {
             PauseTransition pause = new PauseTransition(Duration.seconds(speed));
             pause.setOnFinished(e -> undo(callback));

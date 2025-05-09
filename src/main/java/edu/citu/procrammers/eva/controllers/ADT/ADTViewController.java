@@ -57,6 +57,7 @@ public class ADTViewController {
 
         btnBackward.setDisable(false);
         btnPlay.setDisable(false);
+        btnForward.setDisable(false);
 
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());

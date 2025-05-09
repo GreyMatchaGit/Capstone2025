@@ -115,7 +115,6 @@ public class BST extends Tree {
                 parent.outgoingLineId = lineId;
                 elem.incomingLineId = lineId;
 
-
                 commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
             }
             else
@@ -133,10 +132,11 @@ public class BST extends Tree {
                 elem.x.set(parent.x.getValue() + WIDTH_DELTA/2);
                 elem.y.set(parent.y.getValue() + HEIGHT_DELTA);
 
-                parent.outgoingLineId = id;
-                elem.incomingLineId = id;
-                String lineId = Integer.toString(id++);
-                commands.add(am.newCommand("Connect", lineId, parentId, childId));
+                int lineId = id++;
+                parent.outgoingLineId = lineId;
+                elem.incomingLineId = lineId;
+
+                commands.add(am.newCommand("Connect", Integer.toString(lineId), parentId, childId));
 
             }
             else {
