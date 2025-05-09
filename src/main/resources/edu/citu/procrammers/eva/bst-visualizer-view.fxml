@@ -16,74 +16,92 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ADT.ADTViewController">
-    <children>
-        <StackPane prefHeight="249.0" prefWidth="1920.0">
-            <children>
-                <ImageView fitHeight="428.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="media/img_toolbar_bg.jpg" />
-                    </image>
-                </ImageView>
-                <ToolBar prefHeight="352.0" prefWidth="1920.0" style="-fx-background-color: transparent;">
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.BSTViewController">
+   <children>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;">
+         <children>
+            <StackPane prefHeight="249.0" prefWidth="1920.0">
+               <children>
+                  <ImageView fitHeight="428.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@media/img_toolbar_bg.jpg" />
+                     </image>
+                  </ImageView>
+                  <ToolBar prefHeight="352.0" prefWidth="1920.0" style="-fx-background-color: transparent;">
                     <items>
                         <Region prefHeight="243.0" prefWidth="101.0" />
                         <ImageView fx:id="imgBackBtn" fitHeight="55.0" fitWidth="140.0" onMouseClicked="#navigatePreviousScreen" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="media/img_back_btn.png" />
-                            </image>
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
+                           <image>
+                              <Image url="@media/img_back_btn.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </ImageView>
                         <Region prefHeight="243.0" prefWidth="141.0" />
                         <HBox alignment="CENTER" prefHeight="108.0" prefWidth="1178.0">
-                            <children>
-                                <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onButtonInsertClicked" prefHeight="55.0" prefWidth="107.0" styleClass="pixel-button" text="Insert" />
-                                <TextField fx:id="tfInput" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-textfield" />
-                                <Region prefHeight="200.0" prefWidth="15.0" />
-                                <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteButtonClicked" prefHeight="55.0" styleClass="pixel-button" text="Delete" />
-                                <TextField fx:id="tfDelete" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-textfield" />
-                                <Region prefHeight="200.0" prefWidth="15.0" />
-                                <VBox alignment="CENTER" prefHeight="2.0" prefWidth="200.0">
-                                    <children>
-                                        <Slider fx:id="sliderSpeed" prefHeight="2.0" prefWidth="200.0" styleClass="pixel-slider" />
-                                        <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="47.0" prefWidth="200.0">
-                                            <children>
-                                                <Button fx:id="btnBackward" maxHeight="35.0" mnemonicParsing="false" onAction="#onButtonBackwardClicked" prefHeight="35.0" styleClass="pixel-button" text="&lt;&lt;" disable="true" />
-                                                <Button fx:id="btnPlay" mnemonicParsing="false" onAction="#onButtonPlayClicked" styleClass="pixel-button" text="Pause" />
-                                                <Button fx:id="btnForward" mnemonicParsing="false" onAction="#onButtonForwardClick" styleClass="pixel-button" text="&gt;&gt;" disable="true" />
-                                            </children>
-                                            <VBox.margin>
-                                                <Insets />
-                                            </VBox.margin>
-                                        </HBox>
-                                    </children>
-                                    <HBox.margin>
-                                        <Insets bottom="90.0" top="50.0" />
-                                    </HBox.margin>
-                                </VBox>
-                                <Region prefHeight="200.0" prefWidth="15.0" />
-                                <ToggleButton fx:id="tglSeratoMode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#changeSuccessorMode" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-toggle" text="Serato Mode" />
-                            </children>
+                           <children>
+                            <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onButtonInsertClicked" prefHeight="55.0" prefWidth="107.0" styleClass="pixel-button" text="Insert" />
+                              <TextField fx:id="tfInput" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-textfield" />
+                              <Region prefHeight="200.0" prefWidth="15.0" />
+                              <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteButtonClicked" prefHeight="55.0" styleClass="pixel-button" text="Delete" />
+                              <TextField fx:id="tfDelete" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-textfield" />
+                              <Region prefHeight="200.0" prefWidth="15.0" />
+                              <VBox alignment="CENTER" prefHeight="2.0" prefWidth="200.0">
+                                 <children>
+                                    <Slider fx:id="sliderSpeed" prefHeight="2.0" prefWidth="200.0" styleClass="pixel-slider" />
+                                    <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="47.0" prefWidth="200.0">
+                                       <children>
+                                          <Button fx:id="btnBackward" disable="true" maxHeight="35.0" mnemonicParsing="false" onAction="#onButtonBackwardClicked" prefHeight="35.0" styleClass="pixel-button" text="&lt;&lt;" />
+                                          <Button fx:id="btnPlay" mnemonicParsing="false" onAction="#onButtonPlayClicked" styleClass="pixel-button" text="Pause" />
+                                          <Button fx:id="btnForward" disable="true" mnemonicParsing="false" onAction="#onButtonForwardClick" styleClass="pixel-button" text="&gt;&gt;" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets bottom="90.0" top="50.0" />
+                                 </HBox.margin>
+                              </VBox>
+                              <Region prefHeight="200.0" prefWidth="15.0" />
+                              <ToggleButton fx:id="tglSeratoMode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#changeSuccessorMode" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-toggle" text="Serato Mode" />
+                           </children>
                         </HBox>
                     </items>
-                </ToolBar>
-            </children>
-        </StackPane>
-        <StackPane prefHeight="892.0" prefWidth="1920.0">
-            <children>
-                <ImageView fitHeight="832.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="media/img_visualizer_bg.jpg" />
-                    </image>
-                </ImageView>
-                <AnchorPane fx:id="apMain" prefHeight="200.0" prefWidth="200.0" />
-            </children>
-        </StackPane>
-    </children>
-    <stylesheets>
-        <URL value="css/styles.css" />
-        <URL value="css/fonts.css" />
-    </stylesheets>
-</VBox>
+                  </ToolBar>
+               </children>
+            </StackPane>
+            <StackPane prefHeight="892.0" prefWidth="1920.0">
+               <children>
+                  <ImageView fitHeight="832.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@media/img_visualizer_bg.jpg" />
+                     </image>
+                  </ImageView>
+                  <AnchorPane fx:id="apMain" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                           <AnchorPane fx:id="apChat" layoutX="1357.0" layoutY="90.0" prefHeight="645.0" prefWidth="519.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </StackPane>
+         </children>
+         <stylesheets>
+            <URL value="@css/styles.css" />
+            <URL value="@css/fonts.css" />
+         </stylesheets>
+      </VBox>
+       <AnchorPane fx:id="apVisualizer" layoutX="1450.0" layoutY="327.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="425.0" />
+         <ImageView fx:id="imgChatbotBtn" fitHeight="63.0" fitWidth="63.0" layoutX="1784.0" layoutY="951.0" pickOnBounds="true" preserveRatio="true">
+             <image>
+                 <Image url="@media/img_chatbot_btn.png" />
+             </image>
+             <cursor>
+                 <Cursor fx:constant="HAND" />
+             </cursor>
+         </ImageView>
+   </children>
+</AnchorPane>

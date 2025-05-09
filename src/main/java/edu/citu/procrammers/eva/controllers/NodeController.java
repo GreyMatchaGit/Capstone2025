@@ -1,4 +1,4 @@
-package edu.citu.procrammers.eva.controllers.ADT;
+package edu.citu.procrammers.eva.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;

@@ -1,7 +1,7 @@
 package edu.citu.procrammers.eva.utils.visuals;
 
 import edu.citu.procrammers.eva.Eva;
-import edu.citu.procrammers.eva.controllers.ADT.NodeController;
+import edu.citu.procrammers.eva.controllers.NodeController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;

@@ -7,7 +7,6 @@ public class Constant {
         public static final String ErrorScreen = "error-view.fxml";
 
         public static final String Splash = "splash-view.fxml";
-        public static final String ADT = "ADT-view.fxml";
         public static final String Main = "main-view.fxml";
 
         public static final String Selection = "selection-view.fxml";
@@ -26,6 +25,7 @@ public class Constant {
         public static final String Stack = "stack-visualizer-view.fxml";
         public static final String Queue = "queue-visualizer-view.fxml";
         public static final String Deque = "deque-visualizer-view.fxml";
+        public static final String BST = "bst-visualizer-view.fxml";
     }
 
     public static class Value{

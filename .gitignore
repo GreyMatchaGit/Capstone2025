@@ -39,3 +39,6 @@ build/
 
 # Ignore config folder
 /config/
+
+data.json
+prompt.json

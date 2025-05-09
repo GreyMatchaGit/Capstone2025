@@ -1,24 +1,27 @@
-package edu.citu.procrammers.eva.controllers.ADT;
+package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.models.data_structures.BST;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import org.json.JSONObject;
 
 import java.util.function.UnaryOperator;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 
 
-public class ADTViewController {
+public class BSTViewController {
+    public AnchorPane apVisualizer;
     public AnchorPane apChat;
     public ImageView imgChatbotBtn;
     @FXML private Button btnBackward;
@@ -35,6 +38,8 @@ public class ADTViewController {
     private BST BST;
     private AnimationManager animationManager;
 
+    public ChatBotController chatBotController;
+
     public void initialize() {
         initializeSlider();
         initializeKeyboardListener();
@@ -48,6 +53,12 @@ public class ADTViewController {
             animationManager = new AnimationManager(apMain);
             BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
             System.out.println("BST isStandard = " + BST.isStandard);
+        });
+
+        ChatService.updateData(new JSONObject());
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            ChatService.loadChatbot(chatBotController, apChat);
         });
     }
 
@@ -174,13 +185,6 @@ public class ADTViewController {
         btnPlay.setDisable(false);
         btnPlay.setText(continuous ? "Pause" : "Play");
 
-//        boolean hasCommands = !animationManager.commands.isEmpty();
-//        btnBackward.setDisable(continuous && hasCommands);
-//        btnForward.setDisable(continuous && hasCommands);
-
-//        System.out.println("Has commands: " + !animationManager.commands.isEmpty());
-//
-//        System.out.println("isContinuous = " + animationManager.isContinuous);
         animationManager.play(this::enableUI);
     }
 
@@ -197,8 +201,5 @@ public class ADTViewController {
     public void navigatePreviousScreen() {
         SoundManager.playSFX("sfx/btn_click.MP3");
         NavService.navigateTo(Academy);
-    }
-
-    public void toggleContinuous(ActionEvent actionEvent) {
     }
 }
