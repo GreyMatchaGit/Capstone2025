@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Value.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
 import static java.lang.Math.ceil;
@@ -107,13 +108,27 @@ public class ArraylistViewController implements Initializable {
 
     private void writeDataJSON() {
         dataJSON.put("type", "arraylist");
-        dataJSON.put("size", arrayList.size());
-        dataJSON.put("elements", arrayList.toString());
+        dataJSON.put("size", arrayNodes.size());
+        dataJSON.put("capacity", capacity);
+
+        List<Integer> toList = new ArrayList<>();
+
+        for(int i = 0; i < size; i++) {
+            toList.add(Integer.valueOf(arrayNodes.get(i).getValue().getText()));
+        }
+
+        dataJSON.put("elements", toList.toString());
         ChatService.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON(){
-        dataJSON.put("previousArray", arrayList.toString());
+        List<Integer> toList = new ArrayList<>();
+
+        for(int i = 0; i < size; i++) {
+            toList.add(Integer.valueOf(arrayNodes.get(i).getValue().getText()));
+        }
+        dataJSON.put("previousArray", toList.toString());
+        dataJSON.put("previousCapacity", capacity);
         ChatService.fileWriter(dataJSON, DATA_PATH);
     }
 
@@ -215,6 +230,10 @@ public class ArraylistViewController implements Initializable {
         tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
 
+        if(size != 0){
+            writePreviousDataJSON();
+        }
+
         if(size == capacity) {
             // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
@@ -232,6 +251,7 @@ public class ArraylistViewController implements Initializable {
         SequentialTransition st = new SequentialTransition(highlight, reset);
         st.play();
         ++size;
+        writeDataJSON();
     }
 
     private void addAtElement() {
@@ -239,6 +259,10 @@ public class ArraylistViewController implements Initializable {
         int pos = getPos();
 
         if(num == Integer.MIN_VALUE || pos == -1) return;
+
+        if(size != 0){
+            writePreviousDataJSON();
+        }
 
         if(size == capacity) {
             // resize updateList()
@@ -270,13 +294,13 @@ public class ArraylistViewController implements Initializable {
         shiftX(index, capacity, 55);
         updateIndexes();
         ++size;
+        writeDataJSON();
     }
 
     private void removeElement() {
         int num = getNum();
         tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
-
         SequentialTransition traversal = new SequentialTransition();
         ArrayNode currentNode = searchHelper(num, traversal);
 
@@ -285,6 +309,7 @@ public class ArraylistViewController implements Initializable {
             traversal.setOnFinished(e -> {
                 SequentialTransition st = destroyBox(vbox);
                 st.setOnFinished(event -> {
+                    writePreviousDataJSON();
                     apVisualizer.getChildren().remove(vbox);
                     shiftX(arrayNodes.indexOf(currentNode), capacity, -55);
                     capacity--;
@@ -306,6 +331,7 @@ public class ArraylistViewController implements Initializable {
             int remove = (int) ceil(capacity * 0.75);
             dynamicSubResizeList(remove);
         }
+        writeDataJSON();
     }
 
     private void removeAtElement() {
@@ -322,6 +348,7 @@ public class ArraylistViewController implements Initializable {
         VBox vbox = currentNode.getVBox();
             SequentialTransition st = destroyBox(vbox);
             st.setOnFinished(event -> {
+                writePreviousDataJSON();
                 apVisualizer.getChildren().remove(vbox);
                 shiftX(arrayNodes.indexOf(currentNode), capacity, -55);
                 capacity--;
@@ -337,6 +364,7 @@ public class ArraylistViewController implements Initializable {
             int remove = (int) ceil(capacity * 0.75);
             dynamicSubResizeList(remove);
         }
+        writeDataJSON();
     }
 
     private void searchElement() {
@@ -384,7 +412,7 @@ public class ArraylistViewController implements Initializable {
         if(size != 0) {
             tfPromptNum.clear();
             tfPromptPos.clear();
-
+            writePreviousDataJSON();
             // Highlight Everything
             for (ArrayNode arrayNode : arrayNodes) {
                 Rectangle r = arrayNode.getRectangle();
@@ -405,6 +433,7 @@ public class ArraylistViewController implements Initializable {
                 size = 0;
                 capacity = 0;
                 dynamicAddResizeList(5);
+                writePreviousDataJSON();
                 disableButtons(false);
             });
         }
