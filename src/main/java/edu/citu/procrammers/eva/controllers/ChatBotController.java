@@ -1,11 +1,14 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.utils.ChatService;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
@@ -35,10 +38,9 @@ public class ChatBotController {
         });
     }
 
-
-
     @FXML
     private void onCloseButtonClicked() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
         if (parentContainer != null) {
             parentContainer.getChildren().clear();
         }
@@ -51,13 +53,12 @@ public class ChatBotController {
 */
 
     private void handleChatSubmit() {
+        SoundManager.playSFX("sfx/btn_click.MP3");
         String input = tfChatBox.getText().trim();
         if (input.isEmpty()) return;
 
-        Label message = new Label(input);
-        message.setWrapText(true);
-
-        vbConversation.getChildren().add(message);
+        HBox userBubble = createUserBubble(input);
+        vbConversation.getChildren().add(userBubble);
 
         tfChatBox.clear();
 
@@ -68,7 +69,7 @@ public class ChatBotController {
         }
 
         JSONObject promptJSON = ChatService.readJSON(PROMPT_PATH);
-        if (promptJSON == null) {
+        if (promptJSON == null) {   
             showError("Error reading prompt.json.");
             return;
         }
@@ -76,6 +77,7 @@ public class ChatBotController {
         updatePrompt(promptJSON, 2, input);
         sendChatRequest(apiKey, promptJSON);
     }
+
 
     private void updatePrompt(JSONObject promptJSON, int index, String input) {
         promptJSON.getJSONArray("messages")
@@ -111,12 +113,10 @@ public class ChatBotController {
                     replyText = replyText.substring(0, index).trim();
                 }
 
-//                ChatService.updateSummary(summary);
+                // ChatService.updateSummary(summary);
 
-                Label reply = new Label(replyText);
-                reply.setWrapText(true);
-
-                Platform.runLater(() -> vbConversation.getChildren().add(reply));
+                HBox botBubble = createBotBubble(replyText);
+                Platform.runLater(() -> vbConversation.getChildren().add(botBubble));
 
             } catch (IOException | InterruptedException e) {
                 Platform.runLater(() -> showError("Failed to communicate with API: " + e.getMessage()));
@@ -131,4 +131,24 @@ public class ChatBotController {
     private void showError(String message) {
         System.out.println(message);
     }
+
+    private HBox createUserBubble(String message) {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_RIGHT);
+        Label lbl = new Label(message);
+        lbl.getStyleClass().add("user-chat-bubble");
+        hbox.getChildren().add(lbl);
+        return hbox;
+    }
+
+    private HBox createBotBubble(String message) {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label lbl = new Label(message);
+        lbl.getStyleClass().add("bot-chat-bubble");
+        hbox.getChildren().add(lbl);
+        return hbox;
+    }
+
+
 }

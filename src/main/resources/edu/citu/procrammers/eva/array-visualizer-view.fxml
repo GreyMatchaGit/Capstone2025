@@ -51,21 +51,24 @@
                     </StackPane>
                     <StackPane prefHeight="827.0" prefWidth="1653.0">
                         <children>
+                            <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
                             <ImageView fitHeight="984.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
                                     <Image url="@media/img_visualizer_bg.jpg" />
                                 </image>
                             </ImageView>
-                            <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
                         </children>
                     </StackPane>
                 </children>
             </VBox>
-         <AnchorPane fx:id="apChat" layoutX="1470.0" layoutY="276.0" prefHeight="802.0" prefWidth="448.0" />
-         <ImageView fx:id="imgChatbotBtn" fitHeight="72.0" fitWidth="115.0" layoutX="1800.0" layoutY="990.0" pickOnBounds="true" preserveRatio="true">
+         <AnchorPane fx:id="apChat" layoutX="1450.0" layoutY="327.0" prefHeight="618.0" prefWidth="425.0" />
+         <ImageView fx:id="imgChatbotBtn" fitHeight="69.0" fitWidth="98.0" layoutX="1784.0" layoutY="951.0" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@media/img_academy_book.png" />
+               <Image url="@media/img_chatbot_btn.png" />
             </image>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
          </ImageView>
         </AnchorPane>
     </center>

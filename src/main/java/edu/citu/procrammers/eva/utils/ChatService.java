@@ -3,6 +3,7 @@ package edu.citu.procrammers.eva.utils;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.ChatBotController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import org.json.JSONObject;
@@ -60,7 +61,7 @@ public class ChatService {
     public static void loadChatbot(ChatBotController controller, Pane pane){
         try{
             FXMLLoader loader = new FXMLLoader(Eva.class.getResource(Chatbot));
-            BorderPane chatbotUI = loader.load();
+            AnchorPane chatbotUI = loader.load();
             controller = loader.getController();
             controller.setParentContainer(pane);
             pane.getChildren().setAll(chatbotUI);
