@@ -4,11 +4,11 @@ import edu.citu.procrammers.eva.data.AudioSettings;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.User;
 import edu.citu.procrammers.eva.utils.NavService;
+import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
