@@ -139,7 +139,10 @@ public class HashTableController implements Initializable {
 
         if (nextIndex == FINISHED) {
             Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
+
+            // TODO: Implement adding, remove, search
             currentNode.setNumber(value);
+
             ++size;
             System.out.println("Current size is " + size);
             return;
