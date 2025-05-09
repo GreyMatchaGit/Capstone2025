@@ -28,7 +28,7 @@ public class BSTViewController {
     @FXML private Button btnPlay;
     @FXML private Button btnForward;
     @FXML private Slider sliderSpeed;
-    @FXML private AnchorPane apMain;
+    @FXML private AnchorPane apCanvas;
     @FXML private Button btnInsert;
     @FXML private TextField tfInput;
     @FXML private TextField tfDelete;
@@ -48,10 +48,10 @@ public class BSTViewController {
         btnPlay.setDisable(false);
         btnForward.setDisable(true);
 
-        apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
+        apCanvas.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
-            animationManager = new AnimationManager(apMain);
-            BST = new BST(animationManager, apMain.getWidth(), apMain.getHeight(), apMain);
+            animationManager = new AnimationManager(apCanvas);
+            BST = new BST(animationManager, apCanvas.getWidth(), apCanvas.getHeight(), apCanvas);
             System.out.println("BST isStandard = " + BST.isStandard);
         });
 

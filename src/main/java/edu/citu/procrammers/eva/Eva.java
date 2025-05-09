@@ -33,7 +33,7 @@ public class Eva extends Application {
         new NavService(primaryStage);
         NavService.navigateTo(BST);
 //        NavService.navigateTo(Arrays);
-        NavService.setFullScreen(false);
+        NavService.setFullScreen(true);
 //        NavService.setFullScreen(true);
         primaryStage.show();
     }
