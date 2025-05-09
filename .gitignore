@@ -39,3 +39,7 @@ build/
 
 # Ignore config folder
 /config/
+
+# Ignore chatbot json files
+data.json
+prompt.json
