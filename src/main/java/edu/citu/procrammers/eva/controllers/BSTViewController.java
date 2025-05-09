@@ -48,6 +48,9 @@ public class BSTViewController {
         btnPlay.setDisable(false);
         btnForward.setDisable(true);
 
+        tfInput.setPromptText("Value to insert");
+        tfDelete.setPromptText("Value to delete");
+
         apCanvas.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
             animationManager = new AnimationManager(apCanvas);
@@ -61,7 +64,6 @@ public class BSTViewController {
             ChatService.loadChatbot(chatBotController, apChat);
         });
     }
-
 
     private void initializeKeyboardListener() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -157,7 +159,6 @@ public class BSTViewController {
         animationManager.commands = BST.deleteElement(key);
         animationManager.play(this::enableUI);
     }
-
 
     @FXML
     private void onButtonInsertClicked() {
