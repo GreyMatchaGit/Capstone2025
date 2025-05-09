@@ -18,6 +18,7 @@ public class Constant {
         public static final String Conquest = "conquest-view.fxml";
 
         public static final String Chatbot = "chatbot-view.fxml";
+        public static final String GeneralChatbot = "general-chatbot-view.fxml";
 
         public static final String PROMPT_PATH = "prompt.json";
         public static final String DATA_PATH = "data.json";

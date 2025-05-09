@@ -69,4 +69,16 @@ public class ChatService {
             e.printStackTrace();
         }
     }
+
+    public static void loadChatbot(ChatBotController controller, Pane pane, String chatbot){
+        try{
+            FXMLLoader loader = new FXMLLoader(Eva.class.getResource(chatbot));
+            AnchorPane chatbotUI = loader.load();
+            controller = loader.getController();
+            controller.setParentContainer(pane);
+            pane.getChildren().setAll(chatbotUI);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

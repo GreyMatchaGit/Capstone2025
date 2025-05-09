@@ -51,12 +51,12 @@
                     </StackPane>
                     <StackPane prefHeight="827.0" prefWidth="1653.0">
                         <children>
-                            <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
                             <ImageView fitHeight="984.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
                                     <Image url="@media/img_visualizer_bg.jpg" />
                                 </image>
                             </ImageView>
+                            <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
                         </children>
                     </StackPane>
                 </children>

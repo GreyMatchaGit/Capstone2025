@@ -5,9 +5,12 @@ import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -31,11 +34,15 @@ public class ChatBotController {
 
     private Pane parentContainer;
 
+    @FXML
     public void initialize() {
+        if (btnClose != null) {
+            btnClose.setOnAction(e -> {
+                onCloseButtonClicked();
+            });
+        }
+
         btnSubmit.setOnAction(e -> handleChatSubmit());
-        btnClose.setOnAction(e -> {
-            onCloseButtonClicked();
-        });
     }
 
     @FXML
@@ -149,6 +156,4 @@ public class ChatBotController {
         hbox.getChildren().add(lbl);
         return hbox;
     }
-
-
 }
