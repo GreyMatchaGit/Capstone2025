@@ -24,8 +24,8 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
-import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Value.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class DequeViewController {
@@ -45,15 +45,10 @@ public class DequeViewController {
     private Node backMarker;
     private double centerX, centerY;
 
-    private static final Color POSITIVE = Color.ORANGE;
-    private static final Color NEGATIVE = Color.RED;
-    private static final Color SEARCH = Color.GREENYELLOW;
-    private static final Color DEFAULTR = Color.WHITE;
-
     private boolean isChatbotVisible;
 
-    public JSONObject dataJSON;
-    public ChatBotController chatBotController;
+    private JSONObject dataJSON;
+    private ChatBotController chatBotController;
 
     public void initialize() {
         setupGlow(imgBackBtn);
@@ -83,6 +78,8 @@ public class DequeViewController {
 
         ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
+
         imgChatbotBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             if (isChatbotVisible) {

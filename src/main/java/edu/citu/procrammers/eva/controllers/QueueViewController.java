@@ -24,19 +24,13 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
-import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Value.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class QueueViewController {
 
     private double centerX, centerY;
-    private static final Color POSITIVE = Color.ORANGE;
-    private static final Color NEGATIVE = Color.RED;
-    private static final Color SEARCH = Color.GREENYELLOW;
-    private static final Color DEFAULT = Color.BLACK;
-    private static final Color DEFAULTR = Color.WHITE;
-
 
     @FXML private AnchorPane apVisualizer, apChat;
     @FXML private Button btnEnqueue, btnDequeue, btnFront, btnClear;
@@ -51,11 +45,11 @@ public class QueueViewController {
 
     private Node frontMarker;
 
-    public JSONObject dataJSON;
+    private JSONObject dataJSON;
 
-    public ChatBotController chatBotController;
+    private ChatBotController chatBotController;
 
-    public boolean isChatbotVisible;
+    private boolean isChatbotVisible;
 
     public void initialize() {
         setupGlow(imgBackBtn);
@@ -93,6 +87,7 @@ public class QueueViewController {
 
         ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
         imgChatbotBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             if (isChatbotVisible) {

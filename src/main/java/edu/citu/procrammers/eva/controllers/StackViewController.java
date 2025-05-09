@@ -74,10 +74,10 @@ public class StackViewController {
             centerY = apVisualizer.getHeight() / 2;
             pointY = apVisualizer.getHeight() * 0.9;
         });
+
         ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
         apChat.setVisible(false);
-
         imgChatbotBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             if (isChatbotVisible) {
@@ -90,6 +90,8 @@ public class StackViewController {
     }
 
     private void writeDataJSON() {
+        dataJSON.put("type", "stack");
+        dataJSON.put("size", stack.size());
         dataJSON.put("stack", stack.toString());
         ChatService.updateData(dataJSON);
     }

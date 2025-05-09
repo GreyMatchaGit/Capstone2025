@@ -4,21 +4,18 @@ import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
-import edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -34,11 +31,11 @@ public class ArraylistViewController implements Initializable {
 
     private double centerX, centerY;
 
-    public AnchorPane apVisualizer, apChat;
-    public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
-    public ImageView imgChatbotBtn;
-    public TextField tfPromptNum, tfPromptPos;
-    public ImageView imgBackBtn;
+    @FXML private AnchorPane apVisualizer, apChat;
+    @FXML private Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
+    @FXML private ImageView imgChatbotBtn;
+    @FXML private TextField tfPromptNum, tfPromptPos;
+    @FXML private ImageView imgBackBtn;
     public Button[] btns;
 
     private List<ArrayNode> arrayNodes;
@@ -48,7 +45,7 @@ public class ArraylistViewController implements Initializable {
 
     private boolean isChatbotVisible;
 
-    public ChatBotController chatBotController;
+    private ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
