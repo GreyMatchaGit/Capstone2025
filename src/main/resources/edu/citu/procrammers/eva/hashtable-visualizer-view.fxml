@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.HashTableController">
+    <center>
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;">
+                <children>
+                    <StackPane prefHeight="249.0" prefWidth="1921.0">
+                        <children>
+                            <ImageView fitHeight="256.0" fitWidth="1921.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@media/img_toolbar_bg.jpg" />
+                                </image>
+                            </ImageView>
+                            <ToolBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="315.0" prefWidth="1921.0" style="-fx-background-color: transparent;">
+                                <items>
+                                    <Region prefHeight="243.0" prefWidth="101.0" />
+                                    <ImageView fx:id="imgBackBtn" fitHeight="55.0" fitWidth="140.0" onMouseClicked="#navigatePreviousScreen" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@media/img_back_btn.png" />
+                                        </image>
+                                        <cursor>
+                                            <Cursor fx:constant="HAND" />
+                                        </cursor>
+                                    </ImageView>
+                                    <Region prefHeight="243.0" prefWidth="205.0" />
+                                    <ComboBox fx:id="cbCompression" prefHeight="49.0" prefWidth="200.0" promptText="Compression" styleClass="pixel-combobox" />
+                                    <ComboBox fx:id="cbCollision" prefWidth="200.0" promptText="Collision" styleClass="pixel-combobox" />
+                                    <Region prefHeight="243.0" prefWidth="17.0" />
+                                    <TextField fx:id="tfPrompt" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
+                                    <Region prefHeight="243.0" prefWidth="17.0" />
+                                    <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD" />
+                                    <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="REMOVE" />
+                                    <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="SEARCH" />
+                                    <Button fx:id="btnClear" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="CLEAR" />
+                                    <Region prefHeight="104.0" prefWidth="506.0" />
+                                </items>
+                            </ToolBar>
+                     <AnchorPane mouseTransparent="true" prefHeight="170.0" prefWidth="1921.0">
+                        <children>
+                           <Text layoutX="447.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ddd6ca; -fx-font-size: 15;" styleClass="code-snippet-text" text="Compression function" wrappingWidth="200.47004508972168" />
+                           <Text layoutX="651.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ddd6ca; -fx-font-size: 15;" styleClass="code-snippet-text" text="Collision handling" wrappingWidth="200.47004508972168" />
+                        </children>
+                     </AnchorPane>
+                        </children>
+                    </StackPane>
+                    <StackPane prefHeight="827.0" prefWidth="1653.0">
+                        <children>
+                            <ImageView fitHeight="984.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@media/img_visualizer_bg.jpg" />
+                                </image>
+                            </ImageView>
+                            <HBox fx:id="visualizer" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" />
+                        </children>
+                    </StackPane>
+                </children>
+            </VBox>
+        </AnchorPane>
+    </center>
+   <stylesheets>
+      <URL value="@css/styles.css" />
+      <URL value="@css/fonts.css" />
+   </stylesheets>
+</BorderPane>
