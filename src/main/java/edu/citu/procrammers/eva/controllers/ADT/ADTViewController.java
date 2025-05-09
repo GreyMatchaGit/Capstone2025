@@ -55,9 +55,9 @@ public class ADTViewController {
         initializeSlider();
         initializeKeyboardListener();
 
-        btnBackward.setDisable(false);
+        btnBackward.setDisable(true);
         btnPlay.setDisable(false);
-        btnForward.setDisable(false);
+        btnForward.setDisable(true);
 
         apMain.widthProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Width after layout: " + newVal.doubleValue());
@@ -98,15 +98,16 @@ public class ADTViewController {
     }
 
     private void disableUI() {
+        System.out.println("Disabling UI with CURRENTINDEX = " + animationManager.getCurrentIndex());
+        System.out.println("isContinuous = " + animationManager.isContinuous);
         tfInput.setDisable(true);
         tfDelete.setDisable(true);
 
         btnInsert.setDisable(true);
         btnDelete.setDisable(true);
 
-        btnBackward.setDisable(true);
-
-        btnForward.setDisable(true);
+        btnBackward.setDisable(animationManager.isContinuous);
+        btnForward.setDisable(animationManager.isContinuous);
 
         tglSeratoMode.setDisable(true);
 
@@ -120,9 +121,9 @@ public class ADTViewController {
         btnInsert.setDisable(false);
         btnDelete.setDisable(false);
 
-//        btnBackward.setDisable(!(animationManager.isContinuous && tfInput.isDisable()) );
-//        btnPlay.setDisable(false);
-//        btnForward.setDisable(!animationManager.isContinuous || !tfInput.isDisable());
+        btnBackward.setDisable(animationManager.getCurrentIndex() == 0);
+        btnPlay.setDisable(false);
+        btnForward.setDisable(animationManager.getCurrentIndex() == 0);
 
         tglSeratoMode.setDisable(false);
 
@@ -155,7 +156,7 @@ public class ADTViewController {
 
     @FXML private void onDeleteButtonClicked() {
         if (tfDelete.getText().isEmpty()) {return;}
-//        disableUI();
+        disableUI();
         int key = Integer.parseInt(tfDelete.getText());
         clearFields();
         animationManager.commands = BST.deleteElement(key);
@@ -165,8 +166,9 @@ public class ADTViewController {
 
     @FXML
     private void onButtonInsertClicked() {
-        if (tfInput.getText().isEmpty()) {return;}
-//        disableUI();
+        if (tfInput.getText().isEmpty()) { return; }
+        disableUI();
+
         System.out.println("playing speed: " + animationManager.speed + " seconds ");
         int key = Integer.parseInt(tfInput.textProperty().getValue());
         clearFields();
@@ -176,14 +178,14 @@ public class ADTViewController {
     }
 
     @FXML private void onButtonBackwardClicked() {
-//        disableUI();
-        animationManager.undo(this::enableUI);
+        animationManager.undo();
     }
 
     @FXML private void onButtonPlayClicked() {
-//        disableUI();
         animationManager.isContinuous = !animationManager.isContinuous;
         boolean continuous = animationManager.isContinuous;
+
+        disableUI();
 
         btnPlay.setDisable(false);
         btnPlay.setText(continuous ? "Pause" : "Play");

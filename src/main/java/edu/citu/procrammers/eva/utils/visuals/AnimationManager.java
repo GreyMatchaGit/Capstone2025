@@ -100,6 +100,8 @@ public class AnimationManager {
         return null;
     }
 
+    public int getCurrentIndex() { return currentIndex; }
+
     private void step() {
         System.out.println("Stepping...");
         while (currentIndex < commands.size()) {
@@ -114,12 +116,8 @@ public class AnimationManager {
         }
     }
 
-
-
-
-    public void undo(Runnable callback) {
+    public void undo() {
         if (history.isEmpty()) {
-            callback.run();
             System.out.println("No previous commands...");
             return;
         }
@@ -128,7 +126,6 @@ public class AnimationManager {
         Command command = history.pop();
         if (command instanceof StopCommand) {
             System.out.println("Hit StopCommand, stopping undo.");
-            callback.run();
             return;
         }
 
@@ -136,7 +133,7 @@ public class AnimationManager {
         System.out.println("Undo Command (index = " + currentIndex+ "): " + command);
         command.undo(() -> {
             PauseTransition pause = new PauseTransition(Duration.seconds(speed));
-            pause.setOnFinished(e -> undo(callback));
+            pause.setOnFinished(e -> undo());
             pause.play();
         });
     }
@@ -144,30 +141,14 @@ public class AnimationManager {
 
     public void play(Runnable callback) {
         if (currentIndex >= commands.size()) {
-            System.out.print("History: ");
-            while (!history.isEmpty()) {
-                System.out.print(history.pop().toString() + ", ");
-            }
-            System.out.println();
-
-            callback.run();
             System.out.println("No more commands to play");
             history.clear();
             commands.clear();
             currentIndex = 0;
+            callback.run();
             return;
         }
 
-        if (currentIndex == 0) {
-            System.out.print("Commands: ");
-            for (Command command : commands) {
-                System.out.print(command + ", ");
-            }
-            System.out.println();
-        }
-//        Command command = commands.get(currentIndex);
-//        history.push(command);
-//        System.out.println("Executing Command: " + command);
         history.push(new StopCommand());
 
         if (isContinuous) {
