@@ -48,16 +48,8 @@ public class ArraylistViewController implements Initializable {
     private List<ArrayNode> arrayList;
     private int size, capacity, maxCap;
     private JSONObject dataJSON;
-
-    private boolean isChatbotVisible;
-
     public ChatBotController chatBotController;
-
-    private JSONObject dataJSON;
-
     private boolean isChatbotVisible = false;
-
-    private ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
