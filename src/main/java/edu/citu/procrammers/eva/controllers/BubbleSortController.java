@@ -79,10 +79,6 @@ public class BubbleSortController implements Initializable {
             pt.play();
 
             updateCoordinates();
-            for(ArrayNode node : arrayNodes) {
-                System.out.print(node.getX() + " ");
-            }
-            System.out.println();
         }
     }
 
@@ -96,10 +92,6 @@ public class BubbleSortController implements Initializable {
     }
 
     private void sort() {
-        for(ArrayNode node : arrayNodes) {
-            System.out.print(node.getNumber() + " ");
-        }
-        System.out.println();
         int i;
         for (i = 0; i < tempSize; i++) {
             bubbleSortStep(0, 0, false);

@@ -130,8 +130,6 @@ public class ArraylistViewController implements Initializable {
             double totalWidth = (capacity) * 50 + capacity * 5;
             double currentX = centerX + totalWidth;
             double currentY = centerY-50;
-            System.out.println("Pos " + capacity +
-                    " X: " + currentX + " Y: " + currentY + " Capacity: " + capacity);
             VBox vBox = createBoxes(capacity,"", currentX, currentY);
             capacity++;
 

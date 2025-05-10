@@ -3,13 +3,10 @@ package edu.citu.procrammers.eva.utils.animations.bubblesort;
 import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import javafx.animation.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.List;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class BubbleSortAnimations {
 
@@ -57,26 +54,6 @@ public class BubbleSortAnimations {
 
     public static PauseTransition pause(double duration) {
         return new PauseTransition(Duration.seconds(duration));
-    }
-
-    public static FillTransition fillRectangle(double duration, Rectangle r, Color from, Color to) {
-        FillTransition fill = new FillTransition(Duration.seconds(duration), r);
-        fill.setFromValue(from);
-        fill.setToValue(to);
-
-        return fill;
-    }
-
-    public static ParallelTransition pulseNodeAll(List<ArrayNode> arrayNodes) {
-        ParallelTransition pulsePositive = new ParallelTransition();
-        for (ArrayNode node : arrayNodes) {
-            Rectangle rr = node.getRectangle();
-            FillTransition highlight = fillRectangle(0.3, rr, DEFAULTR, POSITIVE);
-            FillTransition reset = fillRectangle(0.3, rr, POSITIVE, DEFAULTR);
-            SequentialTransition st = new SequentialTransition(highlight, reset);
-            pulsePositive.getChildren().add(st);
-        }
-        return pulsePositive;
     }
 
     public static ParallelTransition swapNodes(ArrayNode left, ArrayNode right) {
