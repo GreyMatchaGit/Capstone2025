@@ -62,18 +62,24 @@ public class LinkedListController implements Initializable {
 
         if (curr != null) {
             dataJSON.put("head", curr.value);
-            while (curr != null) {
-                elements.put(curr.value);
-                if (curr.next == null) {
-                    dataJSON.put("tail", curr.value);
-                }
-                curr = curr.next;
-            }
-
-            dataJSON.put("elements", elements);
-
-            ChatService.updateData(dataJSON);
+        } else {
+            dataJSON.put("head", JSONObject.NULL);
         }
+        while(curr != null) {
+            elements.put(curr.value);
+            if(curr.next == null) {
+                dataJSON.put("tail", curr.value);
+            }
+            curr = curr.next;
+        }
+
+        if (elements.isEmpty()) {
+            dataJSON.put("tail", JSONObject.NULL);
+        }
+
+        dataJSON.put("elements", elements);
+
+        ChatService.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON() {
@@ -95,7 +101,7 @@ public class LinkedListController implements Initializable {
             curr = curr.next;
         }
         dataJSON.put("previousElements", elements);
-        ChatService.fileWriter(dataJSON, DATA_PATH);
+        ChatService.updateData(dataJSON);
     }
 
     @FXML

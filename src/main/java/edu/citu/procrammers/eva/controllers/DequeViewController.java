@@ -93,7 +93,7 @@ public class DequeViewController {
 
     private void writePreviousDataJSON() {
         dataJSON.put("previousDeque", deque.toString());
-        ChatService.fileWriter(dataJSON, DATA_PATH);
+        ChatService.updateData(dataJSON);
     }
 
     public void onButtonClick(ActionEvent event) {

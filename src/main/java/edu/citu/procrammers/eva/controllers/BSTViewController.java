@@ -65,11 +65,7 @@ public class BSTViewController {
         ChatService.loadChatbot(chatBotController, apChat);
         imgChatbotBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX(SFX_BUTTON_CLICK);
-            if (isChatbotVisible) {
-                apChat.setVisible(false);
-            } else {
-                apChat.setVisible(true);
-            }
+            apChat.setVisible(!isChatbotVisible);
             isChatbotVisible = !isChatbotVisible;
         });
     }
