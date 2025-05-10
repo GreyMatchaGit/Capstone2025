@@ -8,6 +8,7 @@ import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import edu.citu.procrammers.eva.utils.Constant;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,6 +27,8 @@ import java.util.function.Consumer;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.EMPTY_STRING;
 import static javafx.scene.paint.Color.GREENYELLOW;
+
+import java.util.Objects;
 
 public class ArrayNode {
 
@@ -189,6 +193,12 @@ public class ArrayNode {
     public void setRect(Rectangle rect) { this.rect = rect; }
     public void setValue(String value) { this.value.setText(value); }
     public void setIndex(String index) { this.index.setText(index); }
+<<<<<<<<< Temporary merge branch 1:src/main/java/edu/citu/procrammers/eva/models/data_structures/ArrayNode.java
+    public void setNumber(int number) {
+        this.number = number;
+        if(number == Integer.MIN_VALUE) this.value.setText("");
+        else this.value.setText(String.valueOf(number));
+=========
     public void setNumber(Integer number) {
         this.number = number;
 
@@ -197,6 +207,7 @@ public class ArrayNode {
         }
         else
             setValue(EMPTY_STRING);
+>>>>>>>>> Temporary merge branch 2:src/main/java/edu/citu/procrammers/eva/utils/ArrayNode.java
     }
 
     public void setX(double x) { this.x = x; }

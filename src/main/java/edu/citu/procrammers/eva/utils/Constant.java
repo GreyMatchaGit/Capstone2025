@@ -19,8 +19,28 @@ public class Constant {
 
         public static final String Academy = "academy-view.fxml";
         public static final String Conquest = "conquest-view.fxml";
+        public static final String ArrayListConquest = "arraylist-conquest-view.fxml";
+        public static final String StackConquest = "stack-conquest-view.fxml";
+        public static final String QueueConquest = "queue-conquest-view.fxml";
+        public static final String DequeConquest = "deque-conquest-view.fxml";
 
+        public static final String Chatbot = "chatbot-view.fxml";
+        public static final String GeneralChatbot = "general-chatbot-view.fxml";
+
+        public static final String PROMPT_PATH = "prompt.json";
+        public static final String DATA_PATH = "data.json";
         public static final String Arrays = "array-visualizer-view.fxml";
+        public static final String Stack = "stack-view.fxml";
+        public static final String Queue = "queue-visualizer-view.fxml";
+        public static final String Deque = "deque-visualizer-view.fxml";
+
+        public static final String BST = "bst-visualizer-view.fxml";
+    }
+
+    public static class Value{
+        public static final double BOX_SIZE = 50.0;
+        public static final double OFFSET = 55.0;
+        public static final double FRONT_BOUNDARY_X = 100.0;
         public static final String Stack = "stack-view.fxml";
         public static final String HashTable = "hashtable-visualizer-view.fxml";
     }

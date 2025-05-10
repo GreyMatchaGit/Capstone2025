@@ -2,12 +2,10 @@ package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.data.Database;
-import edu.citu.procrammers.eva.utils.Constant;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;

@@ -12,7 +12,6 @@ import java.util.List;
 
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 
-
 public class ArrayListAnimations {
 
     public static FadeTransition fadeIn(VBox vBox) {
@@ -116,6 +115,7 @@ public class ArrayListAnimations {
             TranslateTransition tLast = slideY(finalVBox, 100);
             fullSequence.getChildren().add(tLast);
         }
+
         fullSequence.play();
     }
 }

@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.*;
@@ -9,23 +10,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.json.JSONObject;
 
 import java.util.Stack;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
+import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+
 public class StackViewController {
     public Button btnPush, btnPop, btnTop, btnClear;
     public AnchorPane apVisualizer;
     public TextField tfPrompt;
     public ImageView imgBackBtn;
+    public ImageView imgChatbotBtn;
+    public AnchorPane apChat;
 
     private double centerX, centerY, pointY, startY;
 
@@ -35,14 +40,23 @@ public class StackViewController {
     private ParallelTransition pt;
     private double originalScaleX, originalScaleY;
 
+    public JSONObject dataJSON;
+
+    public ChatBotController chatBotController;
+
+    private boolean isChatbotVisible;
+
     public void initialize() {
 
         setupGlow(imgBackBtn);
+
+        isChatbotVisible = false;
 
         stack = new Stack<>();
         stackPanes = new Stack<>();
         labels = new Stack<>();
         pt = null;
+        dataJSON = new JSONObject();
 
         // For Animation purposes
         startY = 100;
@@ -60,6 +74,29 @@ public class StackViewController {
             centerY = apVisualizer.getHeight() / 2;
             pointY = apVisualizer.getHeight() * 0.9;
         });
+        ChatService.updateData(new JSONObject());
+        ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
+        });
+    }
+
+    private void writeDataJSON() {
+        dataJSON.put("stack", stack.toString());
+        ChatService.updateData(dataJSON);
+    }
+
+    private void writePreviousDataJSON(){
+        dataJSON.put("previousStack", stack.toString());
+        ChatService.fileWriter(dataJSON, DATA_PATH);
     }
 
     public void onButtonClick(ActionEvent e) {
@@ -110,6 +147,7 @@ public class StackViewController {
         this.originalScaleY = sp.getScaleY();
 
         stack.push(num);
+        writeDataJSON();
         stackPanes.push(sp);
         ft.play();
         pt.play();
@@ -119,7 +157,9 @@ public class StackViewController {
     private void popElement() {
         if (!stack.isEmpty() && !stackPanes.isEmpty()) {
             StackPane sp = stackPanes.pop();
+            writePreviousDataJSON();
             stack.pop();
+            writeDataJSON();
             labels.pop();
             FadeTransition ft = fadeOut(sp);
             TranslateTransition tt = slideUp(sp);

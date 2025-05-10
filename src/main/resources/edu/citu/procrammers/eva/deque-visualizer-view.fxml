@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.DequeViewController">
+    <center>
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;">
+                <children>
+                    <StackPane prefHeight="249.0" prefWidth="1921.0">
+                        <children>
+                            <ImageView fitHeight="256.0" fitWidth="1921.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@media/img_toolbar_bg.jpg" />
+                                </image>
+                            </ImageView>
+                            <ToolBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="315.0" prefWidth="1921.0" style="-fx-background-color: transparent;">
+                                <items>
+                                    <Region prefHeight="243.0" prefWidth="101.0" />
+                                    <ImageView fx:id="imgBackBtn" fitHeight="55.0" fitWidth="140.0" onMouseClicked="#navigatePreviousScreen" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@media/img_back_btn.png" />
+                                        </image>
+                                        <cursor>
+                                            <Cursor fx:constant="HAND" />
+                                        </cursor>
+                                    </ImageView>
+                                    <Region prefHeight="243.0" prefWidth="328.0" />
+                                    <TextField fx:id="tfPrompt" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
+                                    <Region prefHeight="243.0" prefWidth="17.0" />
+                                    <Button fx:id="btnAddFirst" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADDFIRST" />
+                                    <Button fx:id="btnAddLast" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADDLAST" />
+                                    <Button fx:id="btnRemoveFirst" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="REMOVEFIRST" />
+                                    <Button fx:id="btnRemoveLast" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="REMOVELAST" />
+                                    <Button fx:id="btnPeekFirst" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="PEEKFIRST" />
+                                    <Button fx:id="btnPeekLast" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="PEEKLAST" />
+                                    <Button fx:id="btnClear" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="CLEAR" />
+                                    <Region prefHeight="104.0" prefWidth="506.0" />
+                                </items>
+                            </ToolBar>
+                        </children>
+                    </StackPane>
+                    <StackPane prefHeight="827.0" prefWidth="1653.0">
+                        <children>
+                            <ImageView fitHeight="984.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@media/img_visualizer_bg.jpg" />
+                                </image>
+                            </ImageView>
+                            <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+                        </children>
+                    </StackPane>
+                </children>
+            </VBox>
+            <AnchorPane fx:id="apChat" layoutX="1450.0" layoutY="327.0" prefHeight="618.0" prefWidth="425.0" />
+            <ImageView fx:id="imgChatbotBtn" fitHeight="69.0" fitWidth="98.0" layoutX="1800.0" layoutY="990.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@media/img_chatbot_btn.png" />
+                </image>
+            </ImageView>
+        </AnchorPane>
+    </center>
+</BorderPane>

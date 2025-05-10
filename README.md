@@ -1,5 +1,5 @@
 # Project EVA
-*A capstone project for the subject, CSIT284: Object Oriented Programming.*
+*A capstone project for the subject, CSIT284: Object Oriented Programming II*
 
 **Team RaGO🏃🏻**  
 *Tayo'y babangon muli!*
@@ -20,68 +20,35 @@ var members = listOf(
 
 **Project EVA** (Enhanced Visualizer for Algorithms) is an educational JavaFX desktop application designed to help students learn and practice data structures and algorithms through interactive visualizations and gamified challenges. The application bridges the gap between traditional algorithm visualizers and our professor's specific teaching methodology.
 
+Project EVA features an adventure/fantasy-themed environment where the story follows an adventurer venturing through the DSA journey, making learning data structures and algorithms both engaging and educational.
+
 ---
 
 ## 🚀 Main Features
 
 ### 👤 1. User System
 - **Login/Registration:** Username and password authentication
-- **Profile Management:** One profile per user
 - **Progress Tracking:** Saves completion data for both *Academy* and *Conquest* modes
 
 ### 🧭 2. Navigation Structure
-- **Two Primary Modes:**
-    - **Academy Mode (Learning)**
-    - **Conquest Mode (Challenges)**
-- **Home Button:** Always accessible from top navigation to return to the profiles page
+- **Two Primary Pages:**
+    - **Academy Page (Learning)**
+    - **Conquest Page (Challenges)**
+- **Main Menu Selection button:** Always accessible from top navigation to return to the selection page
 
----
+### 🔰 3. JVM (Jay Vince Mode)
+- Professor-specific implementations of data structures and algorithms
+- Features unique removal operations for trees that select the next greatest element (left-most node of the right subtree)
+- Specially designed to align with Professor Jay Vince's teaching methodology
+- Makes the application particularly valuable for current and future students of Sir Jay Vince
 
-## 🎓 Academy Mode (Learning)
+### 🔍 4. Data Structure Visualizer
+- Interactive visualizations of various data structures
+- Step-by-step algorithm execution
 
-### 📚 Topic Selector
-- Categories:
-    - Arrays
-    - Linked Lists
-    - Stacks & Queues
-    - Trees
-    - Graphs
-    - Sorting Algorithms
-- Progress indicators: Checkmarks or percentage complete
-
-### 🔍 Visualizer Panel
-- Interactive JavaFX canvas to animate algorithm behavior
-- Controls:
-    - Step-by-step execution
-    - Speed adjustment
-    - Pause/Play/Reset
-- Accepts custom data input for dynamic learning
-
-### 📝 Concept Notes Panel
-- Curated course notes
-- Key theory explanations
-- Pseudocode and Java code snippets
-- Quick-reference concept guides
-
----
-
-## ⚔️ Conquest Mode (Challenges)
-
-### 1. **Operation Command Game** *(Non-tree structures)*
-- Inspired by **TyperShark**
-- Match target data structure state using typed operations (e.g., `push()`, `pop()`)
-- Threat indicator with time pressure mechanics
-- Increasing difficulty per level
-
-### 2. **Tree Builder Challenge** *(Tree structures)*
-- Drag-and-drop style tree construction
-- Conditions: e.g., "must be balanced", "follow traversal order"
-- Scoring based on time and accuracy
-
-### 🌍 Progression System
-- Map-based interface for navigating challenges
-- Locked/unlocked levels based on completions
-- Increasing difficulty and achievement rewards
+### 🤖 5. Chatbots
+- General chatbot for overall assistance
+- Specific chatbots for each data structure to handle inquiries
 
 ---
 
@@ -97,15 +64,105 @@ var members = listOf(
     - Singleton (user session handling)
 - **JavaFX UI:** Custom interactive components and visual elements
 
+### 💻 Tech Stack
+- **Language:** Java
+- **IDE:** IntelliJ
+- **Database:** MySQL
+- **AI Integration:** OpenAI for chatbot functionality
+- **Design Tools:** Figma for UI/UX
+
 ---
 
-## 📅 Development Priorities
+## 🎓 Academy Page
 
-- Core visualization framework and basic algorithm implementations
-- User authentication system and database connectivity
-- Academy mode with initial algorithm set
-- Conquest mode game mechanics and progression system
-- UI polish and comprehensive algorithm coverage
+### 📚 Topic Selector
+- Lessons:
+    - Arrays
+    - Linked Lists
+    - Stacks
+    - Queues and Deques
+    - BST
+    - HashTable
+
+### 🔍 Visualizer Panel
+- Interactive JavaFX canvas to animate algorithm behavior
+- Controls:
+    - Step-by-step execution
+    - Speed adjustment
+    - Pause/Play/Reset
+- Accepts custom data input for dynamic learning
+
+#### Data Structure Visualizers
+
+##### Chatbot
+- Utilizes OpenAI's models via OpenAI's API
+- Reads and understands data structure visualizations, including:
+  ArrayList, Stack, Queue, HashTable, Deque, and Binary Tree
+
+##### Queue
+- Visualizes operations such as:
+  - enqueue(num)
+  - dequeue()
+  - front()
+  - clear()
+
+##### Deque
+- Visualizes operations such as:
+  - addFirst(num)
+  - addLast(num)
+  - removeFirst()
+  - removeLast()
+  - peekFirst()
+  - peekLast()
+  - clear()
+
+##### BST (Binary Search Tree)
+- Implemented JVM (Jay Vince Mode)
+- Standard Successor (gets successor: max of left subtree)
+- Implemented visual controls (pause, play, forward, and backward)
+- Dynamic tree restructuring: tree adjusts dynamically based on the nodes
+
+##### HashTable
+- Linear Probing
+- Quadratic Probing
+- Separate Chaining
+
+### 📝 Concept Notes Panel
+- Curated course notes
+- Key theory explanations
+- Pseudocode and Java code snippets
+- Quick-reference concept guides
+
+### 💻 Code Snippets Panel
+- Curated course notes
+- Key theory explanations
+- Pseudocode and Java code snippets
+- Quick-reference concept guides
+
+---
+
+## ⚔️ Conquest Page
+
+### 🎮 Spellbreakers
+
+The Conquest mode features a game called "Spellbreakers" where players face challenges across different data structure domains:
+
+#### ArrayList Conquest
+- Progressive challenges testing ArrayList operations and concepts
+
+#### Stack Conquest
+- Challenges focused on Stack operations and LIFO principles
+
+#### Queue Conquest
+- Missions built around Queue operations and FIFO concepts
+
+#### Deque Conquest
+- Advanced levels exploring Deque operations and versatility
+
+### 🌍 Progression System
+- Map-based interface for navigating challenges
+- Locked/unlocked levels based on completions
+- Increasing difficulty and achievement rewards
 
 ---
 

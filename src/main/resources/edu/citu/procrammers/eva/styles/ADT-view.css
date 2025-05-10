@@ -1,0 +1,53 @@
+.button {
+    -fx-background-color: transparent;
+    -fx-background-size: 24px 24px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 10;
+}
+
+.play-button {
+    -fx-background-image: url("../icons/play-icon.png");
+}
+
+.pause-button {
+    -fx-background-image: url("../icons/pause-icon.png");
+}
+
+.next-button {
+    -fx-background-image: url("../icons/forward-icon.png");
+}
+
+.back-button {
+    -fx-background-image: url("../icons/backward-icon.png");
+}
+
+/*.switch-toggle {*/
+/*    -fx-background-color: #ccc;*/
+/*    -fx-background-radius: 20;*/
+/*    -fx-padding: 0;*/
+/*    -fx-pref-width: 50;*/
+/*    -fx-pref-height: 30;*/
+/*    -fx-cursor: hand;*/
+/*    -fx-text-fill: transparent;*/
+/*    -fx-border-color: transparent;*/
+/*    -fx-alignment: center-left;*/
+/*    -fx-content-display: graphic-only;*/
+/*}*/
+
+/*.switch-toggle:selected {*/
+/*    -fx-background-color: #4cd964;*/
+/*    -fx-alignment: center-right;*/
+/*}*/
+
+.thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+    -fx-min-width: 22;
+    -fx-min-height: 22;
+    -fx-max-width: 22;
+    -fx-max-height: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 2, 0.0, 0, 1);
+}
+
+

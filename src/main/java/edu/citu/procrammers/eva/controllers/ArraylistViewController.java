@@ -1,6 +1,7 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.*;
@@ -32,18 +34,27 @@ public class ArraylistViewController implements Initializable {
 
     private double centerX, centerY;
 
-    public AnchorPane apVisualizer;
+    public AnchorPane apVisualizer, apChat;
     public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
     public TextField tfPromptNum, tfPromptPos;
+    public ImageView imgChatbotBtn;
     public ImageView imgBackBtn;
     public Button[] btns;
 
     private List<ArrayNode> arrayNodes;
+    private List<ArrayNode> arrayList;
     private int size, capacity, maxCap;
+    private JSONObject dataJSON;
+
+    private boolean isChatbotVisible;
+
+    public ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setupGlow(imgBackBtn);
+        setupGlow(imgBackBtn, imgChatbotBtn);
+
+        isChatbotVisible = false;
 
         arrayNodes = new ArrayList<>();
         btns = new Button[]{btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear};
@@ -53,12 +64,13 @@ public class ArraylistViewController implements Initializable {
         size=0;
         capacity=0;
         maxCap = 20;
+        dataJSON = new JSONObject();
 
         apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 Platform.runLater(() -> {
-                    double centerX = (apVisualizer.getWidth() / 2);
-                    double centerY = (apVisualizer.getHeight() / 2);
+                    double centerX = apVisualizer.getWidth() / 2;
+                    double centerY = apVisualizer.getHeight() / 2;
                     this.centerX = centerX;
                     this.centerY = centerY;
                 });
@@ -78,6 +90,32 @@ public class ArraylistViewController implements Initializable {
         Platform.runLater(() -> {
             dynamicAddResizeList(5);
         });
+
+        ChatService.updateData(new JSONObject());
+        ChatService.loadChatbot(chatBotController, apChat);
+        apChat.setVisible(false);
+
+        imgChatbotBtn.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            if (isChatbotVisible) {
+                apChat.setVisible(false);
+            } else {
+                apChat.setVisible(true);
+            }
+            isChatbotVisible = !isChatbotVisible;
+        });
+    }
+
+    private void writeDataJSON() {
+        dataJSON.put("type", "arraylist");
+        dataJSON.put("size", arrayList.size());
+        dataJSON.put("elements", arrayList.toString());
+        ChatService.updateData(dataJSON);
+    }
+
+    private void writePreviousDataJSON(){
+        dataJSON.put("previousArray", arrayList.toString());
+        ChatService.fileWriter(dataJSON, DATA_PATH);
     }
 
     public void onButtonClick(ActionEvent event) {
@@ -153,6 +191,7 @@ public class ArraylistViewController implements Initializable {
         int removable = Math.max(0, capacity - minCapacity);
         int actualRemove = Math.min(n, removable);
 
+        // Highlight Everything to Delete
         for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
             ArrayNode arrayNode = arrayNodes.get(i);
             Rectangle r = arrayNode.getRectangle();
@@ -160,6 +199,7 @@ public class ArraylistViewController implements Initializable {
             highlight.play();
         }
 
+        // Destroy All Boxes
         for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
             ArrayNode arrayNode = arrayNodes.get(i);
             VBox vb = arrayNode.getVBox();
@@ -182,8 +222,11 @@ public class ArraylistViewController implements Initializable {
             disableButtons(false);
             return;
         }
+        if(num == Integer.MIN_VALUE) return;
+        writeDataJSON();
 
         if(size == capacity) {
+            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -211,6 +254,7 @@ public class ArraylistViewController implements Initializable {
         }
 
         if(size == capacity) {
+            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -334,9 +378,11 @@ public class ArraylistViewController implements Initializable {
         }
 
         traversal.play();
+
     }
 
     private ArrayNode searchHelper(int num, SequentialTransition traversal) {
+
         int index;
         for (index = 0; index < size; index++) {
             ArrayNode currentNode = arrayNodes.get(index);
@@ -388,6 +434,8 @@ public class ArraylistViewController implements Initializable {
 
     // Better Utilities
     private VBox createBoxes(int pos, String num, double x, double y) {
+        System.out.println("Pos " + pos +
+                " X: " + x + " Y: " + y + " Capacity: " + capacity);
         ArrayNode arrayNode = new ArrayNode(num, pos, x, y);
         arrayNodes.add(pos, arrayNode);
         VBox vbox = arrayNode.getVBox();
