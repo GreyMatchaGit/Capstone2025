@@ -42,8 +42,7 @@ public class QueueConquestController {
     public TextArea taNarration;
     public HBox hbHealthContainer;
     public Label lblRoundCounter;
-    
-    // New UI elements for victory/lose screen
+
     public StackPane spGameStatusPane;
     public StackPane spVictoryContainer;
     public StackPane spLoseContainer;
@@ -118,8 +117,7 @@ public class QueueConquestController {
         tfSpellCommand.setOnAction(e -> {
             processSpellCommand();
         });
-        
-        // Set up retry button
+
         btnRetry.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             retryLevel();
@@ -342,13 +340,11 @@ public class QueueConquestController {
                 }
                 return;
             }
-            
-            // Play attack sound for any successful spell operation
+
             SoundManager.playSFX("sfx/attack.MP3");
             
             updateQueueDisplay();
 
-            // Check if queues match by comparing their string representations
             if (formatQueueDisplay(currentQueue).equals(formatQueueDisplay(targetQueue))) {
                 stopTimer();
                 gameActive = false;
@@ -361,7 +357,6 @@ public class QueueConquestController {
                     currentRound.set(currentRound.get() + 1);
                     taNarration.appendText("Prepare for the next spell...\n");
 
-                    // Play next round sound effect
                     SoundManager.playSFX("sfx/next-round.MP3");
 
                     Timeline nextRoundDelay = new Timeline(

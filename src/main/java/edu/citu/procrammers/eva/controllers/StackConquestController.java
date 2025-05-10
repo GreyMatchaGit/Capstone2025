@@ -41,8 +41,7 @@ public class StackConquestController {
     public TextArea taNarration;
     public HBox hbHealthContainer;
     public Label lblRoundCounter;
-    
-    // New UI elements for victory/lose screen
+
     public StackPane spGameStatusPane;
     public StackPane spVictoryContainer;
     public StackPane spLoseContainer;

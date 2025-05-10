@@ -157,7 +157,7 @@
                                     <Image url="@media/img_lose_title.png" />
                                  </image>
                               </ImageView>
-                              <Button fx:id="btnRetry" mnemonicParsing="false" prefHeight="51.0" prefWidth="134.0" styleClass="pixel-button" text="Retry" translateY="200.0" />
+                              <Button fx:id="btnRetry" mnemonicParsing="false" prefHeight="51.0" prefWidth="134.0" styleClass="pixel-button" text="Retry" />
                            </children>
                         </VBox>
                      </children>

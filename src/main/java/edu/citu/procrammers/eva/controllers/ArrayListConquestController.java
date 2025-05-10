@@ -46,8 +46,7 @@ public class ArrayListConquestController {
     public TextArea taNarration;
     public HBox hbHealthContainer;
     public Label lblRoundCounter;
-    
-    // New UI elements for victory/lose screen
+
     public StackPane spGameStatusPane;
     public StackPane spVictoryContainer;
     public StackPane spLoseContainer;
@@ -122,8 +121,7 @@ public class ArrayListConquestController {
         tfSpellCommand.setOnAction(e -> {
             processSpellCommand();
         });
-        
-        // Set up retry button
+
         btnRetry.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             retryLevel();
@@ -189,7 +187,6 @@ public class ArrayListConquestController {
     }
     
     private void setupNewRound() {
-        // Hide the game status pane if it's visible
         spGameStatusPane.setVisible(false);
         
         if (currentIndex < rounds.size()) {
@@ -231,20 +228,17 @@ public class ArrayListConquestController {
         stopTimer();
         
         pbTimeLimit.setProgress(1.0);
-        
-        // Calculate number of frames for smooth animation (25 frames per second)
+
         int totalFrames = 40 * 25;  // 40 seconds * 25 fps
         double decrementPerFrame = 1.0 / totalFrames;
         
         timerTimeline = new Timeline();
         timerTimeline.setCycleCount(totalFrames);
-        
-        // Add frame for decrementing progress
+
         KeyFrame keyFrame = new KeyFrame(Duration.millis(40), event -> {
             double newProgress = pbTimeLimit.getProgress() - decrementPerFrame;
             pbTimeLimit.setProgress(newProgress);
-            
-            // Check if we've reached the end
+
             if (newProgress <= 0) {
                 timeExpired();
             }
@@ -331,7 +325,6 @@ public class ArrayListConquestController {
                     currentRound.set(currentRound.get() + 1);
                     taNarration.appendText("Prepare for the next spell...\n");
 
-                    // Play next round sound effect instead of btn_click
                     SoundManager.playSFX("sfx/next-round.MP3");
                     
                     Timeline nextRoundDelay = new Timeline(
