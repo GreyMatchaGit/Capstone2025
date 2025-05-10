@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
@@ -96,7 +97,7 @@ public class StackViewController {
 
     private void writePreviousDataJSON(){
         dataJSON.put("previousStack", stack.toString());
-        ChatService.fileWriter(dataJSON, DATA_PATH);
+        ChatService.updateData(dataJSON);
     }
 
     public void onButtonClick(ActionEvent e) {
@@ -278,6 +279,7 @@ public class StackViewController {
 
     public void navigatePreviousScreen() {
         SoundManager.playSFX(SFX_BUTTON_CLICK);
+        ArrayNode.apVisualizer = null;
         NavService.navigateTo(Academy);
     }
 }

@@ -90,7 +90,7 @@ public class QueueViewController {
 
     private void writePreviousDataJSON(){
         dataJSON.put("previousQueue", queue.toString());
-        ChatService.fileWriter(dataJSON, DATA_PATH);
+        ChatService.updateData(dataJSON);
     }
 
 

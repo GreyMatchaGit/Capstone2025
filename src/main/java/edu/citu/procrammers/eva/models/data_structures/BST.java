@@ -69,7 +69,7 @@ public class BST extends Tree {
 
     private void writePreviousDataJSON(){
         dataJSON.put("previousTree", buildTreeJSON(root));
-        ChatService.fileWriter(dataJSON, DATA_PATH);
+        ChatService.updateData(dataJSON);
     }
 
 
