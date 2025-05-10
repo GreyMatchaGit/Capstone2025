@@ -28,8 +28,8 @@ public class Eva extends Application {
         new NavService(primaryStage);
 //        NavService.navigateTo(Splash);
 //        NavService.navigateTo(Academy);
-        NavService.navigateTo(Arrays);
-//        NavService.navigateTo(Bubble);
+//        NavService.navigateTo(Arrays);
+        NavService.navigateTo(Bubble);
         NavService.setFullScreen(false);
         primaryStage.show();
     }

@@ -20,6 +20,7 @@ public class Constant {
 
         public static final String Arrays = "array-visualizer-view.fxml";
         public static final String Stack = "stack-view.fxml";
+        public static final String Bubble = "bubblesort-visualizer-view.fxml";
 
         public static final Color POSITIVE = Color.ORANGE;
         public static final Color NEGATIVE = Color.RED;
