@@ -14,14 +14,12 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.bubblesort.BubbleSortAnimations.*;
+import static java.util.Collections.swap;
 
 public class BubbleSortController implements Initializable {
 
@@ -92,50 +90,23 @@ public class BubbleSortController implements Initializable {
     }
 
     private void sort() {
-        int i;
-        for (i = 0; i < tempSize; i++) {
-            bubbleSortStep(0, 0, false);
-        }
         btnSort.setDisable(true);
-    }
-
-    private void bubbleSortStep(int i, int j, boolean swapped) {
-        if (i >= tempSize) return;
-
-        if (j < tempSize - i - 1) {
-            if (arrayNodes.get(j).getNumber() > arrayNodes.get(j + 1).getNumber()) {
-
-                ParallelTransition pt = swapAnimation(j, j + 1);
-                pt.setOnFinished(e -> {
-                    // Continue to next step
-//                    ArrayNode left = arrayNodes.get(j);
-//                    ArrayNode right = arrayNodes.get(j + 1);
-//                    arrayNodes.set(j, right);
-//                    arrayNodes.set(j + 1, left);
-//                    updateCoordinates();
-//                    updateIndexes();
-                    bubbleSortStep(i, j + 1, true);
-                });
-                PauseTransition pause = pause(0.25);
-                pause.setOnFinished(e -> {
-                    int temp = numbers.get(j);
-                    numbers.set(j, numbers.get(j+1));
-                    numbers.set(j+1, temp);
-                    updateNumbers();
-                    pt.play();
-                });
-                pause.play();
-            } else {
-                // No swap needed, continue to next comparison
-                bubbleSortStep(i, j + 1, swapped);
+        SequentialTransition sq = new SequentialTransition();
+        for (int i = 0; i < tempSize; i++) {
+            for (int j = 0; j < tempSize - i - 1; j++) {
+                if (numbers.get(j + 1) < numbers.get(j)) {
+                    sq.getChildren().addAll(swapAnimation(j, j + 1));
+                    swap(numbers, j, j + 1);
+                }
             }
-        } else {
-            // End of inner loop; if no swaps were made, array is sorted
-            if (!swapped) return;
-
-            // Start next pass
-            bubbleSortStep(i + 1, 0, false);
         }
+        sq.setOnFinished(e -> btnSort.setDisable(false));
+        sq.play();
+
+        for (int i = 0; i < tempSize; i++) {
+            System.out.print(numbers.get(i) + ", ");
+        }
+        System.out.println();
     }
 
     private void updateCoordinates() {
@@ -162,9 +133,11 @@ public class BubbleSortController implements Initializable {
         }
     }
 
-    private ParallelTransition swapAnimation(int leftIndex, int rightIndex) {
+    private Transition swapAnimation(int leftIndex, int rightIndex) {
         ArrayNode left = arrayNodes.get(leftIndex);
         ArrayNode right = arrayNodes.get(rightIndex);
+
+        SequentialTransition st = new SequentialTransition();
 
         // First vertical translate
         TranslateTransition leftToUp = new TranslateTransition(Duration.millis(200), left.getVBox());
@@ -173,39 +146,47 @@ public class BubbleSortController implements Initializable {
         TranslateTransition rightToDown = new TranslateTransition(Duration.millis(200), right.getVBox());
         rightToDown.setToY(60);
 
+        ParallelTransition firstMove = new ParallelTransition();
+        firstMove.getChildren().addAll(leftToUp, rightToDown);
+
         // Horizontal translate
         TranslateTransition leftToRight = new TranslateTransition(Duration.millis(600), left.getVBox());
         leftToRight.setToX(right.getVBox().getLayoutX() - left.getVBox().getLayoutX());
         TranslateTransition rightToLeft = new TranslateTransition(Duration.millis(600), right.getVBox());
         rightToLeft.setToX(left.getVBox().getLayoutX() - right.getVBox().getLayoutX());
 
+        ParallelTransition secondMove = new ParallelTransition();
+        secondMove.getChildren().addAll(leftToRight, rightToLeft);
+
         // Final vertical translate, remember left and right are swapped at this point but their names retain.
-        TranslateTransition leftToDown = new TranslateTransition(Duration.millis(200), left.getVBox());
+        TranslateTransition leftToDown = new TranslateTransition(Duration.millis(300), left.getVBox());
         leftToDown.setToY(0);
-        TranslateTransition rightToUp = new TranslateTransition(Duration.millis(200), right.getVBox());
+        TranslateTransition rightToUp = new TranslateTransition(Duration.millis(300), right.getVBox());
         rightToUp.setToY(0);
 
+        ParallelTransition thirdMove = new ParallelTransition();
+        thirdMove.getChildren().addAll(leftToDown, rightToUp);
+
+        st.getChildren().addAll(firstMove, secondMove, thirdMove);
         // On finish
-        leftToUp.setOnFinished(e -> leftToRight.play());
-        rightToDown.setOnFinished(e -> rightToLeft.play());
-        leftToRight.setOnFinished(e -> leftToDown.play());
-        rightToLeft.setOnFinished(e -> rightToUp.play());
-        leftToDown.setOnFinished(e -> {
+
+        st.setOnFinished(e -> {
 //            left.getVBox().setLayoutX(left.getVBox().getLayoutX() + left.getVBox().getTranslateX());
 //            left.getVBox().setLayoutY(left.getVBox().getLayoutY() + left.getVBox().getTranslateY());
             left.getVBox().setTranslateX(0);
             left.getVBox().setTranslateY(0);
-        });
-        rightToUp.setOnFinished(e -> {
-//            right.getVBox().setLayoutX(right.getVBox().getLayoutX() + right.getVBox().getTranslateX());
-//            right.getVBox().setLayoutY(right.getVBox().getLayoutY() + right.getVBox().getTranslateY());
+
             right.getVBox().setTranslateX(0);
             right.getVBox().setTranslateY(0);
+
+            int temp = right.getNumber();
+            right.setNumber(left.getNumber());
+            left.setNumber(temp);
+            System.out.println("swap animation done");
         });
 
         // Play altogether
-        ParallelTransition pt = new ParallelTransition(leftToUp, rightToDown, pause(1.75));
-        return pt;
+        return st;
     }
 
     private void updateNumbers() {
