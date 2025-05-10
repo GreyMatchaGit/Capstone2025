@@ -8,7 +8,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,8 +18,8 @@ public class LinkedListAnimation {
     private HashMap<String, SinglyNode> nodes;
     private HashMap<String, SinglyNodeGraphic> graphicNodes;
     private ArrayList<Arrow> arrows;
-    public Text head;
-    public Text tail;
+    public Text headLabel;
+    public Text tailLabel;
 
     public LinkedListAnimation(AnchorPane canvas, SinglyLinkedList linkedList) {
         this.canvas = canvas;
@@ -28,8 +27,10 @@ public class LinkedListAnimation {
         nodes = new HashMap<>();
         graphicNodes = new HashMap<>();
         arrows = new ArrayList<>();
-        head = new Text("HEAD");
-        tail = new Text(" TAIL");
+        headLabel = new Text("HEAD");
+        tailLabel = new Text(" TAIL");
+        headLabel.setStyle("-fx-font-size: 14px; -fx-fill: #E9DBD5;");
+        tailLabel.setStyle("-fx-font-size: 14px; -fx-fill: #E9DBD5;");
     }
 
     public void drawNode(SinglyNode node) {
@@ -110,28 +111,26 @@ public class LinkedListAnimation {
     InvalidationListener oldTailListener = null;
 
     public void updatePointers() {
-        head.setStyle("-fx-font-size: 14px; -fx-fill: #E9DBD5;");
-        tail.setStyle("-fx-font-size: 14px; -fx-fill: #E9DBD5;");
 
-        if (!canvas.getChildren().contains(head)) {
-            canvas.getChildren().add(head);
+        if (!canvas.getChildren().contains(headLabel)) {
+            canvas.getChildren().add(headLabel);
         }
-        if (!canvas.getChildren().contains(tail)) {
-            canvas.getChildren().add(tail);
+        if (!canvas.getChildren().contains(tailLabel)) {
+            canvas.getChildren().add(tailLabel);
         }
 
-        if (linkedList.headProperty.get() == null) {
+        if (linkedList.head == null) {
             System.out.println("Linkedlist is empty...");
-            head.setVisible(false);
-            tail.setVisible(false);
+            headLabel.setVisible(false);
+            tailLabel.setVisible(false);
             return;
         }
 
-        head.setVisible(true);
-        tail.setVisible(true);
+        headLabel.setVisible(true);
+        tailLabel.setVisible(true);
 
-        Bounds headBounds = head.getLayoutBounds();
-        Bounds tailBounds = tail.getLayoutBounds();
+        Bounds headBounds = headLabel.getLayoutBounds();
+        Bounds tailBounds = tailLabel.getLayoutBounds();
 
         double headWidth = headBounds.getWidth();
         double tailWidth =  tailBounds.getWidth();
@@ -142,21 +141,21 @@ public class LinkedListAnimation {
         System.out.println("LinkedList head is " + linkedList.headProperty.get().value);
         System.out.println("LinkedList tail is " + linkedList.tailProperty.get().value);
 
-        if (oldHeadListener != null) {
+        if (oldHead != null && oldHeadListener != null) {
             oldHead.layoutXProperty().removeListener(oldHeadListener);
         }
-        if (oldTailListener != null) {
+        if (oldTail != null && oldTailListener != null) {
             oldTail.layoutXProperty().removeListener(oldTailListener);
         }
 
         InvalidationListener headListener = (_) -> {
-            head.setLayoutX(headGraphic.getLayoutX() + SinglyNode.radius - headWidth / 2.0);
-            head.setLayoutY(headGraphic.getLayoutY() - SinglyNode.radius * 0.5);
+            headLabel.setLayoutX(headGraphic.getLayoutX() + SinglyNode.radius - headWidth / 2.0);
+            headLabel.setLayoutY(headGraphic.getLayoutY() - SinglyNode.radius * 0.5);
         };
 
         InvalidationListener tailListener = (_) -> {
-            tail.setLayoutX(tailGraphic.getLayoutX() + SinglyNode.radius - tailWidth / 2.0);
-            tail.setLayoutY(tailGraphic.getLayoutY() + SinglyNode.radius * 3);
+            tailLabel.setLayoutX(tailGraphic.getLayoutX() + SinglyNode.radius - tailWidth / 2.0);
+            tailLabel.setLayoutY(tailGraphic.getLayoutY() + SinglyNode.radius * 3);
         };
 
 

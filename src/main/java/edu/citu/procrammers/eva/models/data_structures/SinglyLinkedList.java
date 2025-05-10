@@ -23,8 +23,8 @@ public class SinglyLinkedList {
     }
 
     // Main head and tail
-    private SinglyNode head;
-    private SinglyNode tail;
+    public SinglyNode head;
+    public SinglyNode tail;
 
     // Properties to bind to the UI
     public final ObjectProperty<SinglyNode> headProperty = new SimpleObjectProperty<>(null);
@@ -169,12 +169,12 @@ public class SinglyLinkedList {
         }
 
         if (head == tail) {
-            animation.removeNode(head);
+            SinglyNode nodeToRemove = head;
             head = null;
             tail = null;
-
-            headProperty.set(head);
-            tailProperty.set(tail);
+            headProperty.set(null);
+            tailProperty.set(null);
+            animation.removeNode(nodeToRemove);
         } else {
             SinglyNode nodeToRemove = head;
             head = head.next;
@@ -206,9 +206,11 @@ public class SinglyLinkedList {
 
         SinglyNode nodeToRemove = tail;
         tail = prevToNodeToRemove;
+        tail.next = null;
+
         headProperty.set(head);
         tailProperty.set(tail);
-        tail.next = null;
+
         animation.disconnectNode(prevToNodeToRemove, nodeToRemove);
         animation.removeNode(nodeToRemove);
 
@@ -281,7 +283,7 @@ public class SinglyLinkedList {
                 System.out.print(", ");
             current = current.next;
         }
-        System.out.println("]");
+        System.out.printf("] with size: %d\n", size);
     }
 
     private double getVertMid() {
