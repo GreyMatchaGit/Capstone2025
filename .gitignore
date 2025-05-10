@@ -41,5 +41,5 @@ build/
 /config/
 
 # Ignore chatbot json files
-data.json
-prompt.json
+**/data.json
+**/prompt.json
