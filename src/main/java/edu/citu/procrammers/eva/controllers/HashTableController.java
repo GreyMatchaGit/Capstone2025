@@ -80,7 +80,7 @@ public class HashTableController implements Initializable {
 
             if (size == capacity) {
                 System.out.println("Array is currently full.");
-                pulseAllNodes(1000);
+                pulseAllNodes(1000, arrayNodes);
                 return;
             }
 
@@ -137,7 +137,7 @@ public class HashTableController implements Initializable {
             if (arrayNodeAtIndex.getNumber() == value) {
                 select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
             }
-            else if (arrayNodeAtIndex.getNumber() == SENTINEL) {
+            else if (arrayNodeAtIndex.getNumber() == SENTINEL || SEPARATE_CHAINING.equals(cbCollision.getValue())) {
                 handleCollision(index, value, "btnSearch");
             }
             else {
@@ -154,7 +154,7 @@ public class HashTableController implements Initializable {
 
         switch (cbCollision.getValue()) {
             case SEPARATE_CHAINING:
-                collision = new SeparateChainingStrategy(arrayNodes, value);
+                collision = new SeparateChainingStrategy(arrayNodes, value, buttonId);
                 break;
             case LINEAR_PROBING:
                 collision = new LinearProbingStrategy(arrayNodes, value, buttonId);
@@ -176,17 +176,22 @@ public class HashTableController implements Initializable {
 
     private void handleCollisionHelper(int index, int value, CollisionStrategy strategy, String buttonId) {
         ArrayNode currentNode = arrayNodes.get(index);
-
         int nextIndex = strategy.handleCollision(index);
 
         if (nextIndex == FINISHED) {
-            // TODO: Implement adding, remove, search
+            if (strategy instanceof SeparateChainingStrategy) {
+                Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
+//                ++size;
+                return;
+            }
+
             switch(buttonId) {
                 case "btnAdd":
+                    System.out.println("ADDING");
+
                     Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
                     currentNode.setNumber(value);
-
-                    ++size;
+                    size++;
                     System.out.println("Current size is " + size);
                     return;
                 case "btnRemove":
@@ -231,11 +236,23 @@ public class HashTableController implements Initializable {
         size = 0;
 
         try {
-            for (int i = 0; i < capacity; ++i) {
-                ArrayNode newNode = new ArrayNode();
-                newNode.setNumber(EMPTY);
-                arrayNodes.add(newNode);
+            if (SEPARATE_CHAINING.equals(cbCollision.getValue()) ) {
+                System.out.println("SEPARATE_CHAINING");
+                for (int i = 0; i < capacity; ++i) {
+                    ArrayNode newNode = new ArrayNode();
+                    newNode.setNumber(FULL);
+                    newNode.setValue("↓");
+                    arrayNodes.add(newNode);
+                }
             }
+            else {
+                for (int i = 0; i < capacity; ++i) {
+                    ArrayNode newNode = new ArrayNode();
+                    newNode.setNumber(EMPTY);
+                    arrayNodes.add(newNode);
+                }
+            }
+
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
@@ -261,7 +278,7 @@ public class HashTableController implements Initializable {
         });
     }
 
-    private void select(ArrayNode arrayNode, long durationInMillis, Color color) {
+    public static void select(ArrayNode arrayNode, long durationInMillis, Color color) {
         pulseNode(arrayNode, Constant.Color.DEFAULT, color).play();
         fadeColorTo(arrayNode, Constant.Color.DEFAULTR, color).play();
 
@@ -273,13 +290,13 @@ public class HashTableController implements Initializable {
         pause.play();
     }
 
-    private void pulseAllNodes(long durationInMillis) {
+    public static void pulseAllNodes(long durationInMillis, List<ArrayNode> arrayNodes) {
         for (ArrayNode arrayNode : arrayNodes) {
             select(arrayNode, durationInMillis, SUNSET_ORANGE);
         }
     }
 
-    private void check(ArrayNode arrayNode, long durationInMillis) {
+    public static void check(ArrayNode arrayNode, long durationInMillis) {
 
         pulseNode(arrayNode, Constant.Color.DEFAULT, PASTEL_ORANGE).play();
         fadeColorTo(arrayNode, Constant.Color.DEFAULTR, PASTEL_ORANGE).play();
@@ -292,7 +309,7 @@ public class HashTableController implements Initializable {
         pause.play();
     }
 
-    private Timeline fadeColorTo(ArrayNode arrayNode, Color from, Color to) {
+    public static Timeline fadeColorTo(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO,
                 new KeyValue(arrayNode.getRectangle().fillProperty(), from)
@@ -307,7 +324,7 @@ public class HashTableController implements Initializable {
         return timeline;
     }
 
-    private Timeline pulseNode(ArrayNode arrayNode, Color from, Color to) {
+    public static Timeline pulseNode(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO,
                 new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
@@ -340,7 +357,7 @@ public class HashTableController implements Initializable {
     }
 
     public void clear() {
-        pulseAllNodes(1000);
+        pulseAllNodes(1000, arrayNodes);
         PauseTransition pauseTransition = new PauseTransition(Duration.millis(1300));
         pauseTransition.setOnFinished(actionEvent -> initHashTable(5));
         pauseTransition.play();

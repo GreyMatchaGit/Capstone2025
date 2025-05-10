@@ -26,7 +26,6 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
 
     @Override
     public int handleCollision(int index) {
-
         /*
          * Param: Index is initially the result from the compression function.
          * Return: FINISHED if it found the index to insert the value in.

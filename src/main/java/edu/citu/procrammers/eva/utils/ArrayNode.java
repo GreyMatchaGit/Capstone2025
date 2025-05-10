@@ -1,5 +1,7 @@
 package edu.citu.procrammers.eva.utils;
 
+import edu.citu.procrammers.eva.controllers.HashTableController;
+import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -8,11 +10,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
+import static edu.citu.procrammers.eva.utils.Constant.Color.PASTEL_ORANGE;
 import static edu.citu.procrammers.eva.utils.Constant.EMPTY_STRING;
+import static javafx.scene.paint.Color.GREENYELLOW;
 
 public class ArrayNode {
 
@@ -24,12 +30,15 @@ public class ArrayNode {
         }
     }
 
+    private static final int BUCKET_CAPACITY = 4;
     private VBox vbox;
     private StackPane sp;
     private Rectangle rect;
     private Label value, index;
     private int number;
     private double x, y; // Coordinates
+
+    private int id;
 
     // For separate chaining
     private VBox bucketContainer;
@@ -108,8 +117,43 @@ public class ArrayNode {
 
     public int addToBucket(int number) {
         ArrayNode newNode = new ArrayNode(bucketContainer);
+        newNode.id = bucket.size();
         newNode.setNumber(number);
         bucket.add(newNode);
+        return bucket.size();
+    }
+
+    public ArrayNode searchBucket(int number, Consumer<ArrayNode> consumer) {
+        for (ArrayNode node : bucket) {
+            HashTableController.select(node, 1000, PASTEL_ORANGE);
+            if (node.getNumber() == number) {
+                PauseTransition pause = new PauseTransition(Duration.millis(1000));
+                pause.setOnFinished(event -> {
+                    HashTableController.select(node, 1000, GREENYELLOW);
+                    consumer.accept(node);
+                });
+                pause.play();
+                return node;
+
+            }
+        }
+        return null;
+    }
+
+    public int removeFromBucket(int number) {
+        searchBucket(number, node -> {
+            PauseTransition pause = new PauseTransition(Duration.millis(1000));
+            pause.setOnFinished(event -> {
+                bucket.remove(node);
+                bucketContainer.getChildren().remove(node.vbox);
+            });
+            pause.play();
+
+        });
+
+
+
+
         return bucket.size();
     }
 
@@ -131,8 +175,9 @@ public class ArrayNode {
     public void setNumber(Integer number) {
         this.number = number;
 
-        if (number > Constant.HashTable.SENTINEL)
+        if (number > Constant.HashTable.SENTINEL) {
             setValue(number.toString());
+        }
         else
             setValue(EMPTY_STRING);
     }
