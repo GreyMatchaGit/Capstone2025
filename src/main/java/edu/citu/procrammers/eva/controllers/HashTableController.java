@@ -20,7 +20,6 @@ import javafx.util.Duration;
 import org.json.JSONObject;
 
 import java.net.URL;
-import java.sql.SQLOutput;
 import java.util.*;
 
 import static edu.citu.procrammers.eva.controllers.HashTableController.CollisionMethod.*;
@@ -31,9 +30,11 @@ import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
 import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
-import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.fillRectangle;
 
 public class HashTableController implements Initializable {
+
+    public AnchorPane apChat;
+    public ImageView imgChatbotBtn;
 
     public static class ErrorHandling {
         public static String LOGGER_PREFIX = "[HashTableController]";
@@ -53,17 +54,15 @@ public class HashTableController implements Initializable {
     @FXML public Button btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear;
     @FXML public TextField tfPrompt;
     @FXML public ComboBox<String> cbCompression, cbCollision;
-    @FXML public ImageView imgBackBtn, imgChatbotBtn;
-    @FXML public AnchorPane apChat;
+    @FXML public ImageView imgBackBtn;
+
+    private ChatBotController chatBotController;
+    private JSONObject dataJSON;
+    private boolean isChatbotVisible = false;
 
     private ArrayList<ArrayNode> arrayNodes;
     private int size = 0;
     private int capacity = -1;
-    private boolean isChatbotVisible = false;
-
-    private JSONObject dataJSON;
-
-    private ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,17 +77,10 @@ public class HashTableController implements Initializable {
             initHashTable(capacity);
         });
 
-        ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
-        apChat.setVisible(false);
-
         imgChatbotBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX(SFX_BUTTON_CLICK);
-            if (isChatbotVisible) {
-                apChat.setVisible(false);
-            } else {
-                apChat.setVisible(true);
-            }
+            apChat.setVisible(!isChatbotVisible);
             isChatbotVisible = !isChatbotVisible;
         });
     }
@@ -145,7 +137,7 @@ public class HashTableController implements Initializable {
             case QUADRATIC_PROBING:
                 for (ArrayNode node : arrayNodes) {
                     int val = node.getNumber();
-                    if (val != EMPTY) {
+                    if (val > SENTINEL) {
                         values.add(val);
                     } else {
                         values.add(null);
@@ -165,7 +157,7 @@ public class HashTableController implements Initializable {
         int hashCode = getHashCode(value);
         int index = compress(hashCode);
 
-      try {
+        try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
             if (size == capacity) {
@@ -176,18 +168,20 @@ public class HashTableController implements Initializable {
 
             if(size != 0) writePreviousDataJSON();
 
-            if (arrayNodeAtIndex.getNumber() <= SENTINEL) {
+            if (arrayNodeAtIndex.getNumber() == EMPTY) {
                 System.out.println(LOGGER_PREFIX + String.format(" Index %d is empty.", index));
                 select(arrayNodeAtIndex, 1000, MALACHITE);
                 arrayNodeAtIndex.setNumber(value);
                 ++size;
+                writeDataJSON();
             } else {
                 System.out.println(LOGGER_PREFIX + String.format(" A collision occurred at index %d. Handling the collision...", index));
                 handleCollision(index, value, "btnAdd");
+                writeDataJSON();
             }
 
             System.out.println("Current size is " + size);
-            writeDataJSON();
+
         } catch (RuntimeException e) {
             System.out.println(LOGGER_PREFIX + " " + e.getMessage());
         }
@@ -199,22 +193,8 @@ public class HashTableController implements Initializable {
 
         try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
-
-//            if (arrayNodeAtIndex.getNumber() == value) {
-//                select(arrayNodeAtIndex, 1000, SUNSET_ORANGE);
-//
-//                pause(500, () -> {
-//                    arrayNodeAtIndex.setNumber(SENTINEL);
-//                    arrayNodeAtIndex.setValue("-");
-//                });
-//                size--;
-//            }
-//            else {
-
-              handleCollision(index, value, "btnRemove");
-//            }
-
-
+            writePreviousDataJSON();
+            handleCollision(index, value, "btnRemove");
         } catch (RuntimeException e) {
             System.out.println(LOGGER_PREFIX + " " + e.getMessage());
         }
@@ -227,15 +207,6 @@ public class HashTableController implements Initializable {
         try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
-//            if (arrayNodeAtIndex.getNumber() == value) {
-//                select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
-//            }
-//            else if (arrayNodeAtIndex.getNumber() == SENTINEL || SEPARATE_CHAINING.equals(cbCollision.getValue())) {
-//                handleCollision(index, value, "btnSearch");
-//            }
-//            else {
-//                System.out.println(LOGGER_PREFIX + String.format(" %d does not exists.", value));
-//            }
             handleCollision(index, value, "btnSearch");
 
         } catch (RuntimeException e) {
@@ -258,9 +229,9 @@ public class HashTableController implements Initializable {
                 break;
             default:
                 System.out.println(
-                    LOGGER_PREFIX +
-                    " Choose a valid collision handling method. INVALID: " +
-                    cbCollision.toString()
+                        LOGGER_PREFIX +
+                                " Choose a valid collision handling method. INVALID: " +
+                                cbCollision.toString()
                 );
                 return;
         }
@@ -279,7 +250,6 @@ public class HashTableController implements Initializable {
             else {
                 Platform.runLater( () -> select(currentNode, 1000, MALACHITE) );
             }
-//
             return;
         }
 
@@ -294,9 +264,7 @@ public class HashTableController implements Initializable {
                     System.out.println("Current size is " + size);
                     return;
                 case "btnRemove":
-
                     select(currentNode, 1000, SUNSET_ORANGE);
-
                     pause(500, () -> {
                         currentNode.setNumber(SENTINEL);
                         System.out.printf("Current index[%d] is sentinel = %b\n", index, (currentNode.getNumber() == SENTINEL));
@@ -313,8 +281,6 @@ public class HashTableController implements Initializable {
                                 iterations++;
                             }
                         }
-
-
                     });
                     size--;
                     return;
@@ -451,12 +417,12 @@ public class HashTableController implements Initializable {
 
     public static Timeline fadeColorTo(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(arrayNode.getRectangle().fillProperty(), from)
-            ),
-            new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(arrayNode.getRectangle().fillProperty(), to)
-            )
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(arrayNode.getRectangle().fillProperty(), from)
+                ),
+                new KeyFrame(Duration.seconds(0.5),
+                        new KeyValue(arrayNode.getRectangle().fillProperty(), to)
+                )
         );
         timeline.setCycleCount(1);
         timeline.setAutoReverse(false);
@@ -466,18 +432,18 @@ public class HashTableController implements Initializable {
 
     public static Timeline pulseNode(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
-                new KeyValue(arrayNode.getValue().textFillProperty(), from)
-            ),
-            new KeyFrame(Duration.seconds(0.6),
-                new KeyValue(arrayNode.getRectangle().strokeProperty(), to),
-                new KeyValue(arrayNode.getValue().textFillProperty(), to)
-            ),
-            new KeyFrame(Duration.seconds(0.9),
-                new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
-                new KeyValue(arrayNode.getValue().textFillProperty(), from)
-            )
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
+                        new KeyValue(arrayNode.getValue().textFillProperty(), from)
+                ),
+                new KeyFrame(Duration.seconds(0.6),
+                        new KeyValue(arrayNode.getRectangle().strokeProperty(), to),
+                        new KeyValue(arrayNode.getValue().textFillProperty(), to)
+                ),
+                new KeyFrame(Duration.seconds(0.9),
+                        new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
+                        new KeyValue(arrayNode.getValue().textFillProperty(), from)
+                )
         );
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
@@ -526,7 +492,7 @@ public class HashTableController implements Initializable {
 
     @FXML
     private void navigatePreviousScreen() {
-        SoundManager.playSFX(SFX_BUTTON_CLICK);
+        SoundManager.playSFX("sfx/btn_click.MP3");
         NavService.navigateTo(Academy);
     }
 
