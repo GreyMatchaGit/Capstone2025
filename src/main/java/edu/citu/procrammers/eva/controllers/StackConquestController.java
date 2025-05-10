@@ -363,7 +363,6 @@ public class StackConquestController {
                     currentRound.set(currentRound.get() + 1);
                     taNarration.appendText("Prepare for the next spell...\n");
 
-                    // Play next round sound effect
                     SoundManager.playSFX("sfx/next-round.MP3");
 
                     Timeline nextRoundDelay = new Timeline(
@@ -416,49 +415,37 @@ public class StackConquestController {
     private void endGame(boolean victory) {
         stopTimer();
         gameActive = false;
-        
-        // Show game status pane
+
         spGameStatusPane.setVisible(true);
         
         if (victory) {
-            // Play victory sound effect
             SoundManager.playSFX("sfx/victory.MP3");
-            
-            // Show victory container and hide lose container
+
             spVictoryContainer.setVisible(true);
             spLoseContainer.setVisible(false);
-            
-            // Apply victory animations
+
             applyVictoryAnimations();
-            
-            // Mark level as completed
+
             Eva.completedLevels.add(StackConquest);
-            
-            // Clear narration and add victory message
+
             taNarration.clear();
             taNarration.appendText("The wizard's staff crumbles, and the skies clear. You've broken the final chant. The Kingdom of EVA is safe... for now.\n");
         } else {
-            // Play lose sound effect
             SoundManager.playSFX("sfx/lose.MP3");
-            
-            // Show lose container and hide victory container
+
             spLoseContainer.setVisible(true);
             spVictoryContainer.setVisible(false);
-            
-            // Apply lose animations
+
             applyLoseAnimations();
-            
-            // Clear narration and add defeat message
+
             taNarration.clear();
             taNarration.appendText("The Spellbinder's magic overwhelms you. Your wards shatter completely, and darkness falls...\n");
             taNarration.appendText("But do not lose heart, brave one. Return when you've recovered to challenge the duel again.\n");
         }
 
-        // Delay before returning to conquest screen
         Timeline returnDelay = new Timeline(
             new KeyFrame(Duration.seconds(8), event -> {
                 if (victory) {
-                    // Return to conquest view after showing victory screen
                     FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
                     fadeOut.setFromValue(0);
                     fadeOut.setToValue(1);
@@ -467,24 +454,18 @@ public class StackConquestController {
                     });
                     fadeOut.play();
                 }
-                // For defeat, don't automatically return - let player click retry or back button
             })
         );
         returnDelay.play();
     }
-    
-    /**
-     * Apply animations to victory screen elements
-     */
+
     private void applyVictoryAnimations() {
-        // Create rotation animation for sunrays image
         RotateTransition rotateTransition = new RotateTransition(Duration.seconds(10), imgVictorySunrays);
         rotateTransition.setByAngle(360);
         rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
         rotateTransition.setInterpolator(javafx.animation.Interpolator.LINEAR);
         rotateTransition.play();
-        
-        // Create scale animation for victory title
+
         ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(1.5), imgVictoryTitle);
         scaleTransition.setFromX(0.8);
         scaleTransition.setFromY(0.8);
@@ -494,12 +475,8 @@ public class StackConquestController {
         scaleTransition.setAutoReverse(true);
         scaleTransition.play();
     }
-    
-    /**
-     * Apply animations to lose screen elements
-     */
+
     private void applyLoseAnimations() {
-        // Create subtle scale animation for lose title
         ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(1), imgLoseTitle);
         scaleTransition.setFromX(0.95);
         scaleTransition.setFromY(0.95);
@@ -509,25 +486,17 @@ public class StackConquestController {
         scaleTransition.setAutoReverse(true);
         scaleTransition.play();
     }
-    
-    /**
-     * Retry the current level
-     */
+
     private void retryLevel() {
-        // Reset health
         currentHP.set(MAX_HP);
         updateHealthDisplay();
-        
-        // Reset round counter
+
         currentRound.set(1);
-        
-        // Reset game index
+
         currentIndex = 0;
-        
-        // Hide game status pane
+
         spGameStatusPane.setVisible(false);
-        
-        // Setup new round
+
         setupNewRound();
     }
 

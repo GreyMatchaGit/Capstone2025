@@ -137,6 +137,11 @@
                                <Image url="@media/img_victory_sunrays.png" />
                             </image>
                          </ImageView>
+                        <ImageView fitHeight="534.0" fitWidth="710.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@media/img_victory_glow.png" />
+                           </image>
+                        </ImageView>
                          <ImageView fx:id="imgVictoryTitle" fitHeight="188.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                <Image url="@media/img_victory_title.png" />
@@ -146,12 +151,16 @@
                    </StackPane>
                    <StackPane fx:id="spLoseContainer" prefHeight="1080.0" prefWidth="1920.0" visible="false">
                       <children>
-                         <ImageView fx:id="imgLoseTitle" fitHeight="188.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                               <Image url="@media/img_lose_title.png" />
-                            </image>
-                         </ImageView>
-                         <Button fx:id="btnRetry" mnemonicParsing="false" prefHeight="51.0" prefWidth="134.0" styleClass="pixel-button" text="Retry" translateY="200.0" />
+                        <VBox alignment="CENTER">
+                           <children>
+                               <ImageView fx:id="imgLoseTitle" fitHeight="188.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
+                                  <image>
+                                     <Image url="@media/img_lose_title.png" />
+                                  </image>
+                               </ImageView>
+                               <Button fx:id="btnRetry" mnemonicParsing="false" prefHeight="51.0" prefWidth="134.0" styleClass="pixel-button" text="Retry" translateY="200.0" />
+                           </children>
+                        </VBox>
                       </children>
                    </StackPane>
                 </children>
@@ -163,4 +172,4 @@
       <URL value="@css/fonts.css" />
       <URL value="@css/conquest-styles.css" />
    </stylesheets>
-</BorderPane> 
+</BorderPane>
