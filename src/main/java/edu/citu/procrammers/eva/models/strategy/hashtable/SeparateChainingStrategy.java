@@ -4,7 +4,6 @@ import edu.citu.procrammers.eva.controllers.HashTableController;
 import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.utils.Constant;
 import javafx.animation.SequentialTransition;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 

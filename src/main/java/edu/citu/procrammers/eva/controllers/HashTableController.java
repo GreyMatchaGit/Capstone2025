@@ -85,28 +85,30 @@ public class HashTableController implements Initializable {
         });
     }
 
-    private void writeDataJSON() {
+    private void writeDataJSON(String operation) {
+        List<Object> elements = getElements();
+
         dataJSON.put("type", "hashtable");
         dataJSON.put("size", arrayNodes.size());
         dataJSON.put("capacity", capacity);
+        dataJSON.put("operation", operation);
+
         dataJSON.put("collisionHandling", cbCollision.getValue());
         dataJSON.put("compressionMethod", cbCompression.getValue());
-
-        List<Object> elements = getElements();
 
         dataJSON.put("elements", elements);
         ChatService.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON(){
+        List<Object> elements = getElements();
+        dataJSON.put("previousSize", arrayNodes.size());
+        dataJSON.put("previousCapacity", capacity);
+
         dataJSON.put("previousCollisionHandling", cbCollision.getValue());
         dataJSON.put("previousCompressionMethod", cbCompression.getValue());
 
-        List<Object> elements = getElements();
-
-        dataJSON.put("previousSize", arrayNodes.size());
         dataJSON.put("previousHashTable", elements);
-        dataJSON.put("previousCapacity", capacity);
         ChatService.fileWriter(dataJSON, DATA_PATH);
     }
 
@@ -166,18 +168,17 @@ public class HashTableController implements Initializable {
                 return;
             }
 
-            if(size != 0) writePreviousDataJSON();
+            writePreviousDataJSON();
 
             if (arrayNodeAtIndex.getNumber() == EMPTY) {
                 System.out.println(LOGGER_PREFIX + String.format(" Index %d is empty.", index));
                 select(arrayNodeAtIndex, 1000, MALACHITE);
                 arrayNodeAtIndex.setNumber(value);
                 ++size;
-                writeDataJSON();
+                writeDataJSON("add()");
             } else {
                 System.out.println(LOGGER_PREFIX + String.format(" A collision occurred at index %d. Handling the collision...", index));
                 handleCollision(index, value, "btnAdd");
-                writeDataJSON();
             }
 
             System.out.println("Current size is " + size);
@@ -249,6 +250,7 @@ public class HashTableController implements Initializable {
             }
             else {
                 Platform.runLater( () -> select(currentNode, 1000, MALACHITE) );
+                writeDataJSON("add()");
             }
             return;
         }
@@ -261,6 +263,7 @@ public class HashTableController implements Initializable {
                     Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
                     currentNode.setNumber(value);
                     size++;
+                    writeDataJSON("add()");
                     System.out.println("Current size is " + size);
                     return;
                 case "btnRemove":
@@ -268,13 +271,12 @@ public class HashTableController implements Initializable {
                     pause(500, () -> {
                         currentNode.setNumber(SENTINEL);
                         System.out.printf("Current index[%d] is sentinel = %b\n", index, (currentNode.getNumber() == SENTINEL));
-
                         currentNode.setValue("-");
 
                         if (strategy instanceof LinearProbingStrategy) {
                             int i = strategy.getNext(index);
                             int iterations= 0;
-                            while (iterations < arrayNodes.size() && (arrayNodes.get(i).getNumber() == SENTINEL)) {
+                            while (iterations < arrayNodes.size() && (arrayNodes.get(i).getNumber() == EMPTY || arrayNodes.get(i).getNumber() == SENTINEL)) {
                                 System.out.println("Clearing at index " + i);
                                 arrayNodes.get(i).setNumber(EMPTY);
                                 i = strategy.getPrevious(i);
@@ -284,8 +286,9 @@ public class HashTableController implements Initializable {
                         }
 
                         size--;
-                        writeDataJSON();
+                        writeDataJSON("remove()");
                     });
+
                     return;
                 case "btnSearch":
                     if (strategy.getIterations() != capacity) {
@@ -364,6 +367,8 @@ public class HashTableController implements Initializable {
             if (!oldValue.equals(newValue)) {
                 initHashTable(capacity);
             }
+
+            writeDataJSON("switchCollision()");
         });
     }
 
