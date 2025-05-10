@@ -16,6 +16,8 @@ import javafx.util.Duration;
 import static edu.citu.procrammers.eva.data.Database.Error.*;
 import static edu.citu.procrammers.eva.data.Database.Error.TOO_LONG_PASSWORD;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.MUSIC_MAINMENU;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class MainMenuController {
@@ -33,7 +35,7 @@ public class MainMenuController {
 
     @FXML
     public void initialize() {
-        SoundManager.playBackgroundMusic("music/main_menu_music.m4a", true);
+        SoundManager.playBackgroundMusic(MUSIC_MAINMENU, true);
         setupGlow(imgPlayBtn);
 
         imgProjectEvaBG.setPreserveRatio(true);
@@ -73,7 +75,7 @@ public class MainMenuController {
         playBtnPulseTimeline.play();
 
         imgPlayBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             logoPulseTimeline.stop();
             playBtnPulseTimeline.stop();
 
@@ -200,7 +202,7 @@ public class MainMenuController {
     }
 
     public void handleRegister() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         toggleRegisterPane();
 
         String username = tfRegisterUsername.getText();
@@ -219,7 +221,7 @@ public class MainMenuController {
     }
 
     public void handleLogin() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
         fadeOut.setFromValue(0);
         fadeOut.setToValue(1);
@@ -239,7 +241,7 @@ public class MainMenuController {
 
     @FXML
     private void toggleRegisterPane() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         spRegisterContainer.setVisible(!spRegisterContainer.isVisible());
     }
 }

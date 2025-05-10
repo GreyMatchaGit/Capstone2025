@@ -31,6 +31,7 @@ import static edu.citu.procrammers.eva.utils.Constant.HashTable.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.DATA_PATH;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class HashTableController implements Initializable {
@@ -83,7 +84,7 @@ public class HashTableController implements Initializable {
         apChat.setVisible(false);
 
         imgChatbotBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             if (isChatbotVisible) {
                 apChat.setVisible(false);
             } else {
@@ -405,7 +406,7 @@ public class HashTableController implements Initializable {
 
     @FXML
     private void navigatePreviousScreen() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         NavService.navigateTo(Academy);
     }
 

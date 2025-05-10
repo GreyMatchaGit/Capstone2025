@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.function.UnaryOperator;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 
 
 public class BSTViewController {
@@ -61,10 +62,9 @@ public class BSTViewController {
             System.out.println("BST isStandard = " + BST.isStandard);
         });
 
-        ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
         imgChatbotBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             if (isChatbotVisible) {
                 apChat.setVisible(false);
             } else {
@@ -209,7 +209,7 @@ public class BSTViewController {
     }
 
     public void navigatePreviousScreen() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         NavService.navigateTo(Academy);
     }
 }

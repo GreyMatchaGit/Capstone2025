@@ -1,7 +1,5 @@
 package edu.citu.procrammers.eva.utils;
 
-import javafx.scene.paint.Color;
-
 public class Constant {
 
     public static final String EMPTY_STRING = "";
@@ -37,6 +35,16 @@ public class Constant {
         public static final double BOX_SIZE = 50.0;
         public static final double OFFSET = 55.0;
         public static final double FRONT_BOUNDARY_X = 100.0;
+    }
+
+    public static class Sound{
+        public static final String SFX_BUTTON_CLICK = "sfx/btn_click.MP3";
+        public static final String SFX_LOGO_DING = "sfx/logo_ding.MP3";
+        public static final String SFX_ACADEMY_HOVER = "sfx/academy_hover.mp3";
+        public static final String SFX_CONQUEST_HOVER = "sfx/conquest_hover.mp3";
+        public static final String MUSIC_ACADEMY = "music/academy_music.MP3";
+        public static final String MUSIC_CONQUEST = "music/conquest_music.MP3";
+        public static final String MUSIC_MAINMENU = "music/main_menu_music.m4a";
     }
 
     public static class Color {

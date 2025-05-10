@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.*;
 
 public class SettingsController {
@@ -26,7 +27,7 @@ public class SettingsController {
         });
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             NavService.navigateTo(NavService.previousPage);
             SoundManager.saveAudioSettings(SoundManager.musicVolume, SoundManager.sfxVolume);
         });

@@ -127,7 +127,11 @@ public class ArrayNode {
     public void setVbox(VBox vbox) { this.vbox = vbox; }
     public void setSp(StackPane sp) { this.sp = sp; }
     public void setRect(Rectangle rect) { this.rect = rect; }
-    public void setValue(String value) { this.value.setText(value); }
+    public void setValue(String value) {
+        this.value.setText(value);
+        if(value.isEmpty()) number = 0;
+        else number = Integer.parseInt(value);
+    }
     public void setIndex(String index) { this.index.setText(index); }
     public void setNumber(Integer number) {
         this.number = number;

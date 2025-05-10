@@ -9,6 +9,8 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.MUSIC_CONQUEST;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class ConquestController {
@@ -18,12 +20,12 @@ public class ConquestController {
     @FXML
     public void initialize() {
 
-        SoundManager.playBackgroundMusic("music/conquest_music.MP3", true);
+        SoundManager.playBackgroundMusic(MUSIC_CONQUEST, true);
 
         setupGlow(imgBackMenuBtn, imgSettingsBtn);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
 
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
@@ -34,7 +36,7 @@ public class ConquestController {
         });
 
         imgSettingsBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             SoundManager.pauseMusic();
             NavService.navigateTo(Settings);
             NavService.previousPage = Conquest;

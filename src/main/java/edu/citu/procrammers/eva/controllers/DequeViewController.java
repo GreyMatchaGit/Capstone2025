@@ -26,6 +26,7 @@ import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class DequeViewController {
@@ -76,12 +77,9 @@ public class DequeViewController {
             }
         });
 
-        ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
-        apChat.setVisible(false);
-
         imgChatbotBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             if (isChatbotVisible) {
                 apChat.setVisible(false);
             } else {
@@ -244,11 +242,6 @@ public class DequeViewController {
                     labels.size() + " " +
                     vBoxes.size());
         }
-    }
-
-    public void navigatePreviousScreen() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
-        NavService.navigateTo(Academy);
     }
 
     private void removeFirst() {
@@ -418,4 +411,8 @@ public class DequeViewController {
         fadeOut.setOnFinished(event -> apVisualizer.getChildren().remove(vbox));
     }
 
+    public void navigatePreviousScreen() {
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
+        NavService.navigateTo(Academy);
+    }
 }

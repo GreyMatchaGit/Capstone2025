@@ -3,6 +3,7 @@ package edu.citu.procrammers.eva.utils;
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.ChatBotController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.json.JSONObject;
@@ -67,6 +68,8 @@ public class ChatService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        pane.setVisible(false);
     }
 
     public static void loadChatbot(ChatBotController controller, Pane pane, String chatbot){

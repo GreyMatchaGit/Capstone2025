@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.MUSIC_ACADEMY;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class AcademyController {
@@ -39,7 +41,7 @@ public class AcademyController {
 
     @FXML
     public void initialize() {
-        SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
+        SoundManager.playBackgroundMusic(MUSIC_ACADEMY, true);
         try {
             lessons =  Database.getInstance().loadLessons();
         } catch (SQLException e) {
@@ -47,19 +49,20 @@ public class AcademyController {
         }
 
         ChatService.updateData(new JSONObject());
+        ChatService.updateSummary("");
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             NavService.navigateTo(Selection);
         });
 
         imgToggleChatbotPane.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             toggleChatpane();
         });
 
         imgChatbotBtn.setOnMouseClicked(e ->{
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             ChatService.loadChatbot(chatBotController, apChat, GeneralChatbot);
             toggleChatpane();
         });
@@ -70,7 +73,7 @@ public class AcademyController {
         spChatbot.setVisible(false);
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
 
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
@@ -81,7 +84,7 @@ public class AcademyController {
         });
 
         imgSettingsBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             SoundManager.pauseMusic();
             NavService.navigateTo(Settings);
             NavService.previousPage = Academy;
@@ -89,7 +92,7 @@ public class AcademyController {
     }
 
     public void viewVisualizer() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         NavService.navigateTo(lessons.get(index).getVisualizerPath());
     }
 
@@ -104,7 +107,7 @@ public class AcademyController {
 
     public void nextLesson() {
         System.out.println("Index: " + index);
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         index++;
 
         if (index == -1) {
@@ -128,7 +131,7 @@ public class AcademyController {
 
     public void prevLesson() {
         System.out.println("Index: " + index);
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         index--;
 
         if (index == -2) {

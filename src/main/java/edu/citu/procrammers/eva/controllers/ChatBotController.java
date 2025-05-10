@@ -21,6 +21,7 @@ import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 
 public class ChatBotController {
 
@@ -44,7 +45,7 @@ public class ChatBotController {
 
     @FXML
     private void onCloseButtonClicked() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         if (parentContainer != null) {
             parentContainer.getChildren().clear();
         }
@@ -57,7 +58,7 @@ public class ChatBotController {
 */
 
     private void handleChatSubmit() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         String input = tfChatBox.getText().trim();
         if (input.isEmpty()) return;
 
@@ -116,7 +117,7 @@ public class ChatBotController {
                     summary = replyText.substring(index).trim();
                     replyText = replyText.substring(0, index).trim();
                 }
-                
+
                 if(summary != null) {
                     ChatService.updateSummary(summary);
                 }

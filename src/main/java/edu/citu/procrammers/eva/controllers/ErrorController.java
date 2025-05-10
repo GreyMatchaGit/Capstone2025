@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.Splash;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 
 public class ErrorController {
     public static String errorMsg = "Error";
@@ -23,7 +24,7 @@ public class ErrorController {
         lblErrorMsg.setText(errorMsg);
 
         btnExit.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             FadeTransition ft = new FadeTransition(Duration.seconds(1), fadePane);
             ft.setFromValue(0);
             ft.setToValue(1);

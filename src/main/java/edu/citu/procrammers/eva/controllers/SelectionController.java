@@ -10,6 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupScalingAnimation;
 
@@ -27,7 +28,7 @@ public class SelectionController {
         setupScalingAnimation( 1.1, spAcademy, spConquest);
 
         spAcademy.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
@@ -39,7 +40,7 @@ public class SelectionController {
             fadeOut.play();
         });
         spConquest.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
@@ -51,8 +52,8 @@ public class SelectionController {
             fadeOut.play();
         });
 
-        spAcademy.setOnMouseEntered(e -> SoundManager.playSFX("sfx/academy_hover.mp3"));
-        spConquest.setOnMouseEntered(e -> SoundManager.playSFX("sfx/conquest_hover.mp3"));
+        spAcademy.setOnMouseEntered(e -> SoundManager.playSFX(SFX_ACADEMY_HOVER));
+        spConquest.setOnMouseEntered(e -> SoundManager.playSFX(SFX_CONQUEST_HOVER));
 
     }
 }

@@ -15,6 +15,7 @@ import javafx.util.Duration;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.ErrorScreen;
 import static edu.citu.procrammers.eva.utils.Constant.Page.MainMenu;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_LOGO_DING;
 
 public class SplashController {
 
@@ -31,7 +32,7 @@ public class SplashController {
 
     private void animate() {
 
-        MediaPlayer logoDing = SoundManager.createPreloadedPlayer("sfx/logo_ding.MP3", false);
+        MediaPlayer logoDing = SoundManager.createPreloadedPlayer(SFX_LOGO_DING, false);
         imgLogo.setOpacity(0);
         imgLogo.setScaleX(0.5);
         imgLogo.setScaleY(0.5);

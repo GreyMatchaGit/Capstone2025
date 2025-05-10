@@ -26,6 +26,7 @@ import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
 public class QueueViewController {
@@ -85,11 +86,9 @@ public class QueueViewController {
             }
         });
 
-        ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
-        apChat.setVisible(false);
         imgChatbotBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             if (isChatbotVisible) {
                 apChat.setVisible(false);
             } else {
@@ -435,7 +434,7 @@ public class QueueViewController {
     }
 
     public void navigatePreviousScreen() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         NavService.navigateTo(Academy);
     }
 }

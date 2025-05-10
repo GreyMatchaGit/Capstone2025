@@ -22,8 +22,8 @@ import java.net.URL;
 import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
-import static edu.citu.procrammers.eva.utils.Constant.Value.*;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
+import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
 import static java.lang.Math.ceil;
@@ -89,12 +89,9 @@ public class ArraylistViewController implements Initializable {
             dynamicAddResizeList(5);
         });
 
-        ChatService.updateData(new JSONObject());
         ChatService.loadChatbot(chatBotController, apChat);
-        apChat.setVisible(false);
-
         imgChatbotBtn.setOnMouseClicked(e -> {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            SoundManager.playSFX(SFX_BUTTON_CLICK);
             if (isChatbotVisible) {
                 apChat.setVisible(false);
             } else {
@@ -340,6 +337,11 @@ public class ArraylistViewController implements Initializable {
             dynamicSubResizeList(remove);
         }
         writeDataJSON();
+
+        for(int i = 0; i < arrayNodes.size(); ++i) {
+            System.out.println(arrayNodes.get(i).getNumber());
+        }
+
     }
 
     private void removeAtElement() {
@@ -484,7 +486,7 @@ public class ArraylistViewController implements Initializable {
     }
 
     public void navigatePreviousScreen() {
-        SoundManager.playSFX("sfx/btn_click.MP3");
+        SoundManager.playSFX(SFX_BUTTON_CLICK);
         NavService.navigateTo(Academy);
     }
 }
