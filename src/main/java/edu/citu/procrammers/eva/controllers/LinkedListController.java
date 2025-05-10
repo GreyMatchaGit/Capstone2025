@@ -59,18 +59,21 @@ public class LinkedListController implements Initializable {
         JSONArray elements = new JSONArray();
 
         SinglyNode curr = singlyLinkedList.getHead();
-        dataJSON.put("head", curr.value);
-        while(curr != null) {
-            elements.put(curr.value);
-            if(curr.next == null) {
-                dataJSON.put("tail", curr.value);
+
+        if (curr != null) {
+            dataJSON.put("head", curr.value);
+            while (curr != null) {
+                elements.put(curr.value);
+                if (curr.next == null) {
+                    dataJSON.put("tail", curr.value);
+                }
+                curr = curr.next;
             }
-            curr = curr.next;
+
+            dataJSON.put("elements", elements);
+
+            ChatService.updateData(dataJSON);
         }
-
-        dataJSON.put("elements", elements);
-
-        ChatService.updateData(dataJSON);
     }
 
     private void writePreviousDataJSON() {
