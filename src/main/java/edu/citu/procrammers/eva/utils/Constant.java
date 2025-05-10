@@ -1,5 +1,7 @@
 package edu.citu.procrammers.eva.utils;
 
+import java.time.Duration;
+
 public class Constant {
 
     public static final String EMPTY_STRING = "";

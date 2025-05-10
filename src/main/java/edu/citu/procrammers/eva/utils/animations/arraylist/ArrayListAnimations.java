@@ -117,4 +117,20 @@ public class ArrayListAnimations {
         }
         fullSequence.play();
     }
+
+    public static void traverseAnimation(VBox vBox, Rectangle rectangle) {
+        TranslateTransition tFirst = ArrayListAnimations.slideY(vBox, -100);
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+        FillTransition highlightSlide = ArrayListAnimations.fillRectangle(0.3, rectangle, DEFAULTR, SEARCH);
+        FillTransition resetSlide = ArrayListAnimations.fillRectangle(0.3, rectangle, SEARCH, DEFAULTR);
+        TranslateTransition tLast = ArrayListAnimations.slideY(vBox, 100);
+        SequentialTransition fullSequence = new SequentialTransition(
+                tFirst,
+                pause,
+                highlightSlide,
+                resetSlide,
+                tLast
+        );
+        fullSequence.play();
+    }
 }
