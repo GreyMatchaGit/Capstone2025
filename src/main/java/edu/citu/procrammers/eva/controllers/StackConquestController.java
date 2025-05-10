@@ -7,11 +7,8 @@ import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,19 +21,18 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.Stack;
 
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 
-public class ArrayListConquestController {
+public class StackConquestController {
     public Pane fadePane;
     public ImageView imgBackMenuBtn, imgSettingsBtn;
     public ProgressBar pbUserExpLevel, pbTimeLimit;
     public Label lblUserName, lblUserLevel;
-    public Label lblTargetArrayList, lblCurrentArrayList;
+    public Label lblTargetStack, lblCurrentStack;
     public TextField tfSpellCommand;
     public Button btnDispel;
     public TextArea taNarration;
@@ -50,8 +46,8 @@ public class ArrayListConquestController {
     private SimpleIntegerProperty currentRound = new SimpleIntegerProperty(1);
     private List<ImageView> healthIcons = new ArrayList<>();
     
-    private ArrayList<String> targetList;
-    private ArrayList<String> currentList;
+    private Stack<String> targetStack;
+    private Stack<String> currentStack;
     private Timeline timerTimeline;
     private boolean gameActive = false;
 
@@ -101,7 +97,7 @@ public class ArrayListConquestController {
             SoundManager.pauseMusic();
             stopTimer();
             NavService.navigateTo(Settings);
-            NavService.previousPage = ArrayListConquest;
+            NavService.previousPage = StackConquest;
         });
         
         btnDispel.setOnMouseClicked(e -> {
@@ -142,47 +138,58 @@ public class ArrayListConquestController {
         
         // Round 1
         rounds.add(new ConquestRound(
-            new ArrayList<>(java.util.Arrays.asList("fire", "water")),
-            new ArrayList<>(java.util.Arrays.asList("fire", "water", "earth", "air", "light"))
+            createStack("fire"),
+            createStack("fire", "water", "earth")
         ));
         
         // Round 2
         rounds.add(new ConquestRound(
-            new ArrayList<>(java.util.Arrays.asList("potion", "scroll")),
-            new ArrayList<>(java.util.Arrays.asList("wand", "potion", "scroll", "rune"))
+            createStack("potion"),
+            createStack("scroll", "potion", "wand")
         ));
         
         // Round 3
         rounds.add(new ConquestRound(
-            new ArrayList<>(java.util.Arrays.asList("dragon", "knight")),
-            new ArrayList<>(java.util.Arrays.asList("knight", "wizard", "dragon"))
+            createStack("dragon", "knight"),
+            createStack("wizard", "dragon")
         ));
         
         // Round 4
         rounds.add(new ConquestRound(
-            new ArrayList<>(java.util.Arrays.asList("ruby", "emerald", "diamond")),
-            new ArrayList<>(java.util.Arrays.asList("sapphire", "ruby", "emerald"))
+            createStack("ruby"),
+            createStack("diamond", "emerald", "ruby")
         ));
 
         // Round 5
         rounds.add(new ConquestRound(
-            new ArrayList<>(java.util.Arrays.asList("shield", "sword")),
-            new ArrayList<>(java.util.Arrays.asList("bow", "shield", "sword", "dagger", "staff"))
+            createStack("shield", "sword"),
+            createStack("dagger", "staff", "bow")
         ));
+    }
+    
+    private Stack<String> createStack(String... elements) {
+        Stack<String> stack = new Stack<>();
+        for (int i = elements.length - 1; i >= 0; i--) {
+            stack.push(elements[i]);
+        }
+        return stack;
     }
     
     private void setupNewRound() {
         if (currentIndex < rounds.size()) {
             ConquestRound round = rounds.get(currentIndex);
-            currentList = new ArrayList<>(round.getStartList());
-            targetList = new ArrayList<>(round.getTargetList());
+            currentStack = new Stack<>();
+            targetStack = new Stack<>();
+
+            copyStack(round.getStartStack(), currentStack);
+            copyStack(round.getTargetStack(), targetStack);
             
-            updateListDisplay();
+            updateStackDisplay();
             startTimer();
             
             taNarration.clear();
             taNarration.appendText("The Spellbinder's scroll glows with unstable magic...\n");
-            taNarration.appendText("Transform the spell using operations: addFirst(element), addLast(element), removeFirst(), removeLast(), get(index), search(element)");
+            taNarration.appendText("Transform the spell using stack operations: push(element), pop(), top()");
             
             gameActive = true;
         } else {
@@ -190,16 +197,45 @@ public class ArrayListConquestController {
         }
     }
     
-    private void updateListDisplay() {
-        lblCurrentArrayList.setText(formatArrayListDisplay(currentList));
-        lblTargetArrayList.setText(formatArrayListDisplay(targetList));
+    private void copyStack(Stack<String> source, Stack<String> destination) {
+        ArrayList<String> temp = new ArrayList<>();
+        while (!source.isEmpty()) {
+            temp.add(source.pop());
+        }
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            String element = temp.get(i);
+            source.push(element);
+            destination.push(element);
+        }
     }
     
-    private String formatArrayListDisplay(ArrayList<String> list) {
+    private void updateStackDisplay() {
+        lblCurrentStack.setText(formatStackDisplay(currentStack));
+        lblTargetStack.setText(formatStackDisplay(targetStack));
+    }
+    
+    private String formatStackDisplay(Stack<String> stack) {
+        if (stack.isEmpty()) {
+            return "[]";
+        }
+
+        ArrayList<String> tempList = new ArrayList<>();
+        Stack<String> tempStack = new Stack<>();
+
+        while (!stack.isEmpty()) {
+            tempStack.push(stack.pop());
+        }
+
+        while (!tempStack.isEmpty()) {
+            String element = tempStack.pop();
+            tempList.add(element);
+            stack.push(element);
+        }
+
         StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < list.size(); i++) {
-            sb.append("\"").append(list.get(i)).append("\"");
-            if (i < list.size() - 1) {
+        for (int i = 0; i < tempList.size(); i++) {
+            sb.append("\"").append(tempList.get(i)).append("\"");
+            if (i < tempList.size() - 1) {
                 sb.append(", ");
             }
         }
@@ -211,20 +247,17 @@ public class ArrayListConquestController {
         stopTimer();
         
         pbTimeLimit.setProgress(1.0);
-        
-        // Calculate number of frames for smooth animation (25 frames per second)
+
         int totalFrames = 40 * 25;  // 40 seconds * 25 fps
         double decrementPerFrame = 1.0 / totalFrames;
         
         timerTimeline = new Timeline();
         timerTimeline.setCycleCount(totalFrames);
-        
-        // Add frame for decrementing progress
+
         KeyFrame keyFrame = new KeyFrame(Duration.millis(40), event -> {
             double newProgress = pbTimeLimit.getProgress() - decrementPerFrame;
             pbTimeLimit.setProgress(newProgress);
-            
-            // Check if we've reached the end
+
             if (newProgress <= 0) {
                 timeExpired();
             }
@@ -294,12 +327,12 @@ public class ArrayListConquestController {
                 }
                 return;
             }
-            
+
             SoundManager.playSFX("sfx/attack.MP3");
             
-            updateListDisplay();
+            updateStackDisplay();
 
-            if (currentList.equals(targetList)) {
+            if (formatStackDisplay(currentStack).equals(formatStackDisplay(targetStack))) {
                 stopTimer();
                 gameActive = false;
                 
@@ -335,35 +368,18 @@ public class ArrayListConquestController {
     private boolean executeSpellOperation(String command) {
         command = command.replaceAll("\\s+", "");
         
-        if (command.startsWith("addFirst(") && command.endsWith(")")) {
-            String element = command.substring(9, command.length() - 1).replace("\"", "");
-            currentList.add(0, element);
+        if (command.startsWith("push(") && command.endsWith(")")) {
+            String element = command.substring(5, command.length() - 1).replace("\"", "");
+            currentStack.push(element);
             return true;
-        } else if (command.startsWith("addLast(") && command.endsWith(")")) {
-            String element = command.substring(8, command.length() - 1).replace("\"", "");
-            currentList.add(element);
+        } else if (command.equals("pop()")) {
+            if (currentStack.isEmpty()) return false;
+            currentStack.pop();
             return true;
-        } else if (command.equals("removeFirst()")) {
-            if (currentList.isEmpty()) return false;
-            currentList.remove(0);
-            return true;
-        } else if (command.equals("removeLast()")) {
-            if (currentList.isEmpty()) return false;
-            currentList.remove(currentList.size() - 1);
-            return true;
-        } else if (command.startsWith("get(") && command.endsWith(")")) {
-            try {
-                int index = Integer.parseInt(command.substring(4, command.length() - 1));
-                if (index < 0 || index >= currentList.size()) return false;
-                taNarration.appendText("\nElement at index " + index + ": " + currentList.get(index) + "\n");
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        } else if (command.startsWith("search(") && command.endsWith(")")) {
-            String element = command.substring(7, command.length() - 1).replace("\"", "");
-            int index = currentList.indexOf(element);
-            taNarration.appendText("\nElement \"" + element + "\" found at index: " + (index == -1 ? "not found" : index) + "\n");
+        } else if (command.equals("top()")) {
+            if (currentStack.isEmpty()) return false;
+            String top = currentStack.peek();
+            taNarration.appendText("\nTop element: \"" + top + "\"\n");
             return true;
         }
         
@@ -384,7 +400,7 @@ public class ArrayListConquestController {
             taNarration.clear();
             taNarration.appendText("The wizard's staff crumbles, and the skies clear. You've broken the final chant. The Kingdom of EVA is safe... for now.\n");
 
-            Eva.completedLevels.add(ArrayListConquest);
+            Eva.completedLevels.add(StackConquest);
         } else {
             SoundManager.playSFX("sfx/btn_click.MP3");
             taNarration.clear();
@@ -407,20 +423,20 @@ public class ArrayListConquestController {
     }
 
     private static class ConquestRound {
-        private final ArrayList<String> startList;
-        private final ArrayList<String> targetList;
+        private final Stack<String> startStack;
+        private final Stack<String> targetStack;
         
-        public ConquestRound(ArrayList<String> startList, ArrayList<String> targetList) {
-            this.startList = startList;
-            this.targetList = targetList;
+        public ConquestRound(Stack<String> startStack, Stack<String> targetStack) {
+            this.startStack = startStack;
+            this.targetStack = targetStack;
         }
         
-        public ArrayList<String> getStartList() {
-            return new ArrayList<>(startList);
+        public Stack<String> getStartStack() {
+            return startStack;
         }
         
-        public ArrayList<String> getTargetList() {
-            return new ArrayList<>(targetList);
+        public Stack<String> getTargetStack() {
+            return targetStack;
         }
     }
 } 

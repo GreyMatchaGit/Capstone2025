@@ -9,6 +9,7 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -24,7 +25,7 @@ public class ConquestController {
     public ImageView imgBackMenuBtn, imgSettingsBtn;
     public ProgressBar pbUserExpLevel;
     public Label lblUserName, lblUserLevel;
-    public ImageView imgLvl1;
+    public ImageView imgLvl1, imgLvl2, imgLvl3, imgLvl4, imgLvl5, imgLvl6;
 
     private User currentUser = Eva.currentUser;
 
@@ -43,11 +44,13 @@ public class ConquestController {
         }
 
         SoundManager.playBackgroundMusic("music/conquest_music.MP3", true);
-        setupGlow(imgBackMenuBtn, imgSettingsBtn, imgLvl1);
+        setupGlow(imgBackMenuBtn, imgSettingsBtn, imgLvl1, imgLvl2, imgLvl3);
 
         lblUserName.setText(currentUser.username);
         lblUserLevel.setText("Level " + level);
         pbUserExpLevel.setProgress(exp / 100);
+
+        updateLevelCompletionStatus();
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
@@ -68,7 +71,7 @@ public class ConquestController {
             NavService.previousPage = Conquest;
         });
         
-        // Configure Level 1 (Spellbreaker's Duel) to navigate to ArrayListConquest
+        // Arraylist
         imgLvl1.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             
@@ -80,5 +83,58 @@ public class ConquestController {
             });
             fadeOut.play();
         });
+        
+        // Stack
+        imgLvl2.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+            fadeOut.setFromValue(0);
+            fadeOut.setToValue(1);
+            fadeOut.setOnFinished(event -> {
+                SoundManager.fadeOutMusic(() -> NavService.navigateTo(StackConquest));
+            });
+            fadeOut.play();
+        });
+        
+        // Queue
+        imgLvl3.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+            fadeOut.setFromValue(0);
+            fadeOut.setToValue(1);
+            fadeOut.setOnFinished(event -> {
+                SoundManager.fadeOutMusic(() -> NavService.navigateTo(QueueConquest));
+            });
+            fadeOut.play();
+        });
+    }
+
+    private void updateLevelCompletionStatus() {
+        if (Eva.completedLevels == null) {
+            Eva.completedLevels = new java.util.HashSet<>();
+        }
+
+        Image finishedImage = new Image(getClass().getResource("/edu/citu/procrammers/eva/media/img_finished_level.png").toExternalForm());
+        Image unfinishedImage = new Image(getClass().getResource("/edu/citu/procrammers/eva/media/img_unfinished_level.png").toExternalForm());
+
+        if (Eva.completedLevels.contains(ArrayListConquest)) {
+            imgLvl1.setImage(finishedImage);
+        } else {
+            imgLvl1.setImage(unfinishedImage);
+        }
+
+        if (Eva.completedLevels.contains(StackConquest)) {
+            imgLvl2.setImage(finishedImage);
+        } else {
+            imgLvl2.setImage(unfinishedImage);
+        }
+
+        if (Eva.completedLevels.contains(QueueConquest)) {
+            imgLvl3.setImage(finishedImage);
+        } else {
+            imgLvl3.setImage(unfinishedImage);
+        }
     }
 }

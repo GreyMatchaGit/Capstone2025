@@ -11,14 +11,19 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 
 public class Eva extends Application {
 
     public static User currentUser = null;
+    public static Set<String> completedLevels = new HashSet<>();
 
     public static void resetAppState() {
         currentUser = null;
+        completedLevels.clear();
     }
 
     public static void main(String[] args) {
