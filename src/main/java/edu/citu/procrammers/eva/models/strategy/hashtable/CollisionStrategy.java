@@ -7,5 +7,7 @@ public interface CollisionStrategy {
      * Otherwise, return the next index to check for collision.
      */
     int getIterations();
+    int getPrevious(int index);
+    int getNext(int index);
     int handleCollision(int index);
 }

@@ -28,6 +28,16 @@ public class SeparateChainingStrategy implements CollisionStrategy {
     }
 
     @Override
+    public int getPrevious(int index) {
+        return 0;
+    }
+
+    @Override
+    public int getNext(int index) {
+        return 0;
+    }
+
+    @Override
     public int handleCollision(int index) {
         switch (buttonId) {
             case "btnAdd":

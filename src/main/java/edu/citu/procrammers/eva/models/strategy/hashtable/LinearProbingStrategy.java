@@ -23,11 +23,13 @@ public class LinearProbingStrategy implements CollisionStrategy {
         iterations = 0;
     }
 
-    public int checkNext(int index) {
-        return (index + 1) % capacity;
+    @Override
+    public int getPrevious(int index) {
+        return (index - 1) < 0 ? capacity-1 : index - 1;
     }
 
-    public int checkPrevious(int index) {
+    @Override
+    public int getNext(int index) {
         return (index + 1) % capacity;
     }
 

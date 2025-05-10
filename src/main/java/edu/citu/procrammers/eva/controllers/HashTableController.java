@@ -200,12 +200,27 @@ public class HashTableController implements Initializable {
                     System.out.println("Current size is " + size);
                     return;
                 case "btnRemove":
-                    System.out.println();
+
                     select(currentNode, 1000, SUNSET_ORANGE);
 
                     pause(500, () -> {
                         currentNode.setNumber(SENTINEL);
+                        System.out.printf("Current index[%d] is sentinel = %b\n", index, (currentNode.getNumber() == SENTINEL));
                         currentNode.setValue("-");
+
+                        if (strategy instanceof LinearProbingStrategy) {
+                            int i = strategy.getNext(index);
+                            int iterations= 0;
+                            while (iterations < arrayNodes.size() && (arrayNodes.get(i).getNumber() == EMPTY || arrayNodes.get(i).getNumber() == SENTINEL)) {
+                                System.out.println("Clearing at index " + i);
+                                arrayNodes.get(i).setNumber(EMPTY);
+                                i = strategy.getPrevious(i);
+                                System.out.printf("Previous index[%d] is sentinel = %b", i,  (arrayNodes.get(i).getNumber() == SENTINEL));
+                                iterations++;
+                            }
+                        }
+
+
                     });
                     size--;
                     return;

@@ -16,6 +16,7 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
     private int iterations;
     private int originalIndex;
     private String buttonId;
+    boolean isStarted;
 
     public QuadraticProbingStrategy(ArrayList<ArrayNode> array, int value, int originalIndex, String buttonId) {
         this.array = array;
@@ -24,6 +25,7 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
         this.originalIndex = originalIndex;
         iterations = 0;
         this.buttonId = buttonId;
+        isStarted = false;
     }
 
     public int checkNext(int index) {
@@ -31,6 +33,17 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
     }
 
     public int checkPrevious() {
+        return (originalIndex + iterations * iterations) % size;
+    }
+
+    @Override
+    public int getPrevious(int index) {
+        // TODO
+        return 0;
+    }
+
+    @Override
+    public int getNext(int index) {
         return (originalIndex + iterations * iterations) % size;
     }
 
@@ -57,17 +70,17 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
             case "btnRemove":
             case "btnSearch":
                 iterations++;
-                if (value == array.get(index).getNumber() || iterations >= array.size() || array.get(index).getNumber() == EMPTY) {
+                if (value == array.get(index).getNumber() || (originalIndex == index && isStarted) || array.get(index).getNumber() == EMPTY) {
                     return FINISHED;
                 }
                 break;
         }
 
         iterations++;
-        if (iterations >= array.size() * 2) {
+        if (originalIndex == index && isStarted) {
             return ERROR;
         }
-
+        isStarted = true;
         return (originalIndex + iterations * iterations) % size;
     }
 }
