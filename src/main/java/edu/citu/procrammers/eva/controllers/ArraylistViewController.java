@@ -178,8 +178,6 @@ public class ArraylistViewController implements Initializable {
             double totalWidth = (capacity) * 50 + capacity * 5;
             double currentX = centerX + totalWidth;
             double currentY = centerY-50;
-            System.out.println("Pos " + capacity +
-                    " X: " + currentX + " Y: " + currentY + " Capacity: " + capacity);
             VBox vBox = createBoxes(capacity,"", currentX, currentY);
             capacity++;
 
@@ -231,7 +229,6 @@ public class ArraylistViewController implements Initializable {
             disableButtons(false);
             return;
         }
-        if(num == Integer.MIN_VALUE) return;
         writeDataJSON();
 
         if(size != 0){
@@ -239,7 +236,6 @@ public class ArraylistViewController implements Initializable {
         }
 
         if(size == capacity) {
-            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -343,11 +339,6 @@ public class ArraylistViewController implements Initializable {
             dynamicSubResizeList(remove);
         }
         writeDataJSON();
-
-        for(int i = 0; i < arrayNodes.size(); ++i) {
-            System.out.println(arrayNodes.get(i).getNumber());
-        }
-
     }
 
     private void removeAtElement() {
@@ -405,7 +396,6 @@ public class ArraylistViewController implements Initializable {
         }
 
         traversal.play();
-
     }
 
     private ArrayNode searchHelper(int num, SequentialTransition traversal) {
@@ -462,13 +452,10 @@ public class ArraylistViewController implements Initializable {
 
     // Better Utilities
     private VBox createBoxes(int pos, String num, double x, double y) {
-        System.out.println("Pos " + pos +
-                " X: " + x + " Y: " + y + " Capacity: " + capacity);
         ArrayNode arrayNode = new ArrayNode(num, pos, x, y);
         arrayNodes.add(pos, arrayNode);
-        VBox vbox = arrayNode.getVBox();
 
-        return vbox;
+        return arrayNode.getVBox();
     }
 
     private void updateIndexes() {
