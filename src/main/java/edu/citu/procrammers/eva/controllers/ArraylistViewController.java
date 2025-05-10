@@ -180,17 +180,12 @@ public class ArraylistViewController implements Initializable {
             double currentY = centerY-50;
             VBox vBox = createBoxes(capacity,"", currentX, currentY);
             capacity++;
-
             FadeTransition ft = fadeIn(vBox);
             TranslateTransition tt = slideY(vBox, 50);
             ft.play();
             ft.setOnFinished(e -> tt.play());
         }
-
-        for(int i = 0; i < capacity; ++i) {
-            ArrayNode node = arrayNodes.get(i);
-            node.setX(node.getVBox().getLayoutX());
-        }
+        System.out.println(arrayNodes.size());
     }
 
     private void dynamicSubResizeList(int n) {
@@ -482,6 +477,7 @@ public class ArraylistViewController implements Initializable {
     }
 
     public void navigatePreviousScreen() {
+        ArrayNode.apVisualizer = null;
         SoundManager.playSFX(SFX_BUTTON_CLICK);
         NavService.navigateTo(Academy);
     }
