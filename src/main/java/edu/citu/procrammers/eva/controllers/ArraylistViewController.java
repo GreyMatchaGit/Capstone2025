@@ -179,11 +179,11 @@ public class ArraylistViewController implements Initializable {
     private void dynamicAddResizeList(int n) {
         for(int i=0; i<n; ++i) {
             double totalWidth = (capacity) * 50 + capacity * 5;
-//            double startX = centerX - totalWidth / 2;
             double currentX = centerX + totalWidth;
             double currentY = centerY-50;
+            System.out.println("Pos " + capacity +
+                    " X: " + currentX + " Y: " + currentY + " Capacity: " + capacity);
             VBox vBox = createBoxes(capacity,"", currentX, currentY);
-//            shiftX(0, capacity, -55);
             capacity++;
 
             FadeTransition ft = fadeIn(vBox);
@@ -191,7 +191,7 @@ public class ArraylistViewController implements Initializable {
             ft.play();
             ft.setOnFinished(e -> tt.play());
         }
-        // Save Layouts X
+
         for(int i = 0; i < capacity; ++i) {
             ArrayNode node = arrayNodes.get(i);
             node.setX(node.getVBox().getLayoutX());
@@ -203,7 +203,6 @@ public class ArraylistViewController implements Initializable {
         int removable = Math.max(0, capacity - minCapacity);
         int actualRemove = Math.min(n, removable);
 
-        // Highlight Everything to Delete
         for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
             ArrayNode arrayNode = arrayNodes.get(i);
             Rectangle r = arrayNode.getRectangle();
@@ -211,29 +210,34 @@ public class ArraylistViewController implements Initializable {
             highlight.play();
         }
 
-        // Destroy All Boxes
         for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
             ArrayNode arrayNode = arrayNodes.get(i);
             VBox vb = arrayNode.getVBox();
             destroyBox(vb).play();
             arrayNodes.remove(i);
             apVisualizer.getChildren().remove(vb);
+            capacity--;
         }
-        capacity -= actualRemove;
-        shiftX(0, capacity, 55*actualRemove);
+
+        for(int i = 0; i < capacity; ++i) {
+            ArrayNode node = arrayNodes.get(i);
+            node.setX(node.getVBox().getLayoutX());
+        }
     }
 
     private void addElement() {
         int num = getNum();
         tfPromptPos.clear();
-        if(num == Integer.MIN_VALUE) return;
+        if(num == Integer.MIN_VALUE) {
+            disableButtons(false);
+            return;
+        }
 
         if(size != 0){
             writePreviousDataJSON();
         }
 
         if(size == capacity) {
-            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -256,14 +260,16 @@ public class ArraylistViewController implements Initializable {
         int num = getNum();
         int pos = getPos();
 
-        if(num == Integer.MIN_VALUE || pos == -1) return;
+        if(num == Integer.MIN_VALUE || pos == -1) {
+            disableButtons(false);
+            return;
+        }
 
         if(size != 0){
             writePreviousDataJSON();
         }
 
         if(size == capacity) {
-            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -273,7 +279,7 @@ public class ArraylistViewController implements Initializable {
         int index = pos-1;
         ArrayNode origNode = arrayNodes.get(index);
         double currentX = origNode.getX();
-        // Spawn box
+
         VBox vBox = createBoxes(index, String.valueOf(num), currentX-55, centerY-100);
         ArrayNode newNode = arrayNodes.get(index);
         Rectangle r = newNode.getRectangle();
@@ -285,7 +291,7 @@ public class ArraylistViewController implements Initializable {
         ft.play();
         ft.setOnFinished(e -> tt.play());
         tt.setOnFinished(e -> st.play());
-        // Destroy last box
+
         ArrayNode toDelete = arrayNodes.get(capacity);
         apVisualizer.getChildren().remove(toDelete.getVBox());
         arrayNodes.remove(toDelete);
@@ -298,7 +304,11 @@ public class ArraylistViewController implements Initializable {
     private void removeElement() {
         int num = getNum();
         tfPromptPos.clear();
-        if(num == Integer.MIN_VALUE) return;
+        if(num == Integer.MIN_VALUE) {
+            disableButtons(false);
+            return;
+        }
+
         SequentialTransition traversal = new SequentialTransition();
         ArrayNode currentNode = searchHelper(num, traversal);
 
@@ -326,7 +336,7 @@ public class ArraylistViewController implements Initializable {
         traversal.play();
 
         if(size <= ceil(2.0/3 * capacity)) {
-            int remove = (int) ceil(capacity * 0.75);
+            int remove = (int) ceil(capacity * 0.25);
             dynamicSubResizeList(remove);
         }
         writeDataJSON();
@@ -338,6 +348,7 @@ public class ArraylistViewController implements Initializable {
 
         if(pos <= 0 || pos > size) {
             System.err.println("Invalid Position");
+            disableButtons(false);
             return;
         }
 
@@ -354,21 +365,23 @@ public class ArraylistViewController implements Initializable {
                 arrayNodes.remove(currentNode);
                 dynamicAddResizeList(1);
                 updateIndexes();
+                if(size <= ceil(2.0/3 * capacity)) {
+                    int remove = (int) ceil(capacity * 0.75);
+                    dynamicSubResizeList(remove);
+                }
             });
             st.play();
         disableButtons(false);
 
-        if(size <= ceil(2.0/3 * capacity)) {
-            int remove = (int) ceil(capacity * 0.75);
-            dynamicSubResizeList(remove);
-        }
-        writeDataJSON();
     }
 
     private void searchElement() {
         int num = getNum();
         tfPromptPos.clear();
-        if(num == Integer.MIN_VALUE) return;
+        if(num == Integer.MIN_VALUE) {
+            disableButtons(false);
+            return;
+        }
 
         SequentialTransition traversal = new SequentialTransition();
         ArrayNode currentNode = searchHelper(num, traversal);
@@ -388,7 +401,6 @@ public class ArraylistViewController implements Initializable {
     }
 
     private ArrayNode searchHelper(int num, SequentialTransition traversal) {
-
         int index;
         for (index = 0; index < size; index++) {
             ArrayNode currentNode = arrayNodes.get(index);
@@ -424,6 +436,8 @@ public class ArraylistViewController implements Initializable {
                 VBox vb = arrayNode.getVBox();
                 destroyBox(vb).play();
             }
+            arrayNodes.clear();
+            apVisualizer.getChildren().removeAll();
 
             PauseTransition pt = new PauseTransition(Duration.seconds(1.5));
             pt.play();
@@ -439,8 +453,6 @@ public class ArraylistViewController implements Initializable {
 
     // Better Utilities
     private VBox createBoxes(int pos, String num, double x, double y) {
-        System.out.println("Pos " + pos +
-                " X: " + x + " Y: " + y + " Capacity: " + capacity);
         ArrayNode arrayNode = new ArrayNode(num, pos, x, y);
         arrayNodes.add(pos, arrayNode);
         VBox vbox = arrayNode.getVBox();

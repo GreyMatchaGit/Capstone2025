@@ -115,7 +115,6 @@ public class ArrayListAnimations {
             TranslateTransition tLast = slideY(finalVBox, 100);
             fullSequence.getChildren().add(tLast);
         }
-
         fullSequence.play();
     }
 }
