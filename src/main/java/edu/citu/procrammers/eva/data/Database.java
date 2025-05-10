@@ -101,6 +101,7 @@ public class Database {
                 resultPassword = resultSet.getString("password");
             }
 
+            // TODO: Find a way to implement Null Object Pattern here.
             if (resultUID == -1 || resultUsername == null || resultPassword == null) {
                 System.out.println("[Database] Login: User not found");
                 return null;

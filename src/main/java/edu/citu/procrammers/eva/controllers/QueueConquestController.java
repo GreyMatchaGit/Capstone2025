@@ -429,7 +429,7 @@ public class QueueConquestController {
         }
 
         Timeline returnDelay = new Timeline(
-            new KeyFrame(Duration.seconds(8), event -> {
+            new KeyFrame(Duration.seconds(4), event -> {
                 if (victory) {
                     FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
                     fadeOut.setFromValue(0);
