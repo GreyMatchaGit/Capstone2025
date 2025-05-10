@@ -229,9 +229,9 @@ public class HashTableController implements Initializable {
                 break;
             default:
                 System.out.println(
-                        LOGGER_PREFIX +
-                                " Choose a valid collision handling method. INVALID: " +
-                                cbCollision.toString()
+                    LOGGER_PREFIX +
+                    " Choose a valid collision handling method. INVALID: " +
+                    cbCollision.toString()
                 );
                 return;
         }
@@ -268,12 +268,13 @@ public class HashTableController implements Initializable {
                     pause(500, () -> {
                         currentNode.setNumber(SENTINEL);
                         System.out.printf("Current index[%d] is sentinel = %b\n", index, (currentNode.getNumber() == SENTINEL));
+
                         currentNode.setValue("-");
 
                         if (strategy instanceof LinearProbingStrategy) {
                             int i = strategy.getNext(index);
                             int iterations= 0;
-                            while (iterations < arrayNodes.size() && (arrayNodes.get(i).getNumber() == EMPTY || arrayNodes.get(i).getNumber() == SENTINEL)) {
+                            while (iterations < arrayNodes.size() && (arrayNodes.get(i).getNumber() == SENTINEL)) {
                                 System.out.println("Clearing at index " + i);
                                 arrayNodes.get(i).setNumber(EMPTY);
                                 i = strategy.getPrevious(i);
@@ -281,8 +282,10 @@ public class HashTableController implements Initializable {
                                 iterations++;
                             }
                         }
+
+                        size--;
+                        writeDataJSON();
                     });
-                    size--;
                     return;
                 case "btnSearch":
                     if (strategy.getIterations() != capacity) {
@@ -417,12 +420,12 @@ public class HashTableController implements Initializable {
 
     public static Timeline fadeColorTo(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(arrayNode.getRectangle().fillProperty(), from)
-                ),
-                new KeyFrame(Duration.seconds(0.5),
-                        new KeyValue(arrayNode.getRectangle().fillProperty(), to)
-                )
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(arrayNode.getRectangle().fillProperty(), from)
+            ),
+            new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(arrayNode.getRectangle().fillProperty(), to)
+            )
         );
         timeline.setCycleCount(1);
         timeline.setAutoReverse(false);
@@ -432,18 +435,18 @@ public class HashTableController implements Initializable {
 
     public static Timeline pulseNode(ArrayNode arrayNode, Color from, Color to) {
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
-                        new KeyValue(arrayNode.getValue().textFillProperty(), from)
-                ),
-                new KeyFrame(Duration.seconds(0.6),
-                        new KeyValue(arrayNode.getRectangle().strokeProperty(), to),
-                        new KeyValue(arrayNode.getValue().textFillProperty(), to)
-                ),
-                new KeyFrame(Duration.seconds(0.9),
-                        new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
-                        new KeyValue(arrayNode.getValue().textFillProperty(), from)
-                )
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
+                new KeyValue(arrayNode.getValue().textFillProperty(), from)
+            ),
+            new KeyFrame(Duration.seconds(0.6),
+                new KeyValue(arrayNode.getRectangle().strokeProperty(), to),
+                new KeyValue(arrayNode.getValue().textFillProperty(), to)
+            ),
+            new KeyFrame(Duration.seconds(0.9),
+                new KeyValue(arrayNode.getRectangle().strokeProperty(), from),
+                new KeyValue(arrayNode.getValue().textFillProperty(), from)
+            )
         );
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);

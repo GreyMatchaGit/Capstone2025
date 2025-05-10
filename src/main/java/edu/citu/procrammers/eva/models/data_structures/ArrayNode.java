@@ -189,7 +189,6 @@ public class ArrayNode {
     public void setRect(Rectangle rect) { this.rect = rect; }
     public void setValue(String value) { this.value.setText(value); }
     public void setIndex(String index) { this.index.setText(index); }
-
     public void setNumber(Integer number) {
         this.number = number;
 
