@@ -116,13 +116,9 @@ public class DequeConquestController {
             NavService.previousPage = DequeConquest;
         });
         
-        btnDispel.setOnMouseClicked(e -> {
-            processSpellCommand();
-        });
+        btnDispel.setOnMouseClicked(e -> processSpellCommand());
         
-        tfSpellCommand.setOnAction(e -> {
-            processSpellCommand();
-        });
+        tfSpellCommand.setOnAction(e -> processSpellCommand());
 
         btnRetry.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
