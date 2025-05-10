@@ -6,5 +6,8 @@ public interface CollisionStrategy {
      * @Return: FINISHED if it found the index to insert the value in.
      * Otherwise, return the next index to check for collision.
      */
+    int getIterations();
+    int getPrevious(int index);
+    int getNext(int index);
     int handleCollision(int index);
 }

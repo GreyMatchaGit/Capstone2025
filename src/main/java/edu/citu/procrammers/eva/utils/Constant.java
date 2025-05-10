@@ -1,6 +1,6 @@
 package edu.citu.procrammers.eva.utils;
 
-import java.time.Duration;
+import javafx.scene.paint.Color;
 
 public class Constant {
 
@@ -63,9 +63,10 @@ public class Constant {
 
     public static class HashTable {
         public static final int EMPTY = Integer.MIN_VALUE;
-        public static final int FULL  = Integer.MIN_VALUE + 1;
-        public static final int SENTINEL = Integer.MIN_VALUE + 2;
-        public static final int FINISHED = Integer.MIN_VALUE + 3;
-        public static final int INVALID_COLLISION_METHOD = Integer.MIN_VALUE + 4;
+        public static final int FULL  = EMPTY + 1;
+        public static final int SENTINEL = FULL + 1;
+        public static final int FINISHED = SENTINEL + 1;
+        public static final int ERROR = FINISHED + 1;
+        public static final int INVALID_COLLISION_METHOD = FINISHED + 1;
     }
 }

@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.*;
 
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
@@ -399,7 +400,6 @@ public class ArraylistViewController implements Initializable {
         }
 
         traversal.play();
-
     }
 
     private ArrayNode searchHelper(int num, SequentialTransition traversal) {
