@@ -86,7 +86,7 @@ public class Database {
 
     public User login(String username, String password) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM tblusers WHERE username=?"
+                "SELECT * FROM `" + DATABASE_NAME + "`.`tblusers` WHERE username=?"
         ))  {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -134,7 +134,7 @@ public class Database {
         }
 
         try (PreparedStatement statement = connection.prepareStatement(
-            "INSERT INTO tblusers (username, password) values (?, ?)"
+            "INSERT INTO `" + DATABASE_NAME + "`.`tblusers` (username, password) values (?, ?)"
         )) {
             String hashedPassword = Hash.hashPassword(password);
             statement.setString(1, username);
@@ -173,7 +173,7 @@ public class Database {
 
     private boolean isUsernameAvailable(String username) {
         try (PreparedStatement statement = connection.prepareStatement(
-            "SELECT 1 FROM tblusers WHERE username=?"
+            "SELECT 1 FROM `" + DATABASE_NAME + "`.`tblusers` WHERE username=?"
         )) {
             statement.setString(1, username);
             ResultSet usersWithMatchingUsername = statement.executeQuery();
@@ -218,7 +218,7 @@ public class Database {
                 );
                 checkDb.setString(1, DATABASE_NAME);
                 ResultSet rs = checkDb.executeQuery();
-
+                
                 if (!rs.next()) {
                     System.out.println("[Database] Creating database...");
                     PreparedStatement createDatabase = initializerConnection.prepareStatement(
@@ -234,17 +234,7 @@ public class Database {
                 throw e;
             }
 
-            try {
-                connection = DriverManager.getConnection(
-                    DATABASE_URL,
-                    DB_USERNAME,
-                    DB_PASSWORD
-                );
-                System.out.println("[Database] Connected to database successfully.");
-            } catch (SQLException e) {
-                System.out.println("[Database] Error connecting to database: " + e.getMessage());
-                throw e;
-            }
+            establishDatabaseConnection();
 
             createUserTable();
             importLessonsTable();
@@ -257,33 +247,88 @@ public class Database {
     
     private void createUserTable() {
         try {
+            String currentCatalog = connection.getCatalog();
+            System.out.println("[Database] Creating user table in database: " + currentCatalog);
+
+            boolean tableExists = false;
             DatabaseMetaData dbm = connection.getMetaData();
-            ResultSet tables = dbm.getTables(null, null, "tblusers", null);
-            
-            if (tables.next()) {
-                System.out.println("[Database] User table already exists.");
-                return;
+
+            try (ResultSet tables = dbm.getTables(currentCatalog, null, "%", new String[] {"TABLE"})) {
+                System.out.println("[Database] Tables in " + currentCatalog + ":");
+                while (tables.next()) {
+                    String tableName = tables.getString("TABLE_NAME");
+                    String tableCatalog = tables.getString("TABLE_CAT");
+                    System.out.println("[Database] Found table: " + tableName + " in " + tableCatalog);
+                    if (tableName.equalsIgnoreCase("tblusers")) {
+                        tableExists = true;
+                    }
+                }
             }
+            
+            if (tableExists) {
+                System.out.println("[Database] User table already exists in " + currentCatalog);
 
-            String createUserTable = "CREATE TABLE tblusers (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(255));";
+                try (Statement stmt = connection.createStatement();
+                     ResultSet rs = stmt.executeQuery("DESCRIBE `tblusers`")) {
+                    System.out.println("[Database] Verifying tblusers structure:");
+                    while (rs.next()) {
+                        System.out.println("[Database] Column: " + rs.getString("Field") + 
+                                           ", Type: " + rs.getString("Type"));
+                    }
+                } catch (SQLException e) {
+                    System.out.println("[Database] Error verifying table structure: " + e.getMessage());
+                    tableExists = false;
+                }
+            }
+            
+            if (!tableExists) {
+                System.out.println("[Database] Creating user table...");
 
-            String createAdmin = "INSERT INTO tblusers (username, password) VALUES (?, ?);";
-            String adminUsername = "admin";
-            String adminPassword = Hash.hashPassword("admin");
+                try (Statement dropStatement = connection.createStatement()) {
+                    dropStatement.executeUpdate("DROP TABLE IF EXISTS `tblusers`");
+                    System.out.println("[Database] Dropped existing tblusers table if it existed");
+                } catch (SQLException e) {
+                    System.out.println("[Database] Could not drop table: " + e.getMessage());
+                }
 
-            try (Statement statement = connection.createStatement();
-                 PreparedStatement createAdminStatement = connection.prepareStatement(createAdmin)) {
+                String createUserTable = 
+                    "CREATE TABLE `" + DATABASE_NAME + "`.`tblusers` (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "username VARCHAR(50), " +
+                    "password VARCHAR(255)" +
+                    ")";
                 
-                statement.executeUpdate(createUserTable);
-                System.out.println("[Database] User table created successfully.");
-                
-                createAdminStatement.setString(1, adminUsername);
-                createAdminStatement.setString(2, adminPassword);
-                createAdminStatement.executeUpdate();
-                System.out.println("[Database] Admin user created successfully.");
+                try (Statement statement = connection.createStatement()) {
+                    statement.executeUpdate(createUserTable);
+                    System.out.println("[Database] User table created successfully.");
+
+                    String adminUsername = "admin";
+                    String adminPassword = Hash.hashPassword("admin");
+                    
+                    String createAdmin = 
+                        "INSERT INTO `" + DATABASE_NAME + "`.`tblusers` (username, password) " +
+                        "VALUES (?, ?)";
+                    
+                    try (PreparedStatement createAdminStatement = connection.prepareStatement(createAdmin)) {
+                        createAdminStatement.setString(1, adminUsername);
+                        createAdminStatement.setString(2, adminPassword);
+                        createAdminStatement.executeUpdate();
+                        System.out.println("[Database] Admin user created successfully.");
+                    }
+
+                    try (ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM `" + DATABASE_NAME + "`.`tblusers`")) {
+                        if (rs.next()) {
+                            int count = rs.getInt(1);
+                            System.out.println("[Database] Verified table creation, row count: " + count);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("[Database] Error verifying table: " + e.getMessage());
+                    }
+                }
             }
         } catch (SQLException e) {
             System.out.println("[Database] Error creating user table: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -422,5 +467,27 @@ public class Database {
          * TODO: Fix the entire database structure if the user's current database structure does not match
          *  the correct database structure.
          */
+    }
+
+    private void establishDatabaseConnection() {
+        try {
+            connection = DriverManager.getConnection(
+                DATABASE_URL,
+                DB_USERNAME,
+                DB_PASSWORD
+            );
+
+            String currentDb = connection.getCatalog();
+            System.out.println("[Database] Connected to database: " + currentDb);
+            
+            if (!DATABASE_NAME.equalsIgnoreCase(currentDb)) {
+                System.out.println("[Database] WARNING: Connected to wrong database. Expected: " + DATABASE_NAME + ", Got: " + currentDb);
+            }
+            
+            System.out.println("[Database] Connected to database successfully.");
+        } catch (SQLException e) {
+            System.out.println("[Database] Error connecting to database: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

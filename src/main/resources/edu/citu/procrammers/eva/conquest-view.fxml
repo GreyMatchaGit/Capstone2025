@@ -85,7 +85,7 @@
                                     </ImageView>
                                  </children>
                               </AnchorPane>
-                              <ImageView fitHeight="2693.0" fitWidth="1920.0" mouseTransparent="true">
+                              <ImageView fitHeight="3099.0" fitWidth="1920.0" mouseTransparent="true">
                                  <image>
                                     <Image url="@media/img_coming_soon_cover.png" />
                                  </image>
