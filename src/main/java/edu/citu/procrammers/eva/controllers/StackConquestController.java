@@ -116,8 +116,7 @@ public class StackConquestController {
         tfSpellCommand.setOnAction(e -> {
             processSpellCommand();
         });
-        
-        // Set up retry button
+
         btnRetry.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
             retryLevel();
@@ -191,7 +190,6 @@ public class StackConquestController {
     }
     
     private void setupNewRound() {
-        // Hide the game status pane if it's visible
         spGameStatusPane.setVisible(false);
         
         if (currentIndex < rounds.size()) {

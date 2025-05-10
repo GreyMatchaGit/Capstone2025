@@ -191,15 +191,13 @@ public class QueueConquestController {
     }
     
     private void setupNewRound() {
-        // Hide the game status pane if it's visible
         spGameStatusPane.setVisible(false);
         
         if (currentIndex < rounds.size()) {
             ConquestRound round = rounds.get(currentIndex);
             currentQueue = new LinkedList<>();
             targetQueue = new LinkedList<>();
-            
-            // Copy queues
+
             copyQueue(round.getStartQueue(), currentQueue);
             copyQueue(round.getTargetQueue(), targetQueue);
             
@@ -217,11 +215,9 @@ public class QueueConquestController {
     }
     
     private void copyQueue(Queue<String> source, Queue<String> destination) {
-        // Create a temporary ArrayList to preserve order
         ArrayList<String> temp = new ArrayList<>(source);
         source.clear();
-        
-        // Add all elements back to both queues
+
         for (String element : temp) {
             source.add(element);
             destination.add(element);
@@ -237,11 +233,9 @@ public class QueueConquestController {
         if (queue.isEmpty()) {
             return "[]";
         }
-        
-        // Convert queue to list for display without modifying the queue
+
         List<String> tempList = new ArrayList<>(queue);
-        
-        // Format the display
+
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < tempList.size(); i++) {
             sb.append("\"").append(tempList.get(i)).append("\"");
@@ -257,20 +251,17 @@ public class QueueConquestController {
         stopTimer();
         
         pbTimeLimit.setProgress(1.0);
-        
-        // Calculate number of frames for smooth animation (25 frames per second)
+
         int totalFrames = 40 * 25;  // 40 seconds * 25 fps
         double decrementPerFrame = 1.0 / totalFrames;
         
         timerTimeline = new Timeline();
         timerTimeline.setCycleCount(totalFrames);
-        
-        // Add frame for decrementing progress
+
         KeyFrame keyFrame = new KeyFrame(Duration.millis(40), event -> {
             double newProgress = pbTimeLimit.getProgress() - decrementPerFrame;
             pbTimeLimit.setProgress(newProgress);
-            
-            // Check if we've reached the end
+
             if (newProgress <= 0) {
                 timeExpired();
             }
