@@ -126,7 +126,6 @@
                   </VBox>
                </children>
             </HBox>
-            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
             <StackPane fx:id="spGameStatusPane" visible="false">
                 <children>
                    <AnchorPane opacity="0.54" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;" />
@@ -165,6 +164,7 @@
                    </StackPane>
                 </children>
              </StackPane>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
       </AnchorPane>
    </center>
