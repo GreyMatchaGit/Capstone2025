@@ -12,6 +12,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import javafx.application.Platform;
 
@@ -26,6 +27,7 @@ public class ConquestController {
     public ProgressBar pbUserExpLevel;
     public Label lblUserName, lblUserLevel;
     public ImageView imgLvl1, imgLvl2, imgLvl3, imgLvl4, imgLvl5, imgLvl6;
+    public VBox vbLvl1Details, vbLvl2Details, vbLvl3Details, vbLvl4Details;
 
     private User currentUser = Eva.currentUser;
 
@@ -44,13 +46,14 @@ public class ConquestController {
         }
 
         SoundManager.playBackgroundMusic("music/conquest_music.MP3", true);
-        setupGlow(imgBackMenuBtn, imgSettingsBtn, imgLvl1, imgLvl2, imgLvl3);
+        setupGlow(imgBackMenuBtn, imgSettingsBtn, imgLvl1, imgLvl2, imgLvl3, imgLvl4);
 
         lblUserName.setText(currentUser.username);
         lblUserLevel.setText("Level " + level);
         pbUserExpLevel.setProgress(exp / 100);
 
         updateLevelCompletionStatus();
+        setupLevelDetailsVisibility();
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
@@ -96,11 +99,11 @@ public class ConquestController {
             });
             fadeOut.play();
         });
-        
+
         // Queue
         imgLvl3.setOnMouseClicked(e -> {
             SoundManager.playSFX("sfx/btn_click.MP3");
-            
+
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
@@ -109,6 +112,38 @@ public class ConquestController {
             });
             fadeOut.play();
         });
+
+        // Deque
+        imgLvl4.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+            fadeOut.setFromValue(0);
+            fadeOut.setToValue(1);
+            fadeOut.setOnFinished(event -> {
+                SoundManager.fadeOutMusic(() -> NavService.navigateTo(DequeConquest));
+            });
+            fadeOut.play();
+        });
+    }
+
+    private void setupLevelDetailsVisibility() {
+        vbLvl1Details.setVisible(false);
+        vbLvl2Details.setVisible(false);
+        vbLvl3Details.setVisible(false);
+        vbLvl4Details.setVisible(false);
+
+        imgLvl1.setOnMouseEntered(e -> vbLvl1Details.setVisible(true));
+        imgLvl1.setOnMouseExited(e -> vbLvl1Details.setVisible(false));
+
+        imgLvl2.setOnMouseEntered(e -> vbLvl2Details.setVisible(true));
+        imgLvl2.setOnMouseExited(e -> vbLvl2Details.setVisible(false));
+
+        imgLvl3.setOnMouseEntered(e -> vbLvl3Details.setVisible(true));
+        imgLvl3.setOnMouseExited(e -> vbLvl3Details.setVisible(false));
+
+        imgLvl4.setOnMouseEntered(e -> vbLvl4Details.setVisible(true));
+        imgLvl4.setOnMouseExited(e -> vbLvl4Details.setVisible(false));
     }
 
     private void updateLevelCompletionStatus() {

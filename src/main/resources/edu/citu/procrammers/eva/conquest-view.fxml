@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -37,7 +38,7 @@
                                     </ImageView>
                                     <ImageView fx:id="imgLvl1" fitHeight="56.0" fitWidth="58.0" layoutX="896.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@media/img_finished_level.png" />
+                                          <Image url="@media/img_unfinished_level.png" />
                                        </image>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
@@ -83,13 +84,45 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ImageView>
+                                    <VBox fx:id="vbLvl1Details" layoutX="968.0" layoutY="144.0" prefHeight="207.0" prefWidth="360.0" styleClass="level-details-container">
+                                       <children>
+                                          <Label contentDisplay="CENTER" prefHeight="51.0" prefWidth="344.0" style="-fx-font-size: 24;" styleClass="level-details-title" text="The Arrayed Highlands" textAlignment="CENTER" />
+                                          <Separator prefHeight="10.0" prefWidth="231.0" />
+                                          <Label prefHeight="133.0" prefWidth="344.0" styleClass="level-details-description" text="A structured terrain where values lie in perfect order. Traverse this land by placing and retrieving elements with precision." />
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="vbLvl2Details" layoutX="381.0" layoutY="372.0" prefHeight="207.0" prefWidth="360.0" styleClass="level-details-container">
+                                       <children>
+                                          <Label contentDisplay="CENTER" prefHeight="51.0" prefWidth="344.0" style="-fx-font-size: 24;" styleClass="level-details-title" text="The Tower of Stacks" textAlignment="CENTER" />
+                                          <Separator prefHeight="10.0" prefWidth="231.0" />
+                                          <Label prefHeight="133.0" prefWidth="344.0" styleClass="level-details-description" text="Climb a mystical tower where spells and actions stack high — and the last cast is the first unleashed. Only the wise ascend safely." />
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="vbLvl3Details" layoutX="1020.0" layoutY="466.0" prefHeight="207.0" prefWidth="360.0" styleClass="level-details-container">
+                                       <children>
+                                          <Label contentDisplay="CENTER" prefHeight="51.0" prefWidth="344.0" style="-fx-font-size: 24;" styleClass="level-details-title" text="The Courtyard of Queues" textAlignment="CENTER" />
+                                          <Separator prefHeight="10.0" prefWidth="231.0" />
+                                          <Label prefHeight="133.0" prefWidth="344.0" styleClass="level-details-description" text="Enter the orderly halls of the kingdom’s service grounds, where the first to arrive is the first to proceed. Timing and fairness rule here." />
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="vbLvl4Details" layoutX="1200.0" layoutY="523.0" prefHeight="207.0" prefWidth="360.0" styleClass="level-details-container">
+                                       <children>
+                                          <Label contentDisplay="CENTER" prefHeight="51.0" prefWidth="344.0" style="-fx-font-size: 24;" styleClass="level-details-title" text="The Deque Duel Grounds" textAlignment="CENTER" />
+                                          <Separator prefHeight="10.0" prefWidth="231.0" />
+                                          <Label prefHeight="133.0" prefWidth="344.0" styleClass="level-details-description" text="A dynamic arena where the double-ended deque reigns. Command insertions and removals from both front and back to triumph in this tactical trial." />
+                                       </children>
+                                    </VBox>
                                  </children>
                               </AnchorPane>
-                              <ImageView fitHeight="3099.0" fitWidth="1920.0" mouseTransparent="true">
-                                 <image>
-                                    <Image url="@media/img_coming_soon_cover.png" />
-                                 </image>
-                              </ImageView>
+                              <AnchorPane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fitHeight="2897.0" fitWidth="1920.0" layoutY="202.0" mouseTransparent="true">
+                                       <image>
+                                          <Image url="@media/img_coming_soon_cover.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
                               <Label style="-fx-font-size: 90;" styleClass="coming-soon-text" text="Coming soon..." translateY="-550.0" />
                            </children>
                         </StackPane>

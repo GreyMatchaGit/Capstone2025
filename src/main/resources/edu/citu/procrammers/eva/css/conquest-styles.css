@@ -415,3 +415,36 @@
     -fx-text-fill: #f8d686;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
+
+.level-details-container {
+    -fx-background-color: #ddcac9;
+    -fx-border-color: #4E2D2D;
+    -fx-border-width: 8;
+    -fx-effect: dropshadow(gaussian, rgba(78, 45, 45, 0.6), 8, 0.3, 0, 2);
+}
+
+.level-details-title {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-padding: 10;
+    -fx-font-size: 55px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4E2D2D;
+    -fx-alignment: center;
+}
+
+.level-details-description {
+    -fx-font-family: 'Pixelify Sans';
+    -fx-padding: 10;
+    -fx-font-size: 14;
+    -fx-text-fill: #3A1F1F;
+    -fx-wrap-text: true;
+}
+
+.separator {
+    -fx-background-color: #4E2D2D;
+    -fx-padding: 5 0 5 0;
+}
+
+.separator .line {
+    -fx-background-color: transparent;
+}

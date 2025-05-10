@@ -20,6 +20,7 @@ public class Constant {
         public static final String ArrayListConquest = "arraylist-conquest-view.fxml";
         public static final String StackConquest = "stack-conquest-view.fxml";
         public static final String QueueConquest = "queue-conquest-view.fxml";
+        public static final String DequeConquest = "deque-conquest-view.fxml";
 
         public static final String Chatbot = "chatbot-view.fxml";
         public static final String GeneralChatbot = "general-chatbot-view.fxml";
