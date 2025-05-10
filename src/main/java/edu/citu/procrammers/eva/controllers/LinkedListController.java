@@ -47,6 +47,20 @@ public class LinkedListController implements Initializable {
         enableAll();
     }
 
+    @FXML
+    private void addHead() {
+        String valueString = tfValue.getText();
+        if (valueString.isEmpty())
+            return;
+        clearFields();
+        disableAll();
+        int value = Integer.parseInt(valueString);
+        singlyLinkedList.addHead(value);
+        // TODO: Remove when finished
+        singlyLinkedList.print();
+        enableAll();
+    }
+
     private void clearFields() {
         tfValue.clear();
     }
@@ -76,7 +90,7 @@ public class LinkedListController implements Initializable {
     private void setTFValueInputRestrictions() {
         tfValue.setOnKeyTyped(keyEvent -> {
             char characterPressed = keyEvent.getCharacter().charAt(0);
-            if ((!Character.isDigit(characterPressed) && characterPressed != '\b') || tfValue.getText().length() > 9) {
+            if ((!Character.isDigit(characterPressed) && characterPressed != '\b') || tfValue.getText().length() > 5) {
                 String prompt = tfValue.getText();
                 tfValue.setText( tfValue.getText(0, prompt.length() - 1));
                 tfValue.positionCaret(prompt.length());
