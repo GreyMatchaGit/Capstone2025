@@ -35,7 +35,9 @@ public class SinglyLinkedList {
     }
 
     public void addTail(int value) {
-        Pair<Double, Double> initialPosition = getInitialPositionAtTail();
+        Pair<Double, Double> initialPosition = getInitialPositionAtTail(
+            getVertMid() + SinglyNode.radius
+        );
         SinglyNode nodeToAdd = new SinglyNode(
                 initialPosition.getKey(),
                 initialPosition.getValue()
@@ -62,8 +64,8 @@ public class SinglyLinkedList {
         animation.addNode(nodeToAdd);
         if (prevTail != null) {
             animation.connectNode(
-                    animation.getNodeGraphic(prevTail),
-                    animation.getNodeGraphic(tail)
+                prevTail,
+                tail
             );
         }
         ++size;
@@ -71,7 +73,9 @@ public class SinglyLinkedList {
     }
 
     public void addHead(int value) {
-        Pair<Double, Double> initialPosition = getInitialPositionAtHead();
+        Pair<Double, Double> initialPosition = getInitialPositionAtHead(
+            getVertMid() + SinglyNode.radius
+        );
         SinglyNode nodeToAdd = new SinglyNode(
                 initialPosition.getKey(),
                 initialPosition.getValue()
@@ -96,38 +100,152 @@ public class SinglyLinkedList {
         animation.addNode(nodeToAdd);
         if (head.next != null)
             animation.connectNode(
-                    animation.getNodeGraphic(head),
-                    animation.getNodeGraphic(head.next)
+                    head,
+                    head.next
             );
         ++size;
         arrangeNodes();
     }
 
-    private Pair<Double, Double> getInitialPositionAtTail() {
+    public void addAt(int value, int index) {
+        if (index == 0) {
+            addHead(value);
+            return;
+        }
+
+        if (index == size) {
+            addTail(value);
+            return;
+        }
+
+
+        Pair<Double, Double> initialPosition = getInitialPositionAtHead(
+            getVertMid() + SinglyNode.radius
+        );
+        SinglyNode nodeToAdd = new SinglyNode(
+            initialPosition.getKey(),
+            initialPosition.getValue() - SinglyNode.radius * 2
+        );
+        nodeToAdd.value = value;
+
+        SinglyNode current = head;
+
+        int previousIndex = index - 1;
+        for (int i = 0; i < previousIndex; ++i) {
+            current = current.next;
+        }
+
+        animation.disconnectNode(
+            current,
+            current.next
+        );
+
+        width = (size) * ((SinglyNode.radius + spacing) * 2);
+        arrangeNodes();
+
+        animation.addNode(nodeToAdd);
+
+        nodeToAdd.next = current.next;
+        current.next = nodeToAdd;
+
+        animation.connectNode(current, nodeToAdd);
+        animation.connectNode(nodeToAdd, nodeToAdd.next);
+
+        ++size;
+        arrangeNodes();
+    }
+
+    public void removeHead() {
+        if (head == null) {
+            return;
+        }
+
+        if (head == tail) {
+            animation.removeNode(head);
+            head = null;
+            tail = null;
+
+            headProperty.set(head);
+            tailProperty.set(tail);
+        } else {
+            SinglyNode nodeToRemove = head;
+            head = head.next;
+            headProperty.set(head);
+            tailProperty.set(tail);
+            animation.disconnectNode(nodeToRemove, head);
+            animation.removeNode(nodeToRemove);
+        }
+
+        --size;
+        width = (size) * ((SinglyNode.radius + spacing) * 2);
+        arrangeNodes();
+    }
+
+    public void removeTail() {
+        if (head == null) {
+            return;
+        }
+
+        if (head == tail) {
+            removeHead();
+            return;
+        }
+
+        SinglyNode prevToNodeToRemove = head;
+        while (prevToNodeToRemove.next != tail) {
+            prevToNodeToRemove = prevToNodeToRemove.next;
+        }
+
+        SinglyNode nodeToRemove = tail;
+        tail = prevToNodeToRemove;
+        headProperty.set(head);
+        tailProperty.set(tail);
+        tail.next = null;
+        animation.disconnectNode(prevToNodeToRemove, nodeToRemove);
+        animation.removeNode(nodeToRemove);
+
+        --size;
+        width = (size) * ((SinglyNode.radius + spacing) * 2);
+        arrangeNodes();
+    }
+
+    public void remove(int value) {
+        if (head == null) {
+            return;
+        }
+
+        if (head == tail) {
+
+        } else {
+
+        }
+    }
+
+    private Pair<Double, Double> getInitialPositionAtTail(double vertical) {
         if (head == null) {
             return new Pair<>(
                     getHorizontalMid() - SinglyNode.radius,
-                    getVertMid() + SinglyNode.radius
+                    vertical
             );
         }
 
         return new Pair<>(
                 tail.x.get() + ((SinglyNode.radius + spacing) * 2) * 2,
-                getVertMid() + SinglyNode.radius
+                vertical
         );
     }
 
-    private Pair<Double, Double> getInitialPositionAtHead() {
+    private Pair<Double, Double> getInitialPositionAtHead(double vertical) {
         if (head == null) {
             return new Pair<>(
                     getHorizontalMid() - SinglyNode.radius,
-                    getVertMid() + SinglyNode.radius
+                    vertical
             );
         }
 
         return new Pair<>(
                 head.x.get() - ((SinglyNode.radius + spacing) * 2) * 2,
-                getVertMid() + SinglyNode.radius
+                vertical
         );
     }
 
@@ -136,8 +254,7 @@ public class SinglyLinkedList {
         int index = 0;
         while (current != null) {
             current.x.set(getHorizontalMid() + index * ((SinglyNode.radius + spacing) * 2) - (width + (SinglyNode.radius + spacing) * 2) / 2.0);
-            if (current != head)
-                current.y.set(getVertMid() + SinglyNode.radius);
+            current.y.set(getVertMid() + SinglyNode.radius);
             current = current.next;
             ++index;
         }

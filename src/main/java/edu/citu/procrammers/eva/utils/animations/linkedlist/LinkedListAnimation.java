@@ -4,16 +4,13 @@ import edu.citu.procrammers.eva.models.data_structures.SinglyLinkedList;
 import edu.citu.procrammers.eva.models.data_structures.SinglyNode;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class LinkedListAnimation {
 
@@ -21,7 +18,7 @@ public class LinkedListAnimation {
     public SinglyLinkedList linkedList;
     private HashMap<String, SinglyNode> nodes;
     private HashMap<String, SinglyNodeGraphic> graphicNodes;
-    private ArrayList<SinglyNode> nodesArray;
+    private ArrayList<Arrow> arrows;
     public Text head;
     public Text tail;
 
@@ -30,7 +27,7 @@ public class LinkedListAnimation {
         this.linkedList = linkedList;
         nodes = new HashMap<>();
         graphicNodes = new HashMap<>();
-        nodesArray = new ArrayList<>();
+        arrows = new ArrayList<>();
         head = new Text("HEAD");
         tail = new Text(" TAIL");
     }
@@ -47,11 +44,36 @@ public class LinkedListAnimation {
         drawNode(node);
     }
 
-    public void connectNode(SinglyNodeGraphic leftGraphic, SinglyNodeGraphic rightGraphic) {
-        if (leftGraphic == null || rightGraphic == null) return;
+    public void removeNode(SinglyNode node) {
+        canvas.getChildren().remove(graphicNodes.get(node.getId()));
+        nodes.remove(node.getId());
+        updatePointers();
+    }
+
+    public void disconnectNode(SinglyNode leftGraphic, SinglyNode rightGraphic) {
+        int index = 0;
+        for (Arrow arrow : arrows) {
+            if (arrow.leftID.equals(leftGraphic.getId()) && arrow.rightID.equals(rightGraphic.getId())) {
+                canvas.getChildren().remove(arrow);
+                break;
+            }
+            ++index;
+        }
+        if (index != arrows.size())
+            arrows.remove(index);
+    }
+
+    public void connectNode(SinglyNode left, SinglyNode right) {
+        SinglyNodeGraphic leftGraphic = getNodeGraphic(left);
+        SinglyNodeGraphic rightGraphic = getNodeGraphic(right);
+        if (leftGraphic == null || rightGraphic == null){
+            System.out.println("One of the nodes is null.");
+            return;
+        }
 
         // Create the link (a line representation)
-        Arrow link = new Arrow();
+        Arrow link = new Arrow(leftGraphic.getNodeId(), rightGraphic.getNodeId());
+        arrows.add(link);
         link.setStrokeWidth(2);
         link.setArrowStyle("-fx-stroke: #E9DBD5;");
 
@@ -118,6 +140,7 @@ public class LinkedListAnimation {
         SinglyNodeGraphic tailGraphic = getNodeGraphic(linkedList.tailProperty.get());
 
         System.out.println("LinkedList head is " + linkedList.headProperty.get().value);
+        System.out.println("LinkedList tail is " + linkedList.tailProperty.get().value);
 
         if (oldHeadListener != null) {
             oldHead.layoutXProperty().removeListener(oldHeadListener);
@@ -127,7 +150,6 @@ public class LinkedListAnimation {
         }
 
         InvalidationListener headListener = (_) -> {
-            System.out.println();
             head.setLayoutX(headGraphic.getLayoutX() + SinglyNode.radius - headWidth / 2.0);
             head.setLayoutY(headGraphic.getLayoutY() - SinglyNode.radius * 0.5);
         };
@@ -145,10 +167,6 @@ public class LinkedListAnimation {
 
         headGraphic.layoutXProperty().addListener(headListener);
         tailGraphic.layoutXProperty().addListener(tailListener);
-    }
-
-    public void removeNode(SinglyNode node) {
-        nodes.remove(node.getId());
     }
 
     public SinglyNodeGraphic getNodeGraphic(SinglyNode node) {

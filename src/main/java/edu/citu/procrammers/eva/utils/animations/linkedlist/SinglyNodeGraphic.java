@@ -76,4 +76,8 @@ public class SinglyNodeGraphic extends StackPane {
         node.x.addListener(positionListener);
         node.y.addListener(positionListener);
     }
+
+    public String getNodeId() {
+       return node.getId();
+    }
 }

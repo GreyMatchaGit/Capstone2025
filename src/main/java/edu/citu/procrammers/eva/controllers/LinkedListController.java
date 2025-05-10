@@ -3,8 +3,6 @@ package edu.citu.procrammers.eva.controllers;
 import edu.citu.procrammers.eva.models.data_structures.SinglyLinkedList;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
-import edu.citu.procrammers.eva.utils.visuals.AnimationManager;
-import javafx.animation.Animation;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -22,7 +20,7 @@ public class LinkedListController implements Initializable {
     @FXML
     AnchorPane canvas;
     @FXML
-    TextField tfValue;
+    TextField tfValue, tfIndex;
 
     private SinglyLinkedList singlyLinkedList;
 
@@ -53,9 +51,45 @@ public class LinkedListController implements Initializable {
         if (valueString.isEmpty())
             return;
         clearFields();
-        disableAll();
+//        disableAll();
         int value = Integer.parseInt(valueString);
         singlyLinkedList.addHead(value);
+        // TODO: Remove when finished
+        singlyLinkedList.print();
+        enableAll();
+    }
+
+    @FXML
+    private void addAt() {
+        String valueString = tfValue.getText();
+        String indexString = tfIndex.getText();
+        if (valueString.isEmpty() || indexString.isEmpty())
+            return;
+        clearFields();
+//        disableAll();
+        int value = Integer.parseInt(valueString);
+        int index = Integer.parseInt(indexString);
+        singlyLinkedList.addAt(value, index);
+        // TODO: Remove when finished
+        singlyLinkedList.print();
+        enableAll();
+    }
+
+    @FXML
+    private void removeHead() {
+        clearFields();
+//        disableAll();
+        singlyLinkedList.removeHead();
+        // TODO: Remove when finished
+        singlyLinkedList.print();
+        enableAll();
+    }
+
+    @FXML
+    private void removeTail() {
+        clearFields();
+//        disableAll();
+        singlyLinkedList.removeTail();
         // TODO: Remove when finished
         singlyLinkedList.print();
         enableAll();

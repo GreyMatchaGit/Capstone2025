@@ -3,16 +3,18 @@ package edu.citu.procrammers.eva.utils.animations.linkedlist;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class Arrow extends Group {
 
     private final Line line;
     private final Line arrow1, arrow2;
+    public String leftID, rightID;
 
-    public Arrow() {
+    public Arrow(String leftID, String rightID) {
         this(new Line(), new Line(), new Line());
+        this.leftID = leftID;
+        this.rightID = rightID;
     }
 
     private static final double arrowLength = 5;

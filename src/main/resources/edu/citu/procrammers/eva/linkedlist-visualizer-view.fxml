@@ -38,8 +38,12 @@
                            <Region prefHeight="243.0" prefWidth="328.0" />
                                  <TextField fx:id="tfValue" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
                            <Region prefHeight="243.0" prefWidth="17.0" />
-                                 <Button fx:id="btnAddTail" mnemonicParsing="false" onAction="#addTail" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD TAIL" />
                            <Button fx:id="btnAddHead" mnemonicParsing="false" onAction="#addHead" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD HEAD" />
+                                 <Button fx:id="btnAddTail" mnemonicParsing="false" onAction="#addTail" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD TAIL" />
+                           <Button fx:id="btnAddTail1" mnemonicParsing="false" onAction="#removeHead" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-button" text="REMOVE HEAD" />
+                           <Button fx:id="btnAddHead2" mnemonicParsing="false" onAction="#removeTail" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-button" text="REMOVE TAIL" />
+                           <Button fx:id="btnAddHead1" mnemonicParsing="false" onAction="#addAt" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD AT" />
+                           <TextField fx:id="tfIndex" prefHeight="55.0" prefWidth="200.0" promptText="Enter index" styleClass="pixel-textfield" />
                            <Region prefHeight="104.0" prefWidth="506.0" />
                              </items>
                          </ToolBar>
