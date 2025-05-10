@@ -59,7 +59,6 @@ public class BST extends Tree {
 
         id = 0;
         isStandard = true;
-        isStandard = false;
     }
 
     private void writeDataJSON() {
@@ -88,16 +87,6 @@ public class BST extends Tree {
         if(right != null) obj.put("right", right);
 
         return obj;
-    }
-
-    public void addLeft(Node parent, Node child) {
-        parent.setLeft(child);
-        child.setParent(parent);
-    }
-
-    public void addRight(Node parent, Node child) {
-        parent.setRight(child);
-        child.setParent(parent);
     }
 
     public List<Command> insertElement(int insertedValue) {
@@ -277,8 +266,8 @@ public class BST extends Tree {
                 writePreviousDataJSON();
                 if (node.getLeft() == null && node.getRight() == null) {
                     commands.add(am.newCommand("Delete", Integer.toString(node.incomingLineId)));
-
                     commands.add(am.newCommand("Delete", nodeId));
+
                     if (leftchild && node.getParent() != null) {
                         node.getParent().setLeft(null);
                     }

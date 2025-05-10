@@ -1,9 +1,7 @@
-package edu.citu.procrammers.eva.utils;
+package edu.citu.procrammers.eva.models.data_structures;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -14,11 +12,13 @@ import java.util.ArrayList;
 
 import static edu.citu.procrammers.eva.utils.Constant.EMPTY_STRING;
 
+import java.util.Objects;
+
 public class ArrayNode {
 
-    public static Pane apVisualizer;
+    private static AnchorPane apVisualizer;
 
-    public static void initializeVisualizer(Pane anchorPane) {
+    public static void initializeVisualizer(AnchorPane anchorPane) {
         if (apVisualizer == null) {
             apVisualizer = anchorPane;
         }
@@ -62,13 +62,13 @@ public class ArrayNode {
     public ArrayNode(String num, int i, double x, double y) {
         rect = new Rectangle(50, 50);
         rect.setFill(Color.WHITE);
-        rect.setStroke(Color.BLACK);
+        rect.setStroke(Color.WHITE);
         rect.setStrokeWidth(2);
         value = new Label(num);
-        value.setStyle("-fx-font-weight: bold;");
+        value.setStyle("-fx-font-weight: bold; -fx-text-fill: black;");
         sp = new StackPane(rect, value);
         index = new Label(Integer.toString(i));
-        index.setStyle("-fx-font-weight: bold;");
+        index.setStyle("-fx-font-weight: bold; -fx-text-fill: white;");
         vbox = new VBox(2);
         bucket = new ArrayList<>();
         bucketContainer = new VBox();
@@ -79,7 +79,7 @@ public class ArrayNode {
 
         apVisualizer.getChildren().add(vbox);
 
-        number = num == "" ? 0 : Integer.parseInt(num);
+        number = Objects.equals(num, "") ? 0 : Integer.parseInt(num);
     }
 
     public ArrayNode(Pane parent) {

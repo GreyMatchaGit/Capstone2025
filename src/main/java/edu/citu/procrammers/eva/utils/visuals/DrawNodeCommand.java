@@ -2,6 +2,7 @@ package edu.citu.procrammers.eva.utils.visuals;
 
 import edu.citu.procrammers.eva.Eva;
 import edu.citu.procrammers.eva.controllers.NodeController;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -77,9 +79,17 @@ public class DrawNodeCommand extends Command {
             nodeView.setLayoutX(x - circle.getRadius());
             nodeView.setLayoutY(y - circle.getRadius());
 
+            FadeTransition fade = new FadeTransition(Duration.millis(500), nodeView);
+            fade.setFromValue(0.0);
+            fade.setToValue(1.0);
+            fade.setOnFinished(event -> {
+                    onFinished.run();
+            });
+            fade.play();
+
             graphicMap.put(graphicId, nodeView);
 
-            onFinished.run();
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);

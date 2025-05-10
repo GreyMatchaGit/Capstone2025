@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.citu.procrammers.eva.controllers.ArraylistViewController">
     <center>
@@ -36,7 +37,8 @@
                                         </cursor>
                                     </ImageView>
                                     <Region prefHeight="243.0" prefWidth="328.0" />
-                                    <TextField fx:id="tfPrompt" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
+                                    <TextField fx:id="tfPromptNum" prefHeight="55.0" prefWidth="200.0" promptText="Enter value" styleClass="pixel-textfield" />
+                           <TextField fx:id="tfPromptPos" prefHeight="55.0" prefWidth="200.0" promptText="Enter position" styleClass="pixel-textfield" />
                                     <Region prefHeight="243.0" prefWidth="17.0" />
                                     <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="ADD" />
                                     <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#onButtonClick" prefHeight="55.0" prefWidth="120.0" styleClass="pixel-button" text="REMOVE" />
@@ -57,19 +59,11 @@
                                 </image>
                             </ImageView>
                             <AnchorPane fx:id="apVisualizer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="2.0" />
                         </children>
                     </StackPane>
                 </children>
             </VBox>
-         <AnchorPane fx:id="apChat" layoutX="1450.0" layoutY="327.0" prefHeight="618.0" prefWidth="425.0" />
-         <ImageView fx:id="imgChatbotBtn" fitHeight="69.0" fitWidth="98.0" layoutX="1784.0" layoutY="951.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@media/img_chatbot_btn.png" />
-            </image>
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-         </ImageView>
         </AnchorPane>
     </center>
 </BorderPane>
