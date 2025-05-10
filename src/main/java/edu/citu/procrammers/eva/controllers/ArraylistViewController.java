@@ -23,7 +23,6 @@ import java.util.*;
 
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
-import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
@@ -45,16 +44,13 @@ public class ArraylistViewController implements Initializable {
 
     private JSONObject dataJSON;
 
-    private boolean isChatbotVisible;
+    private boolean isChatbotVisible = false;
 
     private ChatBotController chatBotController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupGlow(imgBackBtn, imgChatbotBtn);
-
-        isChatbotVisible = false;
-
         arrayNodes = new ArrayList<>();
         btns = new Button[]{btnAdd, btnAddAt, btnRemove, btnRemoveAt, btnSearch, btnClear};
 
@@ -179,8 +175,6 @@ public class ArraylistViewController implements Initializable {
             double totalWidth = (capacity) * 50 + capacity * 5;
             double currentX = centerX + totalWidth;
             double currentY = centerY-50;
-            System.out.println("Pos " + capacity +
-                    " X: " + currentX + " Y: " + currentY + " Capacity: " + capacity);
             VBox vBox = createBoxes(capacity,"", currentX, currentY);
             capacity++;
 
