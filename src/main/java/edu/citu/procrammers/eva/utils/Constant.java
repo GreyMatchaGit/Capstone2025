@@ -40,6 +40,7 @@ public class Constant {
         public static final int FULL  = EMPTY + 1;
         public static final int SENTINEL = FULL + 1;
         public static final int FINISHED = SENTINEL + 1;
+        public static final int ERROR = FINISHED + 1;
         public static final int INVALID_COLLISION_METHOD = FINISHED + 1;
     }
 }

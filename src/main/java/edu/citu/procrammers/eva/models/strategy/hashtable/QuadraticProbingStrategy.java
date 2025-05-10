@@ -36,6 +36,10 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
         }
 
         iteration++;
+        if (iteration >= array.size() * 2) {
+            return ERROR;
+        }
+
         return (originalIndex + iteration * iteration) % size;
     }
 }

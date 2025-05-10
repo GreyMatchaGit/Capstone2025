@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -90,7 +91,7 @@ public class HashTableController implements Initializable {
                 ++size;
             } else {
                 System.out.println(LOGGER_PREFIX + String.format(" A collision occurred at index %d. Handling the collision...", index));
-                handleCollision(index, value);
+                handleCollision(index, value, "btnAdd");
             }
 
             System.out.println("Current size is " + size);
@@ -100,14 +101,45 @@ public class HashTableController implements Initializable {
     }
 
     private void remove(int value) {
-        // TODO: Implement remove algorithm
+        int hashCode = getHashCode(value);
+        int index = compress(hashCode);
+
+        try {
+            ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
+
+            select(arrayNodeAtIndex, 1000, SUNSET_ORANGE);
+
+            pause(500, () -> {
+                arrayNodeAtIndex.setNumber(SENTINEL);
+                arrayNodeAtIndex.setValue("-1");
+            });
+
+
+        } catch (RuntimeException e) {
+            System.out.println(LOGGER_PREFIX + " " + e.getMessage());
+        }
     }
 
     private void search(int value) {
-        // TODO: Implement search algorithm
+        int hashCode = getHashCode(value);
+        int index = compress(hashCode);
+
+        try {
+            ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
+
+            if (arrayNodeAtIndex.getNumber() == value) {
+                select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
+            }
+            else {
+                System.out.println(LOGGER_PREFIX + String.format(" %d does not exists.", value));
+            }
+
+        } catch (RuntimeException e) {
+            System.out.println(LOGGER_PREFIX + " " + e.getMessage());
+        }
     }
 
-    private void handleCollision(int index, int value) {
+    private void handleCollision(int index, int value, String buttonId) {
         CollisionStrategy collision = null;
 
         switch (cbCollision.getValue()) {
@@ -129,10 +161,10 @@ public class HashTableController implements Initializable {
                 return;
         }
 
-        handleCollisionHelper(index, value, collision);
+        handleCollisionHelper(index, value, collision, buttonId);
     }
 
-    private void handleCollisionHelper(int index, int value, CollisionStrategy strategy) {
+    private void handleCollisionHelper(int index, int value, CollisionStrategy strategy, String buttonId) {
         ArrayNode currentNode = arrayNodes.get(index);
 
         int nextIndex = strategy.handleCollision(index);
@@ -141,21 +173,23 @@ public class HashTableController implements Initializable {
             Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
 
             // TODO: Implement adding, remove, search
-            currentNode.setNumber(value);
+            if (buttonId.equals("btnAdd")) {
+                currentNode.setNumber(value);
 
-            ++size;
-            System.out.println("Current size is " + size);
+                ++size;
+                System.out.println("Current size is " + size);
+                return;
+            }
+
+        }
+        else if (nextIndex == ERROR) {
+            System.err.println("Infinite collisions occurred.");
             return;
         }
 
         Platform.runLater(() -> check(currentNode, 1000));
 
-        PauseTransition pause = new PauseTransition(Duration.millis(1000));
-        pause.setOnFinished(event -> {
-            handleCollisionHelper(nextIndex, value, strategy);
-        });
-
-        pause.play();
+        pause(1000, () -> handleCollisionHelper(nextIndex, value, strategy, buttonId));
     }
 
     private int getHashCode(int value)  {
@@ -315,11 +349,9 @@ public class HashTableController implements Initializable {
         NavService.navigateTo(Academy);
     }
 
-    public void pause(long durationInMillis) {
-        try {
-            Thread.sleep(durationInMillis);
-        } catch (InterruptedException e) {
-            System.out.println(LOGGER_PREFIX + " " + e.getMessage());
-        }
+    public void pause(long durationInMillis, Runnable onFinished) {
+        PauseTransition pause = new PauseTransition(Duration.millis(durationInMillis));
+        pause.setOnFinished(event -> {onFinished.run(); });
+        pause.play();
     }
 }
