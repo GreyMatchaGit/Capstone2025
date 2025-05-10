@@ -18,4 +18,6 @@ module edu.citu.procrammers.eva {
     opens edu.citu.procrammers.eva.utils to javafx.fxml;
     exports edu.citu.procrammers.eva.models.user;
     opens edu.citu.procrammers.eva.models.user to javafx.fxml;
+    exports edu.citu.procrammers.eva.models.data_structures;
+    opens edu.citu.procrammers.eva.models.data_structures to javafx.fxml;
 }
