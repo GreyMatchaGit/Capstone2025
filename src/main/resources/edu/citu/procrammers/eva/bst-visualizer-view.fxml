@@ -66,7 +66,7 @@
                                  </HBox.margin>
                               </VBox>
                               <Region prefHeight="200.0" prefWidth="15.0" />
-                              <ToggleButton fx:id="tglSeratoMode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#changeSuccessorMode" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-toggle" text="Serato Mode" />
+                              <ToggleButton fx:id="tglSeratoMode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#changeSuccessorMode" prefHeight="55.0" prefWidth="150.0" styleClass="pixel-toggle" text="JVM" />
                            </children>
                         </HBox>
                     </items>

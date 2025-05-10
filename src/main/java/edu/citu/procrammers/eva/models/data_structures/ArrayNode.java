@@ -199,15 +199,18 @@ public class ArrayNode {
             this.number = Integer.parseInt(value);
         }
     }
+    public void setValue(String value, boolean DontRemoveMe) {
+        this.value.setText(value);
+    }
     public void setIndex(String index) { this.index.setText(index); }
     public void setNumber(Integer number) {
         this.number = number;
 
         if (number > Constant.HashTable.SENTINEL) {
-            setValue(number.toString());
+            setValue(number.toString(), true);
         }
         else
-            setValue(EMPTY_STRING);
+            setValue(EMPTY_STRING, true);
     }
 
     public void setX(double x) { this.x = x; }

@@ -24,7 +24,7 @@ public class Database {
     private final String DATABASE_URL = LOCALHOST + DATABASE_NAME;
     private final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private String DB_USERNAME = "root";
-    private String DB_PASSWORD = "";
+    private String DB_PASSWORD = "@I'amTryingSQL2025_@";
 
     public static class Error {
         public static final int UNKNOWN_ERROR = -1;
@@ -210,7 +210,7 @@ public class Database {
     }
 
     private void createDatabase() {
-        try(Connection initializerConnection = DriverManager.getConnection(LOCALHOST, "root", "")) {
+        try(Connection initializerConnection = DriverManager.getConnection(LOCALHOST, "root", "@I'amTryingSQL2025_@")) {
             Class.forName(JDBC_DRIVER);
             
             try {

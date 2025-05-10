@@ -46,7 +46,7 @@ public class LinearProbingStrategy implements CollisionStrategy {
          * Return: FINISHED if it found the index to insert the value in.
          * Else, Iteration increments by 1.
          */
-        System.out.println("Current index; " + index);
+        System.out.println("Current index: " + (array.get(index).getNumber() == EMPTY));
 
         switch (buttonId) {
             case "btnAdd":

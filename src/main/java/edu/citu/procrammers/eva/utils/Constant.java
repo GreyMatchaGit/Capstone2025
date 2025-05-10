@@ -48,6 +48,7 @@ public class Constant {
         public static final String Deque = "deque-visualizer-view.fxml";
         public static final String BST = "bst-visualizer-view.fxml";
         public static final String LinkedList = "linkedlist-visualizer-view.fxml";
+        public static final String Hashtable = "hashtable-visualizer-view.fxml";
     }
 
     public static class Value{

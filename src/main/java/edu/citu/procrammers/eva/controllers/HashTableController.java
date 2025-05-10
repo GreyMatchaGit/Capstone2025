@@ -67,6 +67,7 @@ public class HashTableController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+//        visualizer = new HBox();
         setUI();
         setListeners();
 
@@ -272,7 +273,7 @@ public class HashTableController implements Initializable {
                     pause(500, () -> {
                         currentNode.setNumber(SENTINEL);
                         System.out.printf("Current index[%d] is sentinel = %b\n", index, (currentNode.getNumber() == SENTINEL));
-                        currentNode.setValue("-");
+                        currentNode.setValue("-", true);
 
                         if (strategy instanceof LinearProbingStrategy) {
                             int i = strategy.getNext(index);
@@ -327,7 +328,6 @@ public class HashTableController implements Initializable {
         arrayNodes = new ArrayList<>();
         visualizer.getChildren().clear();
         size = 0;
-
         try {
             if (SEPARATE_CHAINING.equals(cbCollision.getValue()) ) {
                 System.out.println("SEPARATE_CHAINING");
@@ -342,6 +342,7 @@ public class HashTableController implements Initializable {
                 for (int i = 0; i < capacity; ++i) {
                     ArrayNode newNode = new ArrayNode();
                     newNode.setNumber(EMPTY);
+                    System.out.println("newNode.getNumber() EMPTY = " + (newNode.getNumber() == EMPTY));
                     arrayNodes.add(newNode);
                 }
             }
@@ -517,6 +518,7 @@ public class HashTableController implements Initializable {
 
     @FXML
     private void navigatePreviousScreen() {
+        ArrayNode.apVisualizer = null;
         SoundManager.playSFX("sfx/btn_click.MP3");
         NavService.navigateTo(Academy);
     }

@@ -1,1 +1,24 @@
-{}
+{
+  "previousCollisionHandling": "Linear Probing",
+  "previousCapacity": 5,
+  "size": 5,
+  "collisionHandling": "Linear Probing",
+  "previousHashTable": [
+    1,
+    null,
+    null,
+    null,
+    null
+  ],
+  "elements": [
+    1,
+    1,
+    null,
+    null,
+    null
+  ],
+  "type": "hashtable",
+  "operation": "add()",
+  "previousSize": 5,
+  "capacity": 5
+}

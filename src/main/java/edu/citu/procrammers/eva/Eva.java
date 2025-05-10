@@ -3,6 +3,8 @@ package edu.citu.procrammers.eva;
 import edu.citu.procrammers.eva.data.AudioSettings;
 import edu.citu.procrammers.eva.data.Database;
 import edu.citu.procrammers.eva.data.User;
+import edu.citu.procrammers.eva.utils.Constant;
+import edu.citu.procrammers.eva.utils.Hash;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.application.Application;
@@ -41,10 +43,10 @@ public class Eva extends Application {
         Database.getInstance();
         new NavService(primaryStage);
 
-        NavService.navigateTo(Splash);
+        NavService.navigateTo(Hashtable);
 //        NavService.navigateTo(Arrays);
 
-        NavService.setFullScreen(true);
+        NavService.setFullScreen(false);
         primaryStage.show();
     }
 }
