@@ -51,6 +51,8 @@ public class AcademyController {
         ChatService.updateData(new JSONObject());
         ChatService.updateSummary("");
 
+        ChatService.loadChatbot(chatBotController, apChat, GeneralChatbot);
+
         imgBackMenuBtn.setOnMouseClicked(e -> {
             SoundManager.playSFX(SFX_BUTTON_CLICK);
             NavService.navigateTo(Selection);
@@ -63,7 +65,6 @@ public class AcademyController {
 
         imgChatbotBtn.setOnMouseClicked(e ->{
             SoundManager.playSFX(SFX_BUTTON_CLICK);
-            ChatService.loadChatbot(chatBotController, apChat, GeneralChatbot);
             toggleChatpane();
         });
 
