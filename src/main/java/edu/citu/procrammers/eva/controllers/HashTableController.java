@@ -107,12 +107,19 @@ public class HashTableController implements Initializable {
         try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
-            select(arrayNodeAtIndex, 1000, SUNSET_ORANGE);
+            if (arrayNodeAtIndex.getNumber() == value) {
+                select(arrayNodeAtIndex, 1000, SUNSET_ORANGE);
 
-            pause(500, () -> {
-                arrayNodeAtIndex.setNumber(SENTINEL);
-                arrayNodeAtIndex.setValue("-1");
-            });
+                pause(500, () -> {
+                    arrayNodeAtIndex.setNumber(SENTINEL);
+                    arrayNodeAtIndex.setValue("-1");
+                });
+                size--;
+            }
+            else {
+                System.out.println(LOGGER_PREFIX + String.format(" A collision occurred at index %d. Handling the collision...", index));
+                handleCollision(index, value, "btnRemove");
+            }
 
 
         } catch (RuntimeException e) {
@@ -129,6 +136,9 @@ public class HashTableController implements Initializable {
 
             if (arrayNodeAtIndex.getNumber() == value) {
                 select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
+            }
+            else if (arrayNodeAtIndex.getNumber() == SENTINEL) {
+                handleCollision(index, value, "btnSearch");
             }
             else {
                 System.out.println(LOGGER_PREFIX + String.format(" %d does not exists.", value));
@@ -147,10 +157,10 @@ public class HashTableController implements Initializable {
                 collision = new SeparateChainingStrategy(arrayNodes, value);
                 break;
             case LINEAR_PROBING:
-                collision = new LinearProbingStrategy(arrayNodes, value);
+                collision = new LinearProbingStrategy(arrayNodes, value, buttonId);
                 break;
             case QUADRATIC_PROBING:
-                collision = new QuadraticProbingStrategy(arrayNodes, value, index);
+                collision = new QuadraticProbingStrategy(arrayNodes, value, index, buttonId);
                 break;
             default:
                 System.out.println(
@@ -170,16 +180,30 @@ public class HashTableController implements Initializable {
         int nextIndex = strategy.handleCollision(index);
 
         if (nextIndex == FINISHED) {
-            Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
-
             // TODO: Implement adding, remove, search
-            if (buttonId.equals("btnAdd")) {
-                currentNode.setNumber(value);
+            switch(buttonId) {
+                case "btnAdd":
+                    Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
+                    currentNode.setNumber(value);
 
-                ++size;
-                System.out.println("Current size is " + size);
-                return;
+                    ++size;
+                    System.out.println("Current size is " + size);
+                    return;
+                case "btnRemove":
+                    System.out.println();
+                    select(currentNode, 1000, SUNSET_ORANGE);
+
+                    pause(500, () -> {
+                        currentNode.setNumber(SENTINEL);
+                        currentNode.setValue("-1");
+                    });
+                    size--;
+                    return;
+                case "btnSearch":
+                    select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
+                    return;
             }
+
 
         }
         else if (nextIndex == ERROR) {

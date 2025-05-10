@@ -13,13 +13,15 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
     private int size;
     private int iteration;
     private int originalIndex;
+    private String buttonId;
 
-    public QuadraticProbingStrategy(ArrayList<ArrayNode> array, int value, int originalIndex) {
+    public QuadraticProbingStrategy(ArrayList<ArrayNode> array, int value, int originalIndex, String buttonId) {
         this.array = array;
         this.value = value;
         size = array.size();
         this.originalIndex = originalIndex;
         iteration = 0;
+        this.buttonId = buttonId;
     }
 
     @Override
@@ -31,7 +33,12 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
          * Else, Iteration increments by 1.
          */
 
-        if(array.get(index).getNumber() == EMPTY || array.get(index).getNumber() == SENTINEL) {
+        if (buttonId.equals("btnAdd")) {
+            if((array.get(index).getNumber() == EMPTY || array.get(index).getNumber() == SENTINEL)) {
+                return FINISHED;
+            }
+        }
+        else if (value == array.get(index).getNumber()) {
             return FINISHED;
         }
 
