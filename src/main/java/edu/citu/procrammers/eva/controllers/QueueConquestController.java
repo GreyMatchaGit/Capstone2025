@@ -6,6 +6,8 @@ import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -39,6 +42,15 @@ public class QueueConquestController {
     public TextArea taNarration;
     public HBox hbHealthContainer;
     public Label lblRoundCounter;
+    
+    // New UI elements for victory/lose screen
+    public StackPane spGameStatusPane;
+    public StackPane spVictoryContainer;
+    public StackPane spLoseContainer;
+    public ImageView imgVictorySunrays;
+    public ImageView imgVictoryTitle;
+    public ImageView imgLoseTitle;
+    public Button btnRetry;
     
     private User currentUser = Eva.currentUser;
     private final int MAX_HP = 4;
@@ -68,16 +80,14 @@ public class QueueConquestController {
         }
 
         SoundManager.playBackgroundMusic("music/conquest_battle_music.MP3", true);
-        setupGlow(imgBackMenuBtn, imgSettingsBtn, btnDispel);
+        setupGlow(imgBackMenuBtn, imgSettingsBtn, btnDispel, btnRetry);
 
         lblUserName.setText(currentUser.username);
         lblUserLevel.setText("Level " + level);
         pbUserExpLevel.setProgress(exp / 100);
 
         setupHealthIcons();
-
         initializeGameRounds();
-
         setupNewRound();
 
         imgBackMenuBtn.setOnMouseClicked(e -> {
@@ -107,6 +117,12 @@ public class QueueConquestController {
         
         tfSpellCommand.setOnAction(e -> {
             processSpellCommand();
+        });
+        
+        // Set up retry button
+        btnRetry.setOnMouseClicked(e -> {
+            SoundManager.playSFX("sfx/btn_click.MP3");
+            retryLevel();
         });
 
         lblRoundCounter.textProperty().bind(new SimpleStringProperty("Round ").concat(currentRound).concat("/").concat(MAX_ROUNDS));
@@ -177,11 +193,15 @@ public class QueueConquestController {
     }
     
     private void setupNewRound() {
+        // Hide the game status pane if it's visible
+        spGameStatusPane.setVisible(false);
+        
         if (currentIndex < rounds.size()) {
             ConquestRound round = rounds.get(currentIndex);
             currentQueue = new LinkedList<>();
             targetQueue = new LinkedList<>();
-
+            
+            // Copy queues
             copyQueue(round.getStartQueue(), currentQueue);
             copyQueue(round.getTargetQueue(), targetQueue);
             
@@ -199,9 +219,11 @@ public class QueueConquestController {
     }
     
     private void copyQueue(Queue<String> source, Queue<String> destination) {
+        // Create a temporary ArrayList to preserve order
         ArrayList<String> temp = new ArrayList<>(source);
         source.clear();
-
+        
+        // Add all elements back to both queues
         for (String element : temp) {
             source.add(element);
             destination.add(element);
@@ -217,10 +239,11 @@ public class QueueConquestController {
         if (queue.isEmpty()) {
             return "[]";
         }
-
-        // Queue to list para sa display
+        
+        // Convert queue to list for display without modifying the queue
         List<String> tempList = new ArrayList<>(queue);
-
+        
+        // Format the display
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < tempList.size(); i++) {
             sb.append("\"").append(tempList.get(i)).append("\"");
@@ -236,17 +259,20 @@ public class QueueConquestController {
         stopTimer();
         
         pbTimeLimit.setProgress(1.0);
-
+        
+        // Calculate number of frames for smooth animation (25 frames per second)
         int totalFrames = 40 * 25;  // 40 seconds * 25 fps
         double decrementPerFrame = 1.0 / totalFrames;
         
         timerTimeline = new Timeline();
         timerTimeline.setCycleCount(totalFrames);
-
+        
+        // Add frame for decrementing progress
         KeyFrame keyFrame = new KeyFrame(Duration.millis(40), event -> {
             double newProgress = pbTimeLimit.getProgress() - decrementPerFrame;
             pbTimeLimit.setProgress(newProgress);
-
+            
+            // Check if we've reached the end
             if (newProgress <= 0) {
                 timeExpired();
             }
@@ -316,11 +342,13 @@ public class QueueConquestController {
                 }
                 return;
             }
-
+            
+            // Play attack sound for any successful spell operation
             SoundManager.playSFX("sfx/attack.MP3");
             
             updateQueueDisplay();
 
+            // Check if queues match by comparing their string representations
             if (formatQueueDisplay(currentQueue).equals(formatQueueDisplay(targetQueue))) {
                 stopTimer();
                 gameActive = false;
@@ -332,6 +360,9 @@ public class QueueConquestController {
                 if (currentIndex < MAX_ROUNDS) {
                     currentRound.set(currentRound.get() + 1);
                     taNarration.appendText("Prepare for the next spell...\n");
+
+                    // Play next round sound effect
+                    SoundManager.playSFX("sfx/next-round.MP3");
 
                     Timeline nextRoundDelay = new Timeline(
                         new KeyFrame(Duration.seconds(4), event -> {
@@ -384,31 +415,118 @@ public class QueueConquestController {
         stopTimer();
         gameActive = false;
         
+        // Show game status pane
+        spGameStatusPane.setVisible(true);
+        
         if (victory) {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            // Play victory sound effect
+            SoundManager.playSFX("sfx/victory.MP3");
+            
+            // Show victory container and hide lose container
+            spVictoryContainer.setVisible(true);
+            spLoseContainer.setVisible(false);
+            
+            // Apply victory animations
+            applyVictoryAnimations();
+            
+            // Mark level as completed
+            Eva.completedLevels.add(QueueConquest);
+            
+            // Clear narration and add victory message
             taNarration.clear();
             taNarration.appendText("The wizard's staff crumbles, and the skies clear. You've broken the final chant. The Kingdom of EVA is safe... for now.\n");
-
-            Eva.completedLevels.add(QueueConquest);
         } else {
-            SoundManager.playSFX("sfx/btn_click.MP3");
+            // Play lose sound effect
+            SoundManager.playSFX("sfx/lose.MP3");
+            
+            // Show lose container and hide victory container
+            spLoseContainer.setVisible(true);
+            spVictoryContainer.setVisible(false);
+            
+            // Apply lose animations
+            applyLoseAnimations();
+            
+            // Clear narration and add defeat message
             taNarration.clear();
             taNarration.appendText("The Spellbinder's magic overwhelms you. Your wards shatter completely, and darkness falls...\n");
             taNarration.appendText("But do not lose heart, brave one. Return when you've recovered to challenge the duel again.\n");
         }
 
+        // Delay before returning to conquest screen
         Timeline returnDelay = new Timeline(
-            new KeyFrame(Duration.seconds(5), event -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
-                fadeOut.setFromValue(0);
-                fadeOut.setToValue(1);
-                fadeOut.setOnFinished(e -> {
-                    SoundManager.fadeOutMusic(() -> NavService.navigateTo(Conquest));
-                });
-                fadeOut.play();
+            new KeyFrame(Duration.seconds(8), event -> {
+                if (victory) {
+                    // Return to conquest view after showing victory screen
+                    FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
+                    fadeOut.setFromValue(0);
+                    fadeOut.setToValue(1);
+                    fadeOut.setOnFinished(e -> {
+                        SoundManager.fadeOutMusic(() -> NavService.navigateTo(Conquest));
+                    });
+                    fadeOut.play();
+                }
+                // For defeat, don't automatically return - let player click retry or back button
             })
         );
         returnDelay.play();
+    }
+    
+    /**
+     * Apply animations to victory screen elements
+     */
+    private void applyVictoryAnimations() {
+        // Create rotation animation for sunrays image
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(10), imgVictorySunrays);
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
+        rotateTransition.setInterpolator(javafx.animation.Interpolator.LINEAR);
+        rotateTransition.play();
+        
+        // Create scale animation for victory title
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(1.5), imgVictoryTitle);
+        scaleTransition.setFromX(0.8);
+        scaleTransition.setFromY(0.8);
+        scaleTransition.setToX(1.2);
+        scaleTransition.setToY(1.2);
+        scaleTransition.setCycleCount(2);
+        scaleTransition.setAutoReverse(true);
+        scaleTransition.play();
+    }
+    
+    /**
+     * Apply animations to lose screen elements
+     */
+    private void applyLoseAnimations() {
+        // Create subtle scale animation for lose title
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(1), imgLoseTitle);
+        scaleTransition.setFromX(0.95);
+        scaleTransition.setFromY(0.95);
+        scaleTransition.setToX(1.05);
+        scaleTransition.setToY(1.05);
+        scaleTransition.setCycleCount(2);
+        scaleTransition.setAutoReverse(true);
+        scaleTransition.play();
+    }
+    
+    /**
+     * Retry the current level
+     */
+    private void retryLevel() {
+        // Reset health
+        currentHP.set(MAX_HP);
+        updateHealthDisplay();
+        
+        // Reset round counter
+        currentRound.set(1);
+        
+        // Reset game index
+        currentIndex = 0;
+        
+        // Hide game status pane
+        spGameStatusPane.setVisible(false);
+        
+        // Setup new round
+        setupNewRound();
     }
 
     private static class ConquestRound {

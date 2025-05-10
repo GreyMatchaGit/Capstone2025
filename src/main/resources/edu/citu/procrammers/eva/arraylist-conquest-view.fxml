@@ -126,11 +126,10 @@
                   </VBox>
                </children>
             </HBox>
-            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
-            <StackPane>
+            <StackPane fx:id="spGameStatusPane" visible="false">
                <children>
                   <AnchorPane opacity="0.54" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;" />
-                  <StackPane prefHeight="1080.0" prefWidth="1920.0" visible="false">
+                  <StackPane fx:id="spVictoryContainer" prefHeight="1080.0" prefWidth="1920.0" visible="false">
                      <children>
                         <ImageView fx:id="imgVictorySunrays" fitHeight="690.0" fitWidth="1229.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -144,7 +143,7 @@
                         </ImageView>
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="1080.0" prefWidth="1920.0">
+                  <StackPane fx:id="spLoseContainer" prefHeight="1080.0" prefWidth="1920.0" visible="false">
                      <children>
                         <ImageView fx:id="imgLoseTitle" fitHeight="188.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -156,6 +155,7 @@
                   </StackPane>
                </children>
             </StackPane>
+            <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
          </children>
       </AnchorPane>
    </center>

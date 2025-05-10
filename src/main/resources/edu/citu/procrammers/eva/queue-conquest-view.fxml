@@ -127,6 +127,35 @@
                </children>
             </HBox>
             <Pane fx:id="fadePane" mouseTransparent="true" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #221f1e;" />
+            <StackPane fx:id="spGameStatusPane" visible="false">
+                <children>
+                   <AnchorPane opacity="0.54" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;" />
+                   <StackPane fx:id="spVictoryContainer" prefHeight="1080.0" prefWidth="1920.0" visible="false">
+                      <children>
+                         <ImageView fx:id="imgVictorySunrays" fitHeight="690.0" fitWidth="1229.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                               <Image url="@media/img_victory_sunrays.png" />
+                            </image>
+                         </ImageView>
+                         <ImageView fx:id="imgVictoryTitle" fitHeight="188.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                               <Image url="@media/img_victory_title.png" />
+                            </image>
+                         </ImageView>
+                      </children>
+                   </StackPane>
+                   <StackPane fx:id="spLoseContainer" prefHeight="1080.0" prefWidth="1920.0" visible="false">
+                      <children>
+                         <ImageView fx:id="imgLoseTitle" fitHeight="188.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                               <Image url="@media/img_lose_title.png" />
+                            </image>
+                         </ImageView>
+                         <Button fx:id="btnRetry" mnemonicParsing="false" prefHeight="51.0" prefWidth="134.0" styleClass="pixel-button" text="Retry" translateY="200.0" />
+                      </children>
+                   </StackPane>
+                </children>
+             </StackPane>
          </children>
       </AnchorPane>
    </center>
