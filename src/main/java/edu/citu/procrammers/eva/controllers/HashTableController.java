@@ -1,11 +1,9 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.models.strategy.hashtable.*;
 import edu.citu.procrammers.eva.utils.*;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,6 +30,7 @@ import static edu.citu.procrammers.eva.utils.Constant.HashTable.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.Academy;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
+import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.fillRectangle;
 
 public class HashTableController implements Initializable {
 
@@ -107,19 +106,19 @@ public class HashTableController implements Initializable {
         try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
-            if (arrayNodeAtIndex.getNumber() == value) {
-                select(arrayNodeAtIndex, 1000, SUNSET_ORANGE);
+//            if (arrayNodeAtIndex.getNumber() == value) {
+//                select(arrayNodeAtIndex, 1000, SUNSET_ORANGE);
+//
+//                pause(500, () -> {
+//                    arrayNodeAtIndex.setNumber(SENTINEL);
+//                    arrayNodeAtIndex.setValue("-");
+//                });
+//                size--;
+//            }
+//            else {
 
-                pause(500, () -> {
-                    arrayNodeAtIndex.setNumber(SENTINEL);
-                    arrayNodeAtIndex.setValue("-1");
-                });
-                size--;
-            }
-            else {
-                System.out.println(LOGGER_PREFIX + String.format(" A collision occurred at index %d. Handling the collision...", index));
-                handleCollision(index, value, "btnRemove");
-            }
+              handleCollision(index, value, "btnRemove");
+//            }
 
 
         } catch (RuntimeException e) {
@@ -134,15 +133,16 @@ public class HashTableController implements Initializable {
         try {
             ArrayNode arrayNodeAtIndex = arrayNodes.get(index);
 
-            if (arrayNodeAtIndex.getNumber() == value) {
-                select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
-            }
-            else if (arrayNodeAtIndex.getNumber() == SENTINEL || SEPARATE_CHAINING.equals(cbCollision.getValue())) {
-                handleCollision(index, value, "btnSearch");
-            }
-            else {
-                System.out.println(LOGGER_PREFIX + String.format(" %d does not exists.", value));
-            }
+//            if (arrayNodeAtIndex.getNumber() == value) {
+//                select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
+//            }
+//            else if (arrayNodeAtIndex.getNumber() == SENTINEL || SEPARATE_CHAINING.equals(cbCollision.getValue())) {
+//                handleCollision(index, value, "btnSearch");
+//            }
+//            else {
+//                System.out.println(LOGGER_PREFIX + String.format(" %d does not exists.", value));
+//            }
+            handleCollision(index, value, "btnSearch");
 
         } catch (RuntimeException e) {
             System.out.println(LOGGER_PREFIX + " " + e.getMessage());
@@ -178,13 +178,18 @@ public class HashTableController implements Initializable {
         ArrayNode currentNode = arrayNodes.get(index);
         int nextIndex = strategy.handleCollision(index);
 
-        if (nextIndex == FINISHED) {
-            if (strategy instanceof SeparateChainingStrategy) {
-                Platform.runLater(() -> select(currentNode, 1000, MALACHITE));
-//                ++size;
-                return;
+        if (strategy instanceof SeparateChainingStrategy) {
+            if (!buttonId.equals("btnAdd")) {
+                highlightNode(currentNode, MALACHITE).play();
             }
+            else {
+                Platform.runLater( () -> select(currentNode, 1000, MALACHITE) );
+            }
+//
+            return;
+        }
 
+        if (nextIndex == FINISHED) {
             switch(buttonId) {
                 case "btnAdd":
                     System.out.println("ADDING");
@@ -200,12 +205,18 @@ public class HashTableController implements Initializable {
 
                     pause(500, () -> {
                         currentNode.setNumber(SENTINEL);
-                        currentNode.setValue("-1");
+                        currentNode.setValue("-");
                     });
                     size--;
                     return;
                 case "btnSearch":
-                    select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
+                    if (strategy.getIterations() != capacity) {
+                        select(arrayNodes.get(index), 1000, Color.GREENYELLOW);
+                    }
+                    else {
+                        select(arrayNodes.get(index), 1000, PASTEL_ORANGE);
+                    }
+
                     return;
             }
 
@@ -288,6 +299,26 @@ public class HashTableController implements Initializable {
         });
 
         pause.play();
+    }
+
+    public static PauseTransition unhighlightNode(ArrayNode arrayNode, long durationInMillis, Color color) {
+        PauseTransition pause = new PauseTransition(Duration.millis(durationInMillis));
+        pause.setOnFinished(event -> {
+            fadeColorTo(arrayNode, color, Constant.Color.DEFAULTR).play();
+        });
+        return pause;
+    }
+
+    public static ParallelTransition highlightNode(ArrayNode arrayNode, Color color) {
+        ParallelTransition st = new ParallelTransition();
+
+        st.getChildren().addAll(
+                pulseNode(arrayNode, Constant.Color.DEFAULT, color),
+                fadeColorTo(arrayNode, Constant.Color.DEFAULTR, color)
+        );
+
+
+        return st;
     }
 
     public static void pulseAllNodes(long durationInMillis, List<ArrayNode> arrayNodes) {

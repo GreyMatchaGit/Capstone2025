@@ -1,6 +1,8 @@
 package edu.citu.procrammers.eva.models.strategy.hashtable;
 
-import edu.citu.procrammers.eva.utils.ArrayNode;
+
+
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 
 import java.util.ArrayList;
 
@@ -11,7 +13,7 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
     private ArrayList<ArrayNode> array;
     private int value;
     private int size;
-    private int iteration;
+    private int iterations;
     private int originalIndex;
     private String buttonId;
 
@@ -20,8 +22,21 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
         this.value = value;
         size = array.size();
         this.originalIndex = originalIndex;
-        iteration = 0;
+        iterations = 0;
         this.buttonId = buttonId;
+    }
+
+    public int checkNext(int index) {
+        return (originalIndex + iterations * iterations) % size;
+    }
+
+    public int checkPrevious() {
+        return (originalIndex + iterations * iterations) % size;
+    }
+
+    @Override
+    public int getIterations() {
+        return iterations;
     }
 
     @Override
@@ -32,20 +47,27 @@ public class QuadraticProbingStrategy implements CollisionStrategy {
          * Else, Iteration increments by 1.
          */
 
-        if (buttonId.equals("btnAdd")) {
-            if((array.get(index).getNumber() == EMPTY || array.get(index).getNumber() == SENTINEL)) {
-                return FINISHED;
-            }
-        }
-        else if (value == array.get(index).getNumber()) {
-            return FINISHED;
+        switch (buttonId) {
+            case "btnAdd":
+                if (array.get(index).getNumber() == EMPTY || array.get(index).getNumber() == SENTINEL) {
+                    return FINISHED;
+                }
+                break;
+
+            case "btnRemove":
+            case "btnSearch":
+                iterations++;
+                if (value == array.get(index).getNumber() || iterations >= array.size() || array.get(index).getNumber() == EMPTY) {
+                    return FINISHED;
+                }
+                break;
         }
 
-        iteration++;
-        if (iteration >= array.size() * 2) {
+        iterations++;
+        if (iterations >= array.size() * 2) {
             return ERROR;
         }
 
-        return (originalIndex + iteration * iteration) % size;
+        return (originalIndex + iterations * iterations) % size;
     }
 }

@@ -10,8 +10,8 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-import static edu.citu.procrammers.eva.utils.Constant.Page.*;
-import static edu.citu.procrammers.eva.utils.Constant.Page.SEARCH;
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
+
 
 public class ArrayListAnimations {
 

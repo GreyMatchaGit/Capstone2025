@@ -1,6 +1,10 @@
 package edu.citu.procrammers.eva.models.strategy.hashtable;
 
-import edu.citu.procrammers.eva.utils.ArrayNode;
+import edu.citu.procrammers.eva.controllers.HashTableController;
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
+import edu.citu.procrammers.eva.utils.Constant;
+import javafx.animation.SequentialTransition;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
@@ -19,6 +23,11 @@ public class SeparateChainingStrategy implements CollisionStrategy {
     }
 
     @Override
+    public int getIterations() {
+        return 0;
+    }
+
+    @Override
     public int handleCollision(int index) {
         switch (buttonId) {
             case "btnAdd":
@@ -28,7 +37,13 @@ public class SeparateChainingStrategy implements CollisionStrategy {
                 array.get(index).removeFromBucket(value);
                 break;
             case "btnSearch":
-                array.get(index).searchBucket(value, null);
+                SequentialTransition st = new SequentialTransition();
+                array.get(index).searchBucket(value, st);
+
+                st.setOnFinished( event -> {
+                    HashTableController.unhighlightNode(array.get(index), 400, Constant.Color.DEFAULTR).play();
+                });
+                st.play();
                 break;
             default:
                 throw new IllegalArgumentException("Invalid button id: " + buttonId);

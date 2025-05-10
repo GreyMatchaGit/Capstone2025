@@ -1,7 +1,12 @@
 package edu.citu.procrammers.eva.models.data_structures;
 
 import edu.citu.procrammers.eva.controllers.HashTableController;
+import edu.citu.procrammers.eva.utils.Constant;
+import edu.citu.procrammers.eva.utils.FullContainerException;
+import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -14,9 +19,10 @@ import javafx.util.Duration;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Consumer;
 
-import static edu.citu.procrammers.eva.utils.Constant.Color.PASTEL_ORANGE;
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.EMPTY_STRING;
 import static javafx.scene.paint.Color.GREENYELLOW;
 
@@ -116,43 +122,54 @@ public class ArrayNode {
     }
 
     public int addToBucket(int number) {
-        ArrayNode newNode = new ArrayNode(bucketContainer);
-        newNode.id = bucket.size();
-        newNode.setNumber(number);
-        bucket.add(newNode);
+        try {
+            if (bucket.size() == BUCKET_CAPACITY) {
+                throw new FullContainerException();
+            }
+
+            ArrayNode newNode = new ArrayNode(bucketContainer);
+            newNode.id = bucket.size();
+            newNode.setNumber(number);
+            bucket.add(newNode);
+
+
+        } catch (RuntimeException e) {
+            System.out.println("[ArrayNode] " + e.getMessage());
+        }
         return bucket.size();
     }
 
-    public ArrayNode searchBucket(int number, Consumer<ArrayNode> consumer) {
+    public ArrayNode searchBucket(int number, SequentialTransition st) {
         for (ArrayNode node : bucket) {
-            HashTableController.select(node, 1000, PASTEL_ORANGE);
             if (node.getNumber() == number) {
-                PauseTransition pause = new PauseTransition(Duration.millis(1000));
-                pause.setOnFinished(event -> {
-                    HashTableController.select(node, 1000, GREENYELLOW);
-                    consumer.accept(node);
-                });
-                pause.play();
+                st.getChildren().addAll( HashTableController.highlightNode(node, GREENYELLOW),
+                        HashTableController.unhighlightNode(node, 400, GREENYELLOW));
                 return node;
-
             }
+            st.getChildren().addAll( HashTableController.highlightNode(node, PASTEL_ORANGE),
+                    HashTableController.unhighlightNode(node, 400, PASTEL_ORANGE));
+
         }
         return null;
     }
 
     public int removeFromBucket(int number) {
-        searchBucket(number, node -> {
-            PauseTransition pause = new PauseTransition(Duration.millis(1000));
-            pause.setOnFinished(event -> {
-                bucket.remove(node);
-                bucketContainer.getChildren().remove(node.vbox);
-            });
-            pause.play();
+        SequentialTransition st = new SequentialTransition();
+        ArrayNode node = searchBucket(number, st);
 
+        ObservableList<Animation> animations = st.getChildren();
+        int size = animations.size();
+        animations.remove(size - 2, size);
+
+        animations.addAll(HashTableController.highlightNode(node, SUNSET_ORANGE),
+                HashTableController.unhighlightNode(node, 400, SUNSET_ORANGE));
+
+        st.setOnFinished(event -> {
+            bucket.remove(node);
+            bucketContainer.getChildren().remove(node.vbox);
+            HashTableController.unhighlightNode(this, 400, Constant.Color.DEFAULTR).play();
         });
-
-
-
+        st.play();
 
         return bucket.size();
     }

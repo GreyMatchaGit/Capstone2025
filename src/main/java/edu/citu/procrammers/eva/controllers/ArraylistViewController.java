@@ -22,6 +22,7 @@ import javafx.util.Pair;
 import java.net.URL;
 import java.util.*;
 
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
@@ -333,7 +334,6 @@ public class ArraylistViewController implements Initializable {
         }
 
         traversal.play();
-
     }
 
     private ArrayNode searchHelper(int num, SequentialTransition traversal) {
