@@ -7,6 +7,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
@@ -50,9 +51,9 @@ public class LinkedListAnimation {
         if (leftGraphic == null || rightGraphic == null) return;
 
         // Create the link (a line representation)
-        Line link = new Line();
+        Arrow link = new Arrow();
         link.setStrokeWidth(2);
-        link.setStyle("-fx-stroke: #E9DBD5;");
+        link.setArrowStyle("-fx-stroke: #E9DBD5;");
 
         // Bind the line's start and end to the graphical representation positions
         link.startXProperty().bind(Bindings.createDoubleBinding(
@@ -66,7 +67,7 @@ public class LinkedListAnimation {
         ));
 
         link.endXProperty().bind(Bindings.createDoubleBinding(
-                () -> rightGraphic.getLayoutX() + SinglyNode.radius,
+                () -> rightGraphic.getLayoutX() - 2,
                 rightGraphic.layoutXProperty()
         ));
 
@@ -81,6 +82,8 @@ public class LinkedListAnimation {
         canvas.getChildren().addFirst(link);
     }
 
+    SinglyNodeGraphic oldHead = null;
+    SinglyNodeGraphic oldTail = null;
     InvalidationListener oldHeadListener = null;
     InvalidationListener oldTailListener = null;
 
@@ -112,10 +115,19 @@ public class LinkedListAnimation {
         double tailWidth =  tailBounds.getWidth();
 
         SinglyNodeGraphic headGraphic = getNodeGraphic(linkedList.headProperty.get());
-        System.out.println("LinkedList head is " + linkedList.headProperty.get().value);
         SinglyNodeGraphic tailGraphic = getNodeGraphic(linkedList.tailProperty.get());
 
+        System.out.println("LinkedList head is " + linkedList.headProperty.get().value);
+
+        if (oldHeadListener != null) {
+            oldHead.layoutXProperty().removeListener(oldHeadListener);
+        }
+        if (oldTailListener != null) {
+            oldTail.layoutXProperty().removeListener(oldTailListener);
+        }
+
         InvalidationListener headListener = (_) -> {
+            System.out.println();
             head.setLayoutX(headGraphic.getLayoutX() + SinglyNode.radius - headWidth / 2.0);
             head.setLayoutY(headGraphic.getLayoutY() - SinglyNode.radius * 0.5);
         };
@@ -125,11 +137,9 @@ public class LinkedListAnimation {
             tail.setLayoutY(tailGraphic.getLayoutY() + SinglyNode.radius * 3);
         };
 
-        if (oldHeadListener != null)
-            headGraphic.layoutXProperty().removeListener(oldHeadListener);
-        if (oldTailListener != null)
-            tailGraphic.layoutXProperty().removeListener(oldTailListener);
 
+        oldHead = headGraphic;
+        oldTail = tailGraphic;
         oldHeadListener = headListener;
         oldTailListener = tailListener;
 

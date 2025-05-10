@@ -31,7 +31,7 @@ public class SinglyLinkedList {
         tail = null;
         size = 0;
         width = 0;
-        spacing = 10;
+        spacing = 20;
     }
 
     public void addTail(int value) {
