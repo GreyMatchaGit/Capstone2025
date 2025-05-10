@@ -43,6 +43,7 @@ public class Constant {
         public static final String Queue = "queue-visualizer-view.fxml";
         public static final String Deque = "deque-visualizer-view.fxml";
         public static final String BST = "bst-visualizer-view.fxml";
+        public static final String LinkedList = "linkedlist-visualizer-view.fxml";
         public static final String HashTable = "hashtable-visualizer-view.fxml";
         public static final String Bubble = "bubblesort-visualizer-view.fxml";
     }

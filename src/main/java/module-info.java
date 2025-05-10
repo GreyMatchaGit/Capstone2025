@@ -9,6 +9,7 @@ module edu.citu.procrammers.eva {
     requires jdk.compiler;
     requires org.json;
     requires java.net.http;
+    requires jdk.jfr;
 
 
     opens edu.citu.procrammers.eva to javafx.fxml;

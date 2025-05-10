@@ -161,10 +161,4 @@ public class AnimationManager {
             step();
         }
     }
-
-
-
-
-
-
 }
