@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -297,6 +298,7 @@ public class HashTableController implements Initializable {
 
         // when the collision method is changed, reset the hashtable
         cbCollision.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            cbCollision.getItems().remove("");
             if (oldValue == null) return;
             if (!oldValue.equals(newValue)) {
                 initHashTable(capacity);
@@ -395,11 +397,26 @@ public class HashTableController implements Initializable {
         setupGlow(imgBackBtn);
         visualizer.setSpacing(10.0);
 
+        cbCollision.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null || item.isEmpty()) {
+                    setText("Collision"); // Displayed when "" is selected
+                } else {
+                    setText(item);
+                }
+            }
+        });
+
         ArrayList<String> collisionMethods = new ArrayList<>();
+        collisionMethods.add("");
         collisionMethods.add(CollisionMethod.LINEAR_PROBING);
         collisionMethods.add(CollisionMethod.QUADRATIC_PROBING);
         collisionMethods.add(SEPARATE_CHAINING);
+
         cbCollision.setItems(FXCollections.observableList(collisionMethods));
+        cbCollision.setValue("");
     }
 
     public void clear() {
