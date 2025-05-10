@@ -1,7 +1,9 @@
 package edu.citu.procrammers.eva.models.data_structures;
 
+import edu.citu.procrammers.eva.utils.Constant;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -16,9 +18,9 @@ import java.util.Objects;
 
 public class ArrayNode {
 
-    private static AnchorPane apVisualizer;
+    private static Pane apVisualizer;
 
-    public static void initializeVisualizer(AnchorPane anchorPane) {
+    public static void initializeVisualizer(Pane anchorPane) {
         if (apVisualizer == null) {
             apVisualizer = anchorPane;
         }

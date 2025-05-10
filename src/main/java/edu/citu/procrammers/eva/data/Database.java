@@ -96,7 +96,7 @@ public class Database {
             String resultPassword = null;
 
             while (resultSet.next()) {
-                resultUID = resultSet.getInt("id");
+                resultUID = resultSet.getInt("uid");
                 resultUsername = resultSet.getString("username");
                 resultPassword = resultSet.getString("password");
             }

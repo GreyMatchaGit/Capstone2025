@@ -1,4 +1,16 @@
 {
-  "previousTree": {"element": 1},
+  "previousTree": {
+    "left": {"element": 123},
+    "right": {
+      "left": {"element": 301},
+      "element": 435
+    },
+    "element": 300
+  },
+  "root": {
+    "left": {"element": 123},
+    "right": {"element": 435},
+    "element": 301
+  },
   "type": "binary_tree"
 }

@@ -1,5 +1,6 @@
 package edu.citu.procrammers.eva.controllers;
 
+import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.models.strategy.hashtable.*;
 import edu.citu.procrammers.eva.utils.*;
 import javafx.animation.KeyFrame;

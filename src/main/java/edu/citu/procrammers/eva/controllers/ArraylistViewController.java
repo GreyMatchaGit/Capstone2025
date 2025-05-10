@@ -1,6 +1,7 @@
 package edu.citu.procrammers.eva.controllers;
 
 import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
+import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations;
@@ -18,10 +19,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.*;
 
+import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.UIElementUtils.setupGlow;
 import static edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations.*;
@@ -39,6 +42,7 @@ public class ArraylistViewController implements Initializable {
     public Button[] btns;
 
     private List<ArrayNode> arrayNodes;
+    private List<ArrayNode> arrayList;
     private int size, capacity, maxCap;
     private JSONObject dataJSON;
 
@@ -210,7 +214,6 @@ public class ArraylistViewController implements Initializable {
         int num = getNum();
         tfPromptPos.clear();
         if(num == Integer.MIN_VALUE) return;
-        arrayList.add(num);
         writeDataJSON();
 
         if(size == capacity) {
