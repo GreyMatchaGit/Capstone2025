@@ -6,6 +6,19 @@ public class Constant {
 
     public static final String EMPTY_STRING = "";
 
+    public static final String[] ORACLE_MESSAGES = {
+            "The Oracle is pondering your words...",
+            "Consulting ancient scrolls...",
+            "The Oracle is formulating wisdom...",
+            "Seeking insight...",
+            "The Oracle is meditating on your query...",
+            "Gazing into the data beyond...",
+            "Whispers of knowledge are forming...",
+            "Divining the best response...",
+            "Channeling the truth...",
+            "Interpreting the signs..."
+    };
+
     public static class Page {
         public static final String Loading = "loading-view.fxml";
         public static final String ErrorScreen = "error-view.fxml";

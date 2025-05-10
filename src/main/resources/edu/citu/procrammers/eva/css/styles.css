@@ -276,3 +276,8 @@
     -fx-font-family: 'Pixelify Sans';
     -fx-font-size: 16;
 }
+
+.loading{
+    -fx-font-style: italic;
+    -fx-opacity: 0.6;
+}

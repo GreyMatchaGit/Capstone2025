@@ -21,8 +21,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import static edu.citu.procrammers.eva.utils.Constant.ORACLE_MESSAGES;
 import static edu.citu.procrammers.eva.utils.Constant.Page.*;
 import static edu.citu.procrammers.eva.utils.Constant.Sound.SFX_BUTTON_CLICK;
 
@@ -75,7 +77,9 @@ public class ChatBotController {
         if (input.isEmpty()) return;
 
         HBox userBubble = createUserBubble(input);
+        HBox loadingBubble = createLoadingBubble();
         vbConversation.getChildren().add(userBubble);
+        vbConversation.getChildren().add(loadingBubble);
 
         tfChatBox.clear();
 
@@ -92,7 +96,7 @@ public class ChatBotController {
         }
 
         updatePrompt(promptJSON, 2, input);
-        sendChatRequest(apiKey, promptJSON);
+        sendChatRequest(apiKey, promptJSON, loadingBubble);
     }
 
 
@@ -102,7 +106,7 @@ public class ChatBotController {
                 .put("content", input);
     }
 
-    private void sendChatRequest(String apiKey, JSONObject promptJSON) {
+    private void sendChatRequest(String apiKey, JSONObject promptJSON, HBox loadingBubble) {
         CompletableFuture.runAsync(() -> {
             try {
                 HttpRequest request = HttpRequest.newBuilder()
@@ -135,7 +139,9 @@ public class ChatBotController {
                 }
 
                 HBox botBubble = createBotBubble(replyText);
-                Platform.runLater(() -> vbConversation.getChildren().add(botBubble));
+                Platform.runLater(() -> {
+                    vbConversation.getChildren().add(botBubble);
+                    vbConversation.getChildren().remove(loadingBubble);});
 
             } catch (IOException | InterruptedException e) {
                 Platform.runLater(() -> showError("Failed to communicate with API: " + e.getMessage()));
@@ -168,4 +174,24 @@ public class ChatBotController {
         hbox.getChildren().add(lbl);
         return hbox;
     }
+
+    private Label generateLoadingLabel() {
+        Random rand = new Random();
+        String message = ORACLE_MESSAGES[rand.nextInt(ORACLE_MESSAGES.length)];
+        Label lbl = new Label(message);
+        lbl.getStyleClass().add("bot-chat-bubble");
+        lbl.getStyleClass().add("loading");
+        return lbl;
+    }
+
+    private HBox createLoadingBubble() {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label lbl = generateLoadingLabel();
+        lbl.getStyleClass().add("bot-chat-bubble");
+        lbl.getStyleClass().add("loading");
+        hbox.getChildren().add(lbl);
+        return hbox;
+    }
+
 }
