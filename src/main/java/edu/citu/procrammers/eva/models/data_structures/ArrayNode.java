@@ -8,6 +8,7 @@ import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import edu.citu.procrammers.eva.utils.Constant;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,6 +27,8 @@ import java.util.function.Consumer;
 import static edu.citu.procrammers.eva.utils.Constant.Color.*;
 import static edu.citu.procrammers.eva.utils.Constant.EMPTY_STRING;
 import static javafx.scene.paint.Color.GREENYELLOW;
+
+import java.util.Objects;
 
 public class ArrayNode {
 

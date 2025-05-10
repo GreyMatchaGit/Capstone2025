@@ -7,10 +7,14 @@ import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -30,18 +34,21 @@ public class AcademyController {
     private int index = -2;
 
     public Pane fadePane;
-    public AnchorPane apChat;
+    public AnchorPane apPrefaceP1, apPrefaceP2, apChat;
     public ChatBotController chatBotController;
-    public AnchorPane apPrefaceP1, apPrefaceP2;
-    public ImageView imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane;
     public StackPane spChatbot;
+    public ImageView imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer;
+    public ImageView imgToggleChatbotPane, imgChatbotBtn;
     public TextArea taDiscussion, taCodeSnippet;
     public Text txtTopicTitle, txtTopicNum;
-
 
     @FXML
     public void initialize() {
         SoundManager.playBackgroundMusic(MUSIC_ACADEMY, true);
+
+        SoundManager.playBackgroundMusic("music/academy_music.MP3", true);
+        setupGlow(imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane);
+
         try {
             lessons =  Database.getInstance().loadLessons();
         } catch (SQLException e) {
@@ -68,8 +75,6 @@ public class AcademyController {
             toggleChatpane();
         });
 
-        setupGlow(imgChatbotBtn, imgBackMenuBtn, imgSettingsBtn, imgBackBtn, imgNextBtn, imgViewVisualizer, imgToggleChatbotPane);
-
         imgBackBtn.setVisible(false);
         spChatbot.setVisible(false);
 
@@ -80,7 +85,9 @@ public class AcademyController {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
-            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic());
+            fadeOut.setOnFinished(event -> {
+                SoundManager.fadeOutMusic(() -> NavService.navigateTo(Selection));
+            });
             fadeOut.play();
         });
 
@@ -143,6 +150,13 @@ public class AcademyController {
         } else if (index == -1) {
             apPrefaceP2.setVisible(true);
             apPrefaceP2.setTranslateX(0);
+            return;
+        }
+
+
+        imgBackBtn.setVisible(index - 1 >= 0);
+        if (index > 0 && index < lessons.size()) {
+            imgNextBtn.setVisible(true);
         }
 
         loadLessonContents();

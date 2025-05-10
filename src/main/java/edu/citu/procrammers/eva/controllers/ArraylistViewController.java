@@ -4,18 +4,23 @@ import edu.citu.procrammers.eva.models.data_structures.ArrayNode;
 import edu.citu.procrammers.eva.utils.ChatService;
 import edu.citu.procrammers.eva.utils.NavService;
 import edu.citu.procrammers.eva.utils.SoundManager;
+import edu.citu.procrammers.eva.utils.animations.arraylist.ArrayListAnimations;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.json.JSONObject;
+import javafx.util.Pair;
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -40,7 +45,13 @@ public class ArraylistViewController implements Initializable {
     public Button[] btns;
 
     private List<ArrayNode> arrayNodes;
+    private List<ArrayNode> arrayList;
     private int size, capacity, maxCap;
+    private JSONObject dataJSON;
+
+    private boolean isChatbotVisible;
+
+    public ChatBotController chatBotController;
 
     private JSONObject dataJSON;
 
@@ -64,8 +75,8 @@ public class ArraylistViewController implements Initializable {
         apVisualizer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 Platform.runLater(() -> {
-                    double centerX = (apVisualizer.getWidth() / 2);
-                    double centerY = (apVisualizer.getHeight() / 2);
+                    double centerX = apVisualizer.getWidth() / 2;
+                    double centerY = apVisualizer.getHeight() / 2;
                     this.centerX = centerX;
                     this.centerY = centerY;
                 });
@@ -175,6 +186,8 @@ public class ArraylistViewController implements Initializable {
             double totalWidth = (capacity) * 50 + capacity * 5;
             double currentX = centerX + totalWidth;
             double currentY = centerY-50;
+            System.out.println("Pos " + capacity +
+                    " X: " + currentX + " Y: " + currentY + " Capacity: " + capacity);
             VBox vBox = createBoxes(capacity,"", currentX, currentY);
             capacity++;
 
@@ -195,6 +208,7 @@ public class ArraylistViewController implements Initializable {
         int removable = Math.max(0, capacity - minCapacity);
         int actualRemove = Math.min(n, removable);
 
+        // Highlight Everything to Delete
         for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
             ArrayNode arrayNode = arrayNodes.get(i);
             Rectangle r = arrayNode.getRectangle();
@@ -202,6 +216,7 @@ public class ArraylistViewController implements Initializable {
             highlight.play();
         }
 
+        // Destroy All Boxes
         for (int i=capacity-1, j=0; j<actualRemove; i--, j++) {
             ArrayNode arrayNode = arrayNodes.get(i);
             VBox vb = arrayNode.getVBox();
@@ -224,12 +239,15 @@ public class ArraylistViewController implements Initializable {
             disableButtons(false);
             return;
         }
+        if(num == Integer.MIN_VALUE) return;
+        writeDataJSON();
 
         if(size != 0){
             writePreviousDataJSON();
         }
 
         if(size == capacity) {
+            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -262,6 +280,7 @@ public class ArraylistViewController implements Initializable {
         }
 
         if(size == capacity) {
+            // resize updateList()
             int additional = (int) ceil(capacity * 0.5);
             if(capacity != maxCap) {
                 additional = Math.min(additional, maxCap - capacity);
@@ -394,9 +413,11 @@ public class ArraylistViewController implements Initializable {
         }
 
         traversal.play();
+
     }
 
     private ArrayNode searchHelper(int num, SequentialTransition traversal) {
+
         int index;
         for (index = 0; index < size; index++) {
             ArrayNode currentNode = arrayNodes.get(index);
@@ -449,6 +470,8 @@ public class ArraylistViewController implements Initializable {
 
     // Better Utilities
     private VBox createBoxes(int pos, String num, double x, double y) {
+        System.out.println("Pos " + pos +
+                " X: " + x + " Y: " + y + " Capacity: " + capacity);
         ArrayNode arrayNode = new ArrayNode(num, pos, x, y);
         arrayNodes.add(pos, arrayNode);
         VBox vbox = arrayNode.getVBox();

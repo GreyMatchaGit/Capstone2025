@@ -2,7 +2,10 @@ package edu.citu.procrammers.eva.data;
 
 import edu.citu.procrammers.eva.utils.Hash;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -83,7 +86,7 @@ public class Database {
 
     public User login(String username, String password) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM tblusers WHERE username=?"
+                "SELECT * FROM `" + DATABASE_NAME + "`.`tblusers` WHERE username=?"
         ))  {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -112,7 +115,7 @@ public class Database {
                 return loggedInUser;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("[Database] Login error: " + e.getMessage());
             return null;
         }
 
@@ -132,7 +135,7 @@ public class Database {
         }
 
         try (PreparedStatement statement = connection.prepareStatement(
-            "INSERT INTO tblusers (username, password) values (?, ?)"
+            "INSERT INTO `" + DATABASE_NAME + "`.`tblusers` (username, password) values (?, ?)"
         )) {
             String hashedPassword = Hash.hashPassword(password);
             statement.setString(1, username);
@@ -143,7 +146,7 @@ public class Database {
             System.out.printf("[Database] %s has been successfully registered.\n", username);
             return NO_ERROR;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("[Database] Registration error: " + e.getMessage());
             return UNKNOWN_ERROR;
         }
     }
@@ -171,12 +174,13 @@ public class Database {
 
     private boolean isUsernameAvailable(String username) {
         try (PreparedStatement statement = connection.prepareStatement(
-            "SELECT 1 FROM tblusers WHERE username=?"
+            "SELECT 1 FROM `" + DATABASE_NAME + "`.`tblusers` WHERE username=?"
         )) {
             statement.setString(1, username);
             ResultSet usersWithMatchingUsername = statement.executeQuery();
             return !usersWithMatchingUsername.next();
         } catch (SQLException e) {
+            System.out.println("[Database] Username check error: " + e.getMessage());
             return false;
         }
     }
@@ -208,32 +212,230 @@ public class Database {
     private void createDatabase() {
         try(Connection initializerConnection = DriverManager.getConnection(LOCALHOST, "root", "")) {
             Class.forName(JDBC_DRIVER);
-            PreparedStatement createDatabase = initializerConnection.prepareStatement(
-                "CREATE DATABASE dbprojecteva;"
-            );
-
-            createDatabase.execute();
-            establishConnection();
-
-            String createTables = "CREATE TABLE tblusers (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(20), password VARCHAR(255));";
-
-            // For admin
-            String createAdmin = "INSERT INTO tblusers (username, password) VALUES (?, ?);";
-            String adminUsername = "admin";
-            String adminPassword = Hash.hashPassword("admin");
-
-            try (
-                PreparedStatement createTablesStatement = connection.prepareStatement(createTables);
-                PreparedStatement createAdminStatement = connection.prepareStatement(createAdmin);
-            ){
-                createTablesStatement.executeUpdate();
-                createAdminStatement.setString(1, adminUsername);
-                createAdminStatement.setString(2, adminPassword);
-                createAdminStatement.executeUpdate();
+            
+            try {
+                PreparedStatement checkDb = initializerConnection.prepareStatement(
+                    "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?"
+                );
+                checkDb.setString(1, DATABASE_NAME);
+                ResultSet rs = checkDb.executeQuery();
+                
+                if (!rs.next()) {
+                    System.out.println("[Database] Creating database...");
+                    PreparedStatement createDatabase = initializerConnection.prepareStatement(
+                        "CREATE DATABASE " + DATABASE_NAME + ";"
+                    );
+                    createDatabase.execute();
+                    System.out.println("[Database] Database created successfully.");
+                } else {
+                    System.out.println("[Database] Database already exists.");
+                }
+            } catch (SQLException e) {
+                System.out.println("[Database] Error checking/creating database: " + e.getMessage());
+                throw e;
             }
 
+            establishDatabaseConnection();
+
+            createUserTable();
+            importLessonsTable();
+            
         } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Database] Database initialization error: " + e.getMessage());
             throw new RuntimeException(e);
+        }
+    }
+    
+    private void createUserTable() {
+        try {
+            String currentCatalog = connection.getCatalog();
+            System.out.println("[Database] Creating user table in database: " + currentCatalog);
+
+            boolean tableExists = false;
+            DatabaseMetaData dbm = connection.getMetaData();
+
+            try (ResultSet tables = dbm.getTables(currentCatalog, null, "%", new String[] {"TABLE"})) {
+                System.out.println("[Database] Tables in " + currentCatalog + ":");
+                while (tables.next()) {
+                    String tableName = tables.getString("TABLE_NAME");
+                    String tableCatalog = tables.getString("TABLE_CAT");
+                    System.out.println("[Database] Found table: " + tableName + " in " + tableCatalog);
+                    if (tableName.equalsIgnoreCase("tblusers")) {
+                        tableExists = true;
+                    }
+                }
+            }
+            
+            if (tableExists) {
+                System.out.println("[Database] User table already exists in " + currentCatalog);
+
+                try (Statement stmt = connection.createStatement();
+                     ResultSet rs = stmt.executeQuery("DESCRIBE `tblusers`")) {
+                    System.out.println("[Database] Verifying tblusers structure:");
+                    while (rs.next()) {
+                        System.out.println("[Database] Column: " + rs.getString("Field") + 
+                                           ", Type: " + rs.getString("Type"));
+                    }
+                } catch (SQLException e) {
+                    System.out.println("[Database] Error verifying table structure: " + e.getMessage());
+                    tableExists = false;
+                }
+            }
+            
+            if (!tableExists) {
+                System.out.println("[Database] Creating user table...");
+
+                try (Statement dropStatement = connection.createStatement()) {
+                    dropStatement.executeUpdate("DROP TABLE IF EXISTS `tblusers`");
+                    System.out.println("[Database] Dropped existing tblusers table if it existed");
+                } catch (SQLException e) {
+                    System.out.println("[Database] Could not drop table: " + e.getMessage());
+                }
+
+                String createUserTable = 
+                    "CREATE TABLE `" + DATABASE_NAME + "`.`tblusers` (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "username VARCHAR(50), " +
+                    "password VARCHAR(255)" +
+                    ")";
+                
+                try (Statement statement = connection.createStatement()) {
+                    statement.executeUpdate(createUserTable);
+                    System.out.println("[Database] User table created successfully.");
+
+                    String adminUsername = "admin";
+                    String adminPassword = Hash.hashPassword("admin");
+                    
+                    String createAdmin = 
+                        "INSERT INTO `" + DATABASE_NAME + "`.`tblusers` (username, password) " +
+                        "VALUES (?, ?)";
+                    
+                    try (PreparedStatement createAdminStatement = connection.prepareStatement(createAdmin)) {
+                        createAdminStatement.setString(1, adminUsername);
+                        createAdminStatement.setString(2, adminPassword);
+                        createAdminStatement.executeUpdate();
+                        System.out.println("[Database] Admin user created successfully.");
+                    }
+
+                    try (ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM `" + DATABASE_NAME + "`.`tblusers`")) {
+                        if (rs.next()) {
+                            int count = rs.getInt(1);
+                            System.out.println("[Database] Verified table creation, row count: " + count);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("[Database] Error verifying table: " + e.getMessage());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("[Database] Error creating user table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    private void importLessonsTable() {
+        try {
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "tbllessons", null);
+            
+            if (tables.next()) {
+                System.out.println("[Database] Lessons table already exists.");
+                return;
+            }
+            
+            String resourcePath = "/edu/citu/procrammers/eva/sql/tbllessons.sql";
+            InputStream inputStream = getClass().getResourceAsStream(resourcePath);
+            if (inputStream == null) {
+                System.out.println("[Database] ERROR: SQL file not found at path: " + resourcePath);
+                return;
+            }
+            
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                boolean inTableDefinition = false;
+
+                while ((line = reader.readLine()) != null) {
+                    if (line.startsWith("--") || line.trim().isEmpty() || 
+                        line.startsWith("/*!") || line.startsWith("SET") || 
+                        line.startsWith("START") || line.contains("time_zone")) {
+                        continue;
+                    }
+                    
+                    if (line.contains("Database:") || line.contains("dbprojecteva")) {
+                        continue;
+                    }
+                    
+                    if (line.contains("CREATE TABLE") && line.contains("tbllessons")) {
+                        inTableDefinition = true;
+                        sb.append("CREATE TABLE `tbllessons` (\n");
+                        continue;
+                    }
+                    
+                    if (inTableDefinition) {
+                        if (line.contains("ENGINE=")) {
+                            sb.append(");\n");
+                            break;
+                        }
+                        
+                        if (!line.contains("--")) {
+                            sb.append(line).append("\n");
+                        }
+                    }
+                }
+            }
+
+            try (Statement stmt = connection.createStatement()) {
+                String createTableSQL = sb.toString().trim();
+                if (!createTableSQL.isEmpty()) {
+                    System.out.println("[Database] Creating lessons table...");
+                    stmt.execute(createTableSQL);
+                    System.out.println("[Database] Lessons table created successfully.");
+                } else {
+                    System.out.println("[Database] ERROR: No CREATE TABLE statement found in SQL file.");
+                    return;
+                }
+            }
+
+            inputStream = getClass().getResourceAsStream(resourcePath);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                 Statement stmt = connection.createStatement()) {
+                
+                StringBuilder insertBuilder = new StringBuilder();
+                boolean inInsertData = false;
+                String line;
+                int insertCount = 0;
+                
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains("INSERT INTO") && line.contains("tbllessons")) {
+                        inInsertData = true;
+                        insertBuilder.setLength(0);
+                        insertBuilder.append(line);
+                    } else if (inInsertData) {
+                        insertBuilder.append(line);
+                        
+                        if (line.endsWith(");")) {
+                            try {
+                                String insertSQL = insertBuilder.toString();
+                                stmt.execute(insertSQL);
+                                insertCount++;
+                                
+                                if (insertCount % 2 == 0) {
+                                    System.out.println("[Database] Inserted " + insertCount + " lessons...");
+                                }
+                                inInsertData = false;
+                            } catch (SQLException e) {
+                                System.out.println("[Database] Error inserting lesson: " + e.getMessage());
+                            }
+                        }
+                    }
+                }
+                
+                System.out.println("[Database] Successfully imported " + insertCount + " lessons.");
+            }
+            
+        } catch (SQLException | IOException e) {
+            System.out.println("[Database] Error importing lessons table: " + e.getMessage());
         }
     }
 
@@ -266,5 +468,27 @@ public class Database {
          * TODO: Fix the entire database structure if the user's current database structure does not match
          *  the correct database structure.
          */
+    }
+
+    private void establishDatabaseConnection() {
+        try {
+            connection = DriverManager.getConnection(
+                DATABASE_URL,
+                DB_USERNAME,
+                DB_PASSWORD
+            );
+
+            String currentDb = connection.getCatalog();
+            System.out.println("[Database] Connected to database: " + currentDb);
+            
+            if (!DATABASE_NAME.equalsIgnoreCase(currentDb)) {
+                System.out.println("[Database] WARNING: Connected to wrong database. Expected: " + DATABASE_NAME + ", Got: " + currentDb);
+            }
+            
+            System.out.println("[Database] Connected to database successfully.");
+        } catch (SQLException e) {
+            System.out.println("[Database] Error connecting to database: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -32,6 +32,10 @@ public class Constant {
 
         public static final String Academy = "academy-view.fxml";
         public static final String Conquest = "conquest-view.fxml";
+        public static final String ArrayListConquest = "arraylist-conquest-view.fxml";
+        public static final String StackConquest = "stack-conquest-view.fxml";
+        public static final String QueueConquest = "queue-conquest-view.fxml";
+        public static final String DequeConquest = "deque-conquest-view.fxml";
 
         public static final String Chatbot = "chatbot-view.fxml";
         public static final String GeneralChatbot = "general-chatbot-view.fxml";
@@ -44,8 +48,6 @@ public class Constant {
         public static final String Deque = "deque-visualizer-view.fxml";
         public static final String BST = "bst-visualizer-view.fxml";
         public static final String LinkedList = "linkedlist-visualizer-view.fxml";
-        public static final String HashTable = "hashtable-visualizer-view.fxml";
-        public static final String Bubble = "bubblesort-visualizer-view.fxml";
     }
 
     public static class Value{

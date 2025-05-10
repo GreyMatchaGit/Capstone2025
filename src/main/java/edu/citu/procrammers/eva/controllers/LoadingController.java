@@ -1,11 +1,13 @@
 package edu.citu.procrammers.eva.controllers;
 
-import edu.citu.procrammers.eva.utils.SoundManager;
+import edu.citu.procrammers.eva.utils.NavService;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+
+import static edu.citu.procrammers.eva.utils.Constant.Page.Selection;
 
 public class LoadingController {
     public ImageView imgWumpus;
@@ -30,12 +32,14 @@ public class LoadingController {
 //        Disabled loop for now
 //        bounceCycle.setCycleCount(Animation.INDEFINITE);
 
-        bounceCycle.setCycleCount(4);
+        bounceCycle.setCycleCount(2);
         bounceCycle.setOnFinished(e -> {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), fadePane);
             fadeOut.setFromValue(0);
             fadeOut.setToValue(1);
-            fadeOut.setOnFinished(event -> SoundManager.fadeOutMusic());
+            fadeOut.setOnFinished(event -> {
+                NavService.navigateTo(Selection);
+            });
             fadeOut.play();
         });
 
